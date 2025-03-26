@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Raftel Engine is an advanced graphics engine for creating immersive 3D games, inspired by One Piece.">
+    <meta name="keywords" content="Raftel Engine, Game Development, Graphics Engine, 3D Games, Programming, One Piece">
+    <meta name="author" content="Your Name or Company">
+    <link rel="icon" href="../doxygen/resources/raftellogo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Raftel Engine - Advanced 3D Graphics Engine</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Header fijo -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+            <span>Raftel Engine</span>
+        </div>
+        <div class="header-search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <input type="text" placeholder="Search documentation...">
+        </div>
+        <div class="header-links">
+            <a href="index.html">Home</a>
+            <a href="../doxygen/html/index.html" target="_blank">API Reference</a>
+            <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba//" target="_blank">GitHub</a>
+            <a href="#community">Community</a>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Sidebar izquierdo -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-category">Getting Started</div>
+                <a href="index.html" class="sidebar-item active">Introduction</a>
+                <a href="./started/installation.html" class="sidebar-item">Installation</a>
+                <a href="./started/buidsetup.html" class="sidebar-item">Build Setup</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Tutorials</div>
+                <a href="tutorial/tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+                <a href="tutorial/tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+                <a href="tutorial/tutorialinput.html" class="sidebar-item">Handling Input</a>
+                <a href="tutorial/tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+                <a href="tutorial/tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+                <a href="tutorial/tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="tutorial/tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+                <a href="tutorial/tutorialecs.html" class="sidebar-item">Entity Component System</a>
+                <a href="tutorial/tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+
+
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Core Components</div>
+                <a href="core/windowsystem.html" class="sidebar-item">Window System</a>
+                <a href="core/shader.html" class="sidebar-item">Shaders</a>
+                <a href="core/mesh.html" class="sidebar-item">Meshes</a>
+                <a href="core/material.html" class="sidebar-item">Materials</a>
+                <a href="core/texture.html" class="sidebar-item">Textures</a>
+                <a href="core/lighting.html" class="sidebar-item">Lighting</a>
+                <a href="core/input.html" class="sidebar-item">Input</a>
+                <a href="core/jobsystem.html" class="sidebar-item">JobSystem</a>
+                <a href="core/rendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="core/ecs.html" class="sidebar-item">ECS</a>
+            </div>
+
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content">
+            <h1>Welcome to Raftel Engine</h1>
+
+            <p>Raftel Engine is an advanced graphics engine designed to facilitate the creation of immersive 3D games
+                and applications. Named after the legendary island in One Piece, Raftel Engine aims to be your ultimate
+                destination in game development.</p>
+
+            <div class="example-viewer">
+                <div class="example-viewer-header">
+                    <div class="example-viewer-title">Showcase Example</div>
+                    <div class="example-viewer-actions">
+                        <button>View Code</button>
+                        <button>Edit</button>
+                        <button>Full Screen</button>
+                    </div>
+                </div>
+                <div class="example-viewer-content">
+                  <video autoplay loop muted playsinline 
+                  style="width:100%; height:100%; object-fit:cover;">
+               <source src="img/demo.mp4" type="video/mp4">
+               Tu navegador no soporta el elemento video.
+           </video>
+                </div>
+            </div>
+
+            <h2>Features</h2>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>High Performance</h3>
+                    <p>Optimized rendering pipeline for maximum performance on modern hardware, with support for
+                        advanced rendering techniques.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Easy to Use</h3>
+                    <p>Intuitive API designed to make game development accessible to programmers of all levels, with
+                        clear documentation and examples.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Extensible</h3>
+                    <p>Modular architecture that allows you to extend and customize the engine to your needs through a
+                        plugin system.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Cross-Platform</h3>
+                    <p>Develop once and deploy everywhere with support for Windows, macOS, and Linux platforms.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Modern OpenGL</h3>
+                    <p>Built on modern OpenGL features for maximum compatibility and performance across different
+                        hardware configurations.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Asset Pipeline</h3>
+                    <p>Comprehensive tools for importing, processing, and optimizing 3D assets for your games and
+                        applications.</p>
+                </div>
+            </div>
+
+            <h2>Getting Started</h2>
+
+            <p>Follow these steps to get started with Raftel Engine:</p>
+
+            <ol>
+                <li><a href="installation.html">Install Raftel Engine</a> on your development machine</li>
+                <li>Complete the <a href="tutorial/tutorialwindow.html">Creating a Window tutorial</a> to set up your
+                    first project</li>
+                <li>Explore the <a href="../doxygen/html/index.html">API Documentation</a> to understand the engine's
+                    capabilities</li>
+                <li>Join our <a href="#community">Community</a> to connect with other developers</li>
+            </ol>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Quick Start Example
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/window.hpp"
+#include "raftel/mesh.hpp"
+
+int main() {
+  // Initialize window system
+  auto windowSystemOpt = Raftel::WindowSystem::make();
+  auto windowOpt = Raftel::Window::make("My First Raftel App", *windowSystemOpt);
+  
+  if (!windowOpt) {
+    std::cerr << "Error creating window.\n";
+    return -1;
+  }
+  
+  windowOpt->MakeContextCurrent();
+  
+  // Create a simple cube
+  auto cube = Raftel::MeshFactory::createCube(30.0f);
+  
+  // Main render loop
+  while (!windowOpt->ShouldClose()) {
+    windowOpt->clear();
+    cube->draw();
+    windowOpt->swapBuffers();
+  }
+  
+  return 0;
+}</code></pre>
+                </div>
+            </div>
+
+            <h2>Tutorials</h2>
+
+            <p>Begin your journey with Raftel Engine through our comprehensive step-by-step tutorials:</p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3><a href="tutorial/tutorialwindow.html">Creating a Window</a></h3>
+                    <p>Learn how to set up a window and initialize the Raftel Engine rendering context.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="tutorial/tutorialtriangle.html">Drawing a Triangle</a></h3>
+                    <p>Understand the basics of rendering geometry with Raftel Engine.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="tutorial/tutorialinput.html">Handling Input</a></h3>
+                    <p>Learn how to capture and respond to user input for interactive applications.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="tutorial/tutorialmesh.html">Loading 3D Meshes</a></h3>
+                    <p>Import and render 3D models from various file formats.</p>
+                </div>
+            </div>
+
+            <h2 id="downloads">Downloads</h2>
+
+            <p>Get started with Raftel Engine by downloading the latest version below:</p>
+
+            <div class="mb-3">
+                <a href="#" class="button">Download v1.0.0 (Windows)</a>
+                <a href="#" class="button">Download v1.0.0 (macOS)</a>
+                <a href="#" class="button">Download v1.0.0 (Linux)</a>
+            </div>
+
+            <p class="mb-4">Released on March 13, 2025 | <a href="#">View changelog</a></p>
+
+            <div class="info-box">
+                <h3>Build from Source</h3>
+                <p>If you prefer to build from source or need the latest development version, check out our <a
+                        href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/">GitHub repository</a> and follow the build instructions.</p>
+            </div>
+
+            <h2 id="community">Join Our Community</h2>
+
+            <p>Connect with other Raftel Engine developers, get support, and share your creations:</p>
+
+            <div class="mb-3">
+                <a href="#" class="button">Discord Server</a>
+                <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" class="button">GitHub Repository</a>
+                <a href="#" class="button">Developer Forum</a>
+            </div>
+
+            <p>We're excited to see what you'll create with Raftel Engine! Share your projects with us using the hashtag
+                <strong>#RaftelEngine</strong> on social media.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="about.html">About</a>
+            <a href="extra/license.html">License</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy</a>
+        </div>
+        <div class="footer-copyright">
+            &copy; 2025 Raftel Engine. All rights reserved.
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

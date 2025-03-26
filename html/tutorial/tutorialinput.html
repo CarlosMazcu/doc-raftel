@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to use the input system in Raftel Engine.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <title>Input System - Raftel Engine</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+</head>
+<body>
+  <!-- Header fijo -->
+  <div class="header">
+    <div class="header-logo">
+      <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+      <span>Raftel Engine</span>
+    </div>
+    <div class="header-search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+      </svg>
+      <input type="text" placeholder="Search documentation...">
+    </div>
+    <div class="header-links">
+      <a href="../index.html">Home</a>
+      <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+      <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+      <a href="../index.html#community">Community</a>
+    </div>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="container">
+    <!-- Sidebar izquierdo -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-category">Getting Started</div>
+        <a href="../index.html" class="sidebar-item">Introduction</a>
+        <a href="../started/installation.html" class="sidebar-item">Installation</a>
+        <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-category">Tutorials</div>
+        <a href="tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+        <a href="tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+        <a href="tutorialinput.html" class="sidebar-item active">Handling Input</a>
+        <a href="tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+        <a href="tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+        <a href="tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+        <a href="tutorialecs.html" class="sidebar-item">Entity Component System</a>
+        <a href="tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-category">Core Components</div>
+        <a href="../core/windowsystem.html" class="sidebar-item">Window System</a>
+        <a href="../core/shader.html" class="sidebar-item">Shaders</a>
+        <a href="../core/mesh.html" class="sidebar-item">Meshes</a>
+        <a href="../core/material.html" class="sidebar-item">Materials</a>
+        <a href="../core/texture.html" class="sidebar-item">Textures</a>
+        <a href="../core/lighting.html" class="sidebar-item">Lighting</a>
+        <a href="../core/input.html" class="sidebar-item">Input</a>
+        <a href="../core/jobsystem.html" class="sidebar-item">JobSystem</a>
+        <a href="../core/rendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="../core/ecs.html" class="sidebar-item">ECS</a>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+      <h1>Input System in Raftel Engine</h1>
+      
+      <p>This tutorial shows how to use Raftel Engine's input system to handle keyboard and mouse interactions.</p>
+
+      <div class="tutorial-nav">
+        <a href="tutorialtriangle.html" class="prev">Previous: Drawing a Triangle</a>
+        <a href="tutorialmesh.html" class="next">Next: Loading 3D Meshes</a>
+      </div>
+          
+      <h2>Input System Basics</h2>
+      
+      <p>The Raftel Engine input system is accessed through the <code>input</code> member of your window object. Before checking any input, you must update the input system at the beginning of each frame:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Input Update</div>
+        <div class="example-card-body">
+          <pre><code>// Update at the start of each frame
+windowOpt->input->updateKeys();</code></pre>
+        </div>
+      </div>
+      
+      <h2>Keyboard Input</h2>
+      
+      <p>Raftel Engine provides methods to check different key states:</p>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>isKeyDown()</h3>
+          <p>Checks if a key is currently held down.</p>
+          <pre><code>if (windowOpt->input->isKeyDown(Raftel::Input::Keys::Key_W)) {
+    // W key is down - move forward
+}</code></pre>
+        </div>
+        
+        <div class="grid-item">
+          <h3>isKeyUp()</h3>
+          <p>Checks if a key is currently not pressed.</p>
+          <pre><code>if (windowOpt->input->isKeyUp(Raftel::Input::Keys::Key_W)) {
+    // W key is up
+}</code></pre>
+        </div>
+      </div>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>isKeyPressed()</h3>
+          <p>Checks if a key was just pressed this frame.</p>
+          <pre><code>if (windowOpt->input->isKeyPressed(Raftel::Input::Keys::Key_Space)) {
+    // Space was just pressed - jump
+}</code></pre>
+        </div>
+        
+        <div class="grid-item">
+          <h3>isKeyRelease()</h3>
+          <p>Checks if a key was just released this frame.</p>
+          <pre><code>if (windowOpt->input->isKeyRelease(Raftel::Input::Keys::Key_Escape)) {
+    // Escape was just released - toggle menu
+}</code></pre>
+        </div>
+      </div>
+      
+      <h2>Mouse Input</h2>
+      
+      <p>Raftel Engine also supports mouse input detection:</p>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>Mouse Buttons</h3>
+          <pre><code>if (windowOpt->input->isMouseButtonDown(
+    Raftel::Input::Buttons::Mouse_Left)) {
+    // Left mouse button is being held down
+}</code></pre>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Mouse Position</h3>
+          <pre><code>glm::vec2 mousePos = windowOpt->input->getMousePosition();
+// mousePos.x and mousePos.y contain coordinates</code></pre>
+        </div>
+      </div>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>Mouse Movement</h3>
+          <pre><code>glm::vec2 mouseDelta = windowOpt->input->getMouseDelta();
+// mouseDelta.x and mouseDelta.y contain movement</code></pre>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Mouse Wheel</h3>
+          <pre><code>glm::vec2 scrollDelta = windowOpt->input->getScrollDelta();
+// scrollDelta.y contains vertical scroll amount</code></pre>
+        </div>
+      </div>
+      
+      <h2>Example: Moving a Shape with Keyboard</h2>
+      
+      <p>This example shows how to move a triangle with WASD keys and rotate it with Q and E:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Movement and Rotation</div>
+        <div class="example-card-body">
+          <pre><code>// Set up direction vector
+Raftel::Vec2 dir = {0, 0};
+const float speed = 0.5f;
+
+// Check WASD keys for movement
+if (windowOpt->input->isKeyDown(Raftel::Input::Keys::Key_W)) {
+    dir.y = speed;  // Move up
+}
+if (windowOpt->input->isKeyDown(Raftel::Input::Keys::Key_A)) {
+    dir.x = -speed;  // Move left
+}
+if (windowOpt->input->isKeyDown(Raftel::Input::Keys::Key_D)) {
+    dir.x = speed;  // Move right
+}
+if (windowOpt->input->isKeyDown(Raftel::Input::Keys::Key_S)) {
+    dir.y = -speed;  // Move down
+}
+
+// Check Q and E for rotation
+if (windowOpt->input->isKeyDown(Raftel::Input::Keys::Key_Q)) {
+    triangle.tr.Rotate(angle * deltaTime);  // Rotate counter-clockwise
+}
+if (windowOpt->input->isKeyDown(Raftel::Input::Keys::Key_E)) {
+    triangle.tr.Rotate(-angle * deltaTime);  // Rotate clockwise
+}
+
+// Apply movement
+triangle.tr.velocity_ = dir;
+triangle.tr.Translate(deltaTime);</code></pre>
+        </div>
+      </div>
+      
+      <h2>Next Steps</h2>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3><a href="tutorialmesh.html">Loading 3D Meshes</a></h3>
+          <p>Learn how to load and render 3D models in your application.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3><a href="../core/input.html">Input System API</a></h3>
+          <p>View the full API reference for the Input system.</p>
+        </div>
+      </div>
+      <div class="api-reference">
+        <p>For complete details, see the <a href="../../doxygen/html/class_raftel_1_1_input.html"target="_blank">Input API Reference</a>.</p>
+        </div>
+      <div class="tutorial-nav">
+        <a href="tutorialtriangle.html" class="prev">Previous: Drawing a Triangle</a>
+        <a href="tutorialmesh.html" class="next">Next: Loading 3D Meshes</a>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-links">
+      <a href="../about.html">About</a>
+      <a href="../extra/license.html">License</a>
+      <a href="../contact.html">Contact</a>
+      <a href="../privacy.html">Privacy</a>
+    </div>
+    <div class="footer-copyright">
+      &copy; 2025 Raftel Engine. All rights reserved.
+    </div>
+  </div>
+
+  <script src="../script.js"></script>
+</body>
+</html>

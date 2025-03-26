@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Learn how to load and render 3D meshes in Raftel Engine with this step-by-step tutorial.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <title>Loading and Rendering 3D Meshes - Raftel Engine Tutorial</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+</head>
+
+<body>
+  <!-- Header fijo -->
+  <div class="header">
+    <div class="header-logo">
+      <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+      <span>Raftel Engine</span>
+    </div>
+    <div class="header-search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path
+          d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+      </svg>
+      <input type="text" placeholder="Search documentation...">
+    </div>
+    <div class="header-links">
+      <a href="../index.html">Home</a>
+      <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+      <a href="https://github.com/" target="_blank">GitHub</a>
+      <a href="../index.html#community">Community</a>
+    </div>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="container">
+    <!-- Sidebar izquierdo -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-category">Getting Started</div>
+        <a href="../index.html" class="sidebar-item">Introduction</a>
+        <a href="../started/installation.html" class="sidebar-item">Installation</a>
+        <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-category">Tutorials</div>
+        <a href="tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+        <a href="tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+        <a href="tutorialinput.html" class="sidebar-item">Handling Input</a>
+        <a href="tutorialmesh.html" class="sidebar-item active">Loading 3D Meshes</a>
+        <a href="tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+        <a href="tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+        <a href="tutorialecs.html" class="sidebar-item">Entity Component System</a>
+        <a href="tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-category">Core Components</div>
+        <a href="../core/windowsystem.html" class="sidebar-item">Window System</a>
+        <a href="../core/shader.html" class="sidebar-item">Shaders</a>
+        <a href="../core/mesh.html" class="sidebar-item">Meshes</a>
+        <a href="../core/material.html" class="sidebar-item">Materials</a>
+        <a href="../core/texture.html" class="sidebar-item">Textures</a>
+        <a href="../core/lighting.html" class="sidebar-item">Lighting</a>
+        <a href="../core/input.html" class="sidebar-item">Input</a>
+        <a href="../core/jobsystem.html" class="sidebar-item">JobSystem</a>
+        <a href="../core/rendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="../core/ecs.html" class="sidebar-item">ECS</a>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+      <h1>Loading and Rendering 3D Meshes</h1>
+
+      <p>This tutorial will guide you through the process of loading 3D models, applying textures, and rendering them in
+        your Raftel Engine application.</p>
+
+      <div class="tutorial-nav">
+        <a href="tutorialinput.html" class="prev">Previous: Input Handling</a>
+        <a href="#" class="next">Next: Lighting & Materials</a>
+      </div>
+
+      <div class="example-viewer">
+        <div class="example-viewer-header">
+          <div class="example-viewer-title">Final Result Preview</div>
+          <div class="example-viewer-actions">
+            <button>View Code</button>
+            <button>Full Screen</button>
+          </div>
+        </div>
+        <div class="example-viewer-content">
+          <img src="../img/obj.png" alt="Rendered 3D Mesh" style="width:100%; height:100%; object-fit:contain;">
+        </div>
+        <div class="example-viewer-code" style="display: none;">
+          <pre><code>#include "raftel/window.hpp"
+            #include "raftel/mesh.hpp"        
+            
+            int main(void) {
+            
+                auto windowSystemOpt = Raftel::WindowSystem::make();
+                auto windowOpt = Raftel::Window::make("OBJ Loader Test", *windowSystemOpt);
+                
+                if (windowOpt) {
+                    windowOpt->MakeContextCurrent();
+            
+                 
+                    if (!myModel.loadMesh("../assets/obj/luffytrial.obj")) {
+                      std::cerr << "Error al cargar la malla inicial.\n";
+                      return -1;
+                    }
+                    auto luffy_t = Raftel::Texture::loadTexture("../assets/textures/luffytextrial.png");
+                    
+                    myModel.GetMaterialByIndex(0)->setAlbedo(luffy_t);
+                    myModel.setupMesh();
+                    
+                    Raftel::ShaderProgram shaderProgram;
+                    if (!shaderProgram.load("../assets/shaders/test.vs", "../assets/shaders/test.fs")) {
+                        std::cerr << "Error al cargar los shaders.\n";
+                        return -1;
+                    }
+            
+                    while (!windowOpt->ShouldClose()) {
+                        windowOpt->clear();
+                        shaderProgram.use();
+            
+                        myModel.setUniforms(shaderProgram.GetProgramID());
+                        myModel.draw(shaderProgram);
+                        shaderProgram.unUse();
+            
+                        windowOpt->swapBuffers();
+                    }
+                }
+                else {
+                    printf("Error con la creación de la ventana.\n");
+                    return -1;
+                }
+            
+                return 0;
+            }</code></pre>
+      </div>
+      </div>
+
+      <h2>Prerequisites</h2>
+      <p>Before proceeding, make sure you:</p>
+      <ul>
+        <li>Have Raftel Engine installed on your system</li>
+        <li>Are familiar with basic C++ programming</li>
+        <li>Understand fundamental 3D graphics concepts</li>
+        <li>Have completed the previous tutorials</li>
+      </ul>
+
+      <h2>Including the Required Headers</h2>
+
+      <p>To work with meshes in Raftel Engine, start by including the necessary headers:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Mesh Headers</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/mesh.hpp"</code></pre>
+        </div>
+      </div>
+
+      <p>This header provides access to all mesh-related functionality, including loading 3D models, creating primitive
+        shapes, and managing material properties.</p>
+
+      <h2>Setting Up the Window</h2>
+
+      <p>First, let's set up a window to render our 3D meshes:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Window Initialization</div>
+        <div class="example-card-body">
+          <pre><code>auto windowSystemOpt = Raftel::WindowSystem::make();
+auto windowOpt = Raftel::Window::make("OBJ Loader Test", *windowSystemOpt);
+if (!windowOpt) {
+  std::cerr << "Error creating window.\n";
+  return -1;
+}
+windowOpt->MakeContextCurrent();</code></pre>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <h3>Window Context</h3>
+        <p>The <code>MakeContextCurrent()</code> method must be called before performing any rendering operations. This
+          establishes the OpenGL context for the current thread.</p>
+      </div>
+
+      <h2>Loading a 3D Model</h2>
+
+      <p>Raftel Engine supports loading various 3D model formats. Let's load a model from an OBJ file:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Loading a Mesh</div>
+        <div class="example-card-body">
+          <pre><code>Raftel::Mesh myModel;
+if (!myModel.loadMesh("../assets/obj/luffytrial.obj")) {
+  std::cerr << "Error loading the initial mesh.\n";
+  return -1;
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <h3>Supported Formats</h3>
+        <p>Raftel Engine currently supports the following 3D model formats:</p>
+        <ul>
+          <li><strong>OBJ (.obj)</strong> - Wavefront Object format</li>
+          <li><strong>FBX (.fbx)</strong> - Autodesk FBX format</li>
+        </ul>
+        <p>Make sure your 3D models are in one of these supported formats.</p>
+      </div>
+
+      <h2>Working with Materials (MTL Files)</h2>
+
+<p>Raftel Engine now supports Material Template Library (MTL) files commonly used with OBJ models. These files define material properties for your 3D models.</p>
+
+<div class="info-box">
+  <h3>Using MTL Files</h3>
+  <p>When loading an OBJ file that references an MTL file (using the <code>mtllib</code> directive), Raftel Engine will automatically:</p>
+  <ul>
+    <li>Load the referenced MTL file from the same directory as the OBJ file</li>
+    <li>Parse material definitions and properties</li>
+    <li>Apply materials to the appropriate submeshes based on <code>usemtl</code> directives</li>
+  </ul>
+  <p>Make sure to keep your MTL files in the same directory as your OBJ files for proper loading.</p>
+</div>
+
+<div class="example-card">
+  <div class="example-card-header">Loading a Model with Materials</div>
+  <div class="example-card-body">
+    <pre><code>// Load a model with its materials
+auto shipModel = Raftel::Mesh::Create("../assets/models/ship-medium.obj");
+
+// The MTL file (ship-medium.mtl) is automatically loaded
+// No additional code needed to handle materials!
+
+// You can still override specific material properties if needed
+shipModel->GetMaterialByIndex(0)->setRoughness(0.7f);</code></pre>
+  </div>
+</div>
+
+<div class="tip-box">
+  <h3>Material Properties</h3>
+  <p>The engine will parse and apply the following common MTL properties:</p>
+  <ul>
+    <li><strong>Kd</strong> - Diffuse color (maps to albedo color)</li>
+    <li><strong>Ks</strong> - Specular color (influences metallic property)</li>
+    <li><strong>Ns</strong> - Specular exponent (maps to shininess and roughness)</li>
+    <li><strong>map_Kd</strong> - Diffuse texture map (albedo texture)</li>
+    <li><strong>map_Bump</strong> - Normal map texture</li>
+  </ul>
+</div>
+
+      <h2>Applying Textures</h2>
+
+      <p>To apply a texture to your loaded model, follow these steps:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Texture Application</div>
+        <div class="example-card-body">
+          <pre><code>auto luffy_t = Raftel::Texture::loadTexture("../assets/textures/luffytextrial.png");
+myModel.GetMaterialByIndex(0)->setAlbedo(luffy_t);
+myModel.setupMesh();</code></pre>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <h3>Materials and Submeshes</h3>
+        <p>A 3D model may contain multiple submeshes, each with its own material. You can access these materials using
+          their index. For a model with a single mesh, you can access its material using index 0.</p>
+        <p>After modifying any material properties, always call <code>setupMesh()</code> to apply the changes.</p>
+      </div>
+
+      <h2>Setting Up Shaders</h2>
+
+      <p>Shaders are essential for rendering meshes with the desired visual effects. Let's set up a basic shader
+        program:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Shader Setup</div>
+        <div class="example-card-body">
+          <pre><code>Raftel::ShaderProgram shaderProgram;
+if (!shaderProgram.load("../assets/shaders/test.vs", "../assets/shaders/test.fs")) {
+  std::cerr << "Error loading shaders.\n";
+  return -1;
+}
+shaderProgram.use();</code></pre>
+        </div>
+      </div>
+
+      <p>The shader program requires both a vertex shader (.vs) and a fragment shader (.fs) file. These files contain
+        GLSL code that defines how vertices are transformed and how fragments (pixels) are colored.</p>
+
+      <h2>Creating the Render Loop</h2>
+
+      <p>Now that we have our model, texture, and shaders set up, let's create a render loop to display our 3D mesh:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Render Loop</div>
+        <div class="example-card-body">
+          <pre><code>while (!windowOpt->ShouldClose()) {
+  windowOpt->clear();
+  myModel.setUniforms(shaderProgram.GetProgramID());
+  myModel.draw(shaderProgram);
+  windowOpt->swapBuffers();
+}</code></pre>
+        </div>
+      </div>
+
+      <p>The render loop performs the following steps in each iteration:</p>
+      <ol>
+        <li>Clears the window's color and depth buffers</li>
+        <li>Sets the uniform variables for the shader program</li>
+        <li>Draws the model using the active shader program</li>
+        <li>Swaps the front and back buffers to display the rendered frame</li>
+      </ol>
+
+      <h2>Creating Primitive Meshes</h2>
+
+      <p>In addition to loading 3D models from files, Raftel Engine provides a <code>MeshFactory</code> to easily create
+        common primitive shapes:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Primitive Creation</div>
+        <div class="example-card-body">
+          <pre><code>// Create various primitive shapes
+auto sphere = Raftel::MeshFactory::createSphere(30.0f, 50);
+auto cube = Raftel::MeshFactory::createCube(30.0f);
+auto plane = Raftel::MeshFactory::createPlane(10.0f, 20.0f);
+auto terrain = Raftel::MeshFactory::createTerrain("../assets/heightmap/heightMap_test3.png", 1.0f, 200.0f, true);</code></pre>
+        </div>
+      </div>
+
+      <div class="grid mb-3">
+        <div class="grid-item">
+          <h3>Sphere</h3>
+          <p><code>createSphere(float radius, int segments)</code><br>Creates a sphere with the specified radius and
+            resolution (segments).</p>
+        </div>
+
+        <div class="grid-item">
+          <h3>Cube</h3>
+          <p><code>createCube(float size)</code><br>Creates a cube with equal width, height, and depth dimensions.</p>
+        </div>
+
+        <div class="grid-item">
+          <h3>Plane</h3>
+          <p><code>createPlane(float width, float height)</code><br>Creates a flat rectangular surface with the
+            specified dimensions.</p>
+        </div>
+
+        <div class="grid-item">
+          <h3>Terrain</h3>
+          <p>
+            <code>createTerrain(string heightmapPath, float heightScale, float terrainSize, bool smoothing)</code><br>Creates
+            a terrain mesh from a heightmap image.</p>
+        </div>
+                <div class="grid-item">
+          <h3>Cone</h3>
+          <p>
+            <code>createCone(float radius, float height, int segments);</code><br>Creates
+             a cone mesh with the specific radius for base, height and resolution (segments).
+            </p>
+         </div>
+      </div>
+
+      <div>
+        <img src="../img/cone.png" alt="Rendered 3D Mesh" style="width:50%; height:auto; display:block; margin:0 auto;">
+      </div>
+      <h2>Rendering Multiple Meshes</h2>
+
+      <p>You can render multiple meshes in the same scene by drawing each one in sequence:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Multi-Mesh Rendering</div>
+        <div class="example-card-body">
+          <pre><code>// Render loop with multiple meshes
+while (!windowOpt->ShouldClose()) {
+  windowOpt->clear();
+  
+  // Draw each mesh
+  sphere->setUniforms(shaderProgram.GetProgramID());
+  sphere->draw(shaderProgram);
+  
+  cube->setUniforms(shaderProgram.GetProgramID());
+  cube->draw(shaderProgram);
+  
+  plane->setUniforms(shaderProgram.GetProgramID());
+  plane->draw(shaderProgram);
+  
+  terrain->setUniforms(shaderProgram.GetProgramID());
+  terrain->draw(shaderProgram);
+  
+  windowOpt->swapBuffers();
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <h3>Optimizing Multiple Mesh Rendering</h3>
+        <p>For better performance when rendering many meshes of the same type, consider using instanced rendering. This
+          allows you to draw multiple instances of the same mesh with a single draw call.</p>
+        <p>Check the <a href="../../doxygen/html/class_raftel_1_1_mesh.html"target="_blank">Instanced Rendering</a>
+          section in the API documentation for more details.</p>
+      </div>
+
+      <h2>Complete Example</h2>
+
+      <p>Here's a complete example that demonstrates loading and rendering a 3D mesh with texture:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Complete Mesh Example</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/window.hpp"
+#include "raftel/mesh.hpp"
+#include "raftel/shader.hpp"
+#include "raftel/texture.hpp"
+
+int main() {
+  // Initialize window system
+  auto windowSystemOpt = Raftel::WindowSystem::make();
+  auto windowOpt = Raftel::Window::make("Mesh Example", *windowSystemOpt);
+  
+  if (!windowOpt) {
+    std::cerr << "Error creating window.\n";
+    return -1;
+  }
+  
+  windowOpt->MakeContextCurrent();
+  
+  // Load a 3D model
+  Raftel::Mesh myModel;
+  if (!myModel.loadMesh("../assets/obj/luffytrial.obj")) {
+    std::cerr << "Error loading the mesh.\n";
+    return -1;
+  }
+  
+  // Apply texture
+  auto texture = Raftel::Texture::loadTexture("../assets/textures/luffytextrial.png");
+  myModel.GetMaterialByIndex(0)->setAlbedo(texture);
+  myModel.setupMesh();
+  
+  // Setup shaders
+  Raftel::ShaderProgram shaderProgram;
+  if (!shaderProgram.load("../assets/shaders/test.vs", "../assets/shaders/test.fs")) {
+    std::cerr << "Error loading shaders.\n";
+    return -1;
+  }
+  
+  // Main render loop
+  while (!windowOpt->ShouldClose()) {
+    windowOpt->clear();
+    shaderProgram.use();
+    myModel.setUniforms(shaderProgram.GetProgramID());
+    myModel.draw(shaderProgram);
+    windowOpt->swapBuffers();
+  }
+  
+  return 0;
+}</code></pre>
+        </div>
+      </div>
+
+      <h2>Next Steps</h2>
+
+      <p>Now that you've learned to load and render 3D meshes, you might want to explore the following topics:</p>
+
+      <div class="grid">
+        <div class="grid-item">
+          <h3><a href="#">Implementing Lighting</a></h3>
+          <p>Learn how to add dynamic lighting to your scenes for more realistic rendering.</p>
+        </div>
+
+        <div class="grid-item">
+          <h3><a href="#">Advanced Materials</a></h3>
+          <p>Discover how to create PBR (Physically Based Rendering) materials for realistic surfaces.</p>
+        </div>
+
+        <div class="grid-item">
+          <h3><a href="#">Scene Management</a></h3>
+          <p>Organize your 3D objects in a scene graph for easier manipulation and rendering.</p>
+        </div>
+
+        <div class="grid-item">
+          <h3><a href="#">Animation</a></h3>
+          <p>Implement skeletal animation to bring your 3D characters to life.</p>
+        </div>
+      </div>
+
+      <div class="tutorial-nav">
+        <a href="tutorialinput.html" class="prev">Previous: Input Handling</a>
+        <a href="#" class="next">Next: Lighting & Materials</a>
+      </div>
+
+      <div class="api-reference">
+        <p>For complete API details, see the <a href="../../doxygen/html/class_raftel_1_1_mesh.html"
+            target="_blank">Mesh Class Reference</a> in the API documentation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-links">
+      <a href="../about.html">About</a>
+      <a href="../extra/license.html">License</a>
+      <a href="../contact.html">Contact</a>
+      <a href="../privacy.html">Privacy</a>
+    </div>
+    <div class="footer-copyright">
+      &copy; 2025 Raftel Engine. All rights reserved.
+    </div>
+  </div>
+
+  <script src="../script.js"></script>
+</body>
+
+</html>

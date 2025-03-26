@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Documentation for Raftel Engine's Input System for keyboard and mouse interaction.">
+    <meta name="keywords" content="Raftel Engine, Game Development, Graphics Engine, Input System, Keyboard, Mouse">
+    <meta name="author" content="Your Name or Company">
+    <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Input System - Raftel Engine</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <!-- Header fijo -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+            <span>Raftel Engine</span>
+        </div>
+        <div class="header-search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <input type="text" placeholder="Search documentation...">
+        </div>
+        <div class="header-links">
+            <a href="../index.html">Home</a>
+            <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+            <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+            <a href="#community">Community</a>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Sidebar izquierdo -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-category">Getting Started</div>
+                <a href="../index.html" class="sidebar-item">Introduction</a>
+                <a href="../started/installation.html" class="sidebar-item">Installation</a>
+                <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Tutorials</div>
+                <a href="../tutorial/tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+                <a href="../tutorial/tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+                <a href="../tutorial/tutorialinput.html" class="sidebar-item">Handling Input</a>
+                <a href="../tutorial/tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+                <a href="../tutorial/tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+                <a href="../tutorial/tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="../tutorial/tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+                <a href="../tutorial/tutorialecs.html" class="sidebar-item">Entity Component System</a>
+                <a href="../tutorial/tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Core Components</div>
+                <a href="windowsystem.html" class="sidebar-item">Window System</a>
+                <a href="shader.html" class="sidebar-item">Shaders</a>
+                <a href="mesh.html" class="sidebar-item">Meshes</a>
+                <a href="material.html" class="sidebar-item">Materials</a>
+                <a href="texture.html" class="sidebar-item">Textures</a>
+                <a href="lighting.html" class="sidebar-item">Lighting</a>
+                <a href="input.html" class="sidebar-item active">Input</a>
+                <a href="jobsystem.html" class="sidebar-item">JobSystem</a>
+                <a href="rendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="ecs.html" class="sidebar-item">ECS</a>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content">
+            <h1>Input System</h1>
+
+            <p>The Raftel Engine Input System provides a simple and consistent way to handle keyboard and mouse interactions in your application. The system abstracts the complexities of the underlying GLFW input handling and provides a clean interface for your game to respond to user actions.</p>
+
+            <div class="info-box">
+                <h3>Important Note</h3>
+                <p>The Input object is always owned and managed by the Window object. You should never create an Input object directly. Access the input system through your Window instance.</p>
+            </div>
+
+            <h2>Features</h2>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>Keyboard Input</h3>
+                    <p>Detect key presses, releases, and held states with simple function calls. Supports all standard keyboard keys.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Mouse Input</h3>
+                    <p>Track mouse buttons, position, movement deltas, and scroll wheel activity with precision.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Frame-Based Detection</h3>
+                    <p>Distinguish between keys pressed this frame versus keys being held down, allowing for precise input timing.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Scroll Wheel Support</h3>
+                    <p>Capture scroll wheel movement in both x and y axes for advanced navigation or zooming functionality.</p>
+                </div>
+            </div>
+
+            <h2>Accessing Input</h2>
+
+            <p>Since the Input system is managed by the Window, you'll need to access it through your Window instance:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Accessing Input
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Assuming you have a Window instance
+auto windowOpt = Raftel::Window::make("My Application", *windowSystemOpt);
+
+// Check if a key is being pressed
+if (windowOpt->input->isKeyPressed(Raftel::Input::Keys::Key_Space)) {
+    // The space key was just pressed this frame
+}
+
+// Check if a key is held down
+if (windowOpt->input->isKeyDown(Raftel::Input::Keys::Key_W)) {
+    // The W key is being held down
+}
+
+// Access mouse movement
+glm::vec2 mouseDelta = windowOpt->input->getMouseDelta();
+// Use mouseDelta.x and mouseDelta.y for camera rotation or other controls</code></pre>
+                </div>
+            </div>
+
+            <h2>Keyboard Input</h2>
+
+            <p>The Input system provides several methods to check the state of keys:</p>
+
+            <ul>
+                <li><strong>isKeyPressed(Keys key)</strong>: Returns true if the key was pressed this frame (transition from up to down).</li>
+                <li><strong>isKeyRelease(Keys key)</strong>: Returns true if the key was released this frame (transition from down to up).</li>
+                <li><strong>isKeyDown(Keys key)</strong>: Returns true if the key is currently being held down.</li>
+                <li><strong>isKeyUp(Keys key)</strong>: Returns true if the key is currently up (not pressed).</li>
+            </ul>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Keyboard Input Example
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// In your update or game loop function
+void update(float deltaTime) {
+    // Jump only on the frame when space is pressed
+    if (window->input->isKeyPressed(Raftel::Input::Keys::Key_Space)) {
+        player.jump();
+    }
+    
+    // Continuously move forward while W is held down
+    if (window->input->isKeyDown(Raftel::Input::Keys::Key_W)) {
+        player.moveForward(deltaTime);
+    }
+    
+    // Reload weapon when R is released
+    if (window->input->isKeyRelease(Raftel::Input::Keys::Key_R)) {
+        player.reloadWeapon();
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <h2>Mouse Input</h2>
+
+            <p>The Input system also provides methods to handle mouse interaction:</p>
+
+            <ul>
+                <li><strong>isMouseButtonPressed(Buttons button)</strong>: Returns true if the mouse button was pressed this frame.</li>
+                <li><strong>isMouseButtonRelease(Buttons button)</strong>: Returns true if the mouse button was released this frame.</li>
+                <li><strong>isMouseButtonDown(Buttons button)</strong>: Returns true if the mouse button is currently being held down.</li>
+                <li><strong>isMouseButtonUp(Buttons button)</strong>: Returns true if the mouse button is currently up.</li>
+                <li><strong>getMousePosition()</strong>: Returns the current mouse position as a glm::vec2.</li>
+                <li><strong>getMouseDelta()</strong>: Returns the mouse movement since the last frame as a glm::vec2.</li>
+                <li><strong>getScrollDelta()</strong>: Returns the scroll wheel movement since the last frame as a glm::vec2.</li>
+                <li><strong>resetMouseTracking()</strong>: Resets mouse movement tracking (useful when implementing camera controls).</li>
+            </ul>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Mouse Input Example
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Handle camera rotation with mouse movement
+void updateCamera(float deltaTime) {
+    // Get mouse movement
+    glm::vec2 mouseDelta = window->input->getMouseDelta();
+    
+    // Apply rotation to camera
+    camera.yaw += mouseDelta.x * sensitivity;
+    camera.pitch -= mouseDelta.y * sensitivity; // Inverted Y for intuitive control
+    
+    // Clamp pitch to avoid gimbal lock
+    camera.pitch = glm::clamp(camera.pitch, -89.0f, 89.0f);
+    
+    // Update camera vectors
+    camera.updateVectors();
+    
+    // Handle zoom with scroll wheel
+    glm::vec2 scrollDelta = window->input->getScrollDelta();
+    camera.zoom -= scrollDelta.y * zoomSensitivity;
+    camera.zoom = glm::clamp(camera.zoom, 1.0f, 45.0f);
+}</code></pre>
+                </div>
+            </div>
+
+            <h2>Complete Example: First Person Camera</h2>
+
+            <p>Here's a complete example showing how to implement a first-person camera using the Input system:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    First Person Camera Control
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/window.hpp"
+#include "raftel/camera.hpp"
+
+class FirstPersonController {
+public:
+    FirstPersonController(Raftel::Window* window, Raftel::Camera* camera)
+        : window(window), camera(camera) {
+        // Initially reset mouse tracking to avoid jumps
+        window->input->resetMouseTracking();
+    }
+
+    void update(float deltaTime) {
+        // Process keyboard input for movement
+        processKeyboardInput(deltaTime);
+        
+        // Process mouse input for rotation
+        processMouseInput();
+        
+        // Process scroll wheel for zoom
+        processScrollInput();
+    }
+
+private:
+    Raftel::Window* window;
+    Raftel::Camera* camera;
+    
+    // Movement settings
+    float movementSpeed = 5.0f;
+    float mouseSensitivity = 0.1f;
+    float zoomSensitivity = 1.0f;
+    
+    void processKeyboardInput(float deltaTime) {
+        float velocity = movementSpeed * deltaTime;
+        
+        // Forward/backward
+        if (window->input->isKeyDown(Raftel::Input::Keys::Key_W))
+            camera->position += camera->forward * velocity;
+        if (window->input->isKeyDown(Raftel::Input::Keys::Key_S))
+            camera->position -= camera->forward * velocity;
+            
+        // Left/right
+        if (window->input->isKeyDown(Raftel::Input::Keys::Key_A))
+            camera->position -= camera->right * velocity;
+        if (window->input->isKeyDown(Raftel::Input::Keys::Key_D))
+            camera->position += camera->right * velocity;
+            
+        // Up/down
+        if (window->input->isKeyDown(Raftel::Input::Keys::Key_Space))
+            camera->position += camera->up * velocity;
+        if (window->input->isKeyDown(Raftel::Input::Keys::Key_Control))
+            camera->position -= camera->up * velocity;
+    }
+    
+    void processMouseInput() {
+        // Only rotate when right mouse button is held down
+        if (window->input->isMouseButtonDown(Raftel::Input::Buttons::Mouse_Right)) {
+            glm::vec2 mouseDelta = window->input->getMouseDelta();
+            
+            camera->yaw += mouseDelta.x * mouseSensitivity;
+            camera->pitch -= mouseDelta.y * mouseSensitivity;
+            
+            // Clamp pitch to avoid gimbal lock
+            camera->pitch = glm::clamp(camera->pitch, -89.0f, 89.0f);
+            
+            // Update camera vectors
+            camera->updateVectors();
+        }
+    }
+    
+    void processScrollInput() {
+        glm::vec2 scrollDelta = window->input->getScrollDelta();
+        camera->fov -= scrollDelta.y * zoomSensitivity;
+        camera->fov = glm::clamp(camera->fov, 1.0f, 90.0f);
+    }
+};
+
+// In main application
+int main() {
+    // Initialize window and camera
+    auto windowSystemOpt = Raftel::WindowSystem::make();
+    auto windowOpt = Raftel::Window::make("First Person Demo", *windowSystemOpt);
+    
+    auto camera = std::make_unique<Raftel::Camera>();
+    auto controller = std::make_unique<FirstPersonController>(windowOpt.get(), camera.get());
+    
+    // Main loop
+    float lastFrame = 0.0f;
+    while (!windowOpt->ShouldClose()) {
+        float currentFrame = glfwGetTime();
+        float deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        
+        // Update controller
+        controller->update(deltaTime);
+        
+        // Clear screen and render scene...
+        
+        // Important: update keys at the end of each frame
+        windowOpt->input->updateKeys();
+        
+        windowOpt->swapBuffers();
+    }
+    
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h3>Best Practices</h3>
+                <ul>
+                    <li>Always call <code>updateKeys()</code> at the end of each frame to ensure proper key state tracking.</li>
+                    <li>For camera controls, use <code>resetMouseTracking()</code> when initializing or toggling camera modes to avoid sudden jumps.</li>
+                    <li>Separate input handling from game logic for better maintainability.</li>
+                    <li>For smooth movement, always multiply your velocities by deltaTime.</li>
+                </ul>
+            </div>
+
+            <h2>Keyboard Keys and Mouse Buttons</h2>
+
+            <p>The Input system defines enumerations for supported keyboard keys and mouse buttons. These enumerations are used as parameters in the various input detection methods.</p>
+
+            <h3>Keyboard Keys Enumeration</h3>
+            
+            <div class="example-card">
+                <div class="example-card-header">
+                    Input::Keys Enumeration
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// All supported keyboard keys
+enum class Keys {
+    // Alphabet
+    Key_A, Key_B, Key_C, Key_D, Key_E, Key_F, Key_G, Key_H, Key_I, Key_J, Key_K, Key_L, Key_M,
+    Key_N, Key_O, Key_P, Key_Q, Key_R, Key_S, Key_T, Key_U, Key_V, Key_W, Key_X, Key_Y, Key_Z,
+
+    // Numbers (top row)
+    Key_0, Key_1, Key_2, Key_3, Key_4, Key_5, Key_6, Key_7, Key_8, Key_9,
+
+    // Function keys
+    Key_F1, Key_F2, Key_F3, Key_F4, Key_F5, Key_F6, Key_F7, Key_F8, Key_F9, Key_F10, Key_F11, Key_F12,
+    Key_F13, Key_F14, Key_F15, Key_F16, Key_F17, Key_F18, Key_F19, Key_F20, Key_F21, Key_F22, Key_F23, Key_F24, Key_F25,
+
+    // Numpad
+    Key_KP_0, Key_KP_1, Key_KP_2, Key_KP_3, Key_KP_4, Key_KP_5, Key_KP_6, Key_KP_7, Key_KP_8, Key_KP_9,
+    Key_KP_Decimal, Key_KP_Divide, Key_KP_Multiply, Key_KP_Subtract, Key_KP_Add, Key_KP_Enter, Key_KP_Equal,
+
+    // Arrow keys
+    Key_Left, Key_Right, Key_Up, Key_Down,
+
+    // Special keys
+    Key_Space, Key_Escape, Key_Enter, Key_Tab, Key_Backspace, Key_Insert, Key_Delete,
+    Key_Page_Up, Key_Page_Down, Key_Home, Key_End,
+    Key_Caps_Lock, Key_Scroll_Lock, Key_Num_Lock, Key_Print_Screen, Key_Pause,
+
+    // Modifier keys
+    Key_Left_Shift, Key_Left_Control, Key_Left_Alt, Key_Left_Super,
+    Key_Right_Shift, Key_Right_Control, Key_Right_Alt, Key_Right_Super,
+
+    // Punctuation and symbols
+    Key_Apostrophe,      // '
+    Key_Comma,           // ,
+    Key_Minus,           // -
+    Key_Period,          // .
+    Key_Slash,           // /
+    Key_Semicolon,       // ;
+    Key_Equal,           // =
+    Key_Left_Bracket,    // [
+    Key_Backslash,       // \
+    Key_Right_Bracket,   // ]
+    Key_Grave_Accent,    // `
+
+    Key_Count            // Number of keys
+};</code></pre>
+                </div>
+            </div>
+
+            <h3>Mouse Buttons Enumeration</h3>
+            
+            <div class="example-card">
+                <div class="example-card-header">
+                    Input::Buttons Enumeration
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// All supported mouse buttons
+enum class Buttons {
+    Mouse_Left,   // Left mouse button
+    Mouse_Right,  // Right mouse button
+    Mouse_Middle, // Middle mouse button (scroll wheel click)
+
+    Button_Count  // Number of buttons
+};</code></pre>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h3>Key Categories</h3>
+                <p>The keyboard keys are organized into several logical categories:</p>
+                <ul>
+                    <li><strong>Alphabet</strong>: All letter keys (A-Z)</li>
+                    <li><strong>Numbers</strong>: Number keys in the top row (0-9)</li>
+                    <li><strong>Function Keys</strong>: All function keys (F1-F25)</li>
+                    <li><strong>Numpad</strong>: Number pad keys and operators</li>
+                    <li><strong>Arrow Keys</strong>: Directional arrow keys</li>
+                    <li><strong>Special Keys</strong>: Common special keys like Space, Enter, Tab, etc.</li>
+                    <li><strong>Modifier Keys</strong>: Shift, Control, Alt, Super (Windows/Command)</li>
+                    <li><strong>Punctuation and Symbols</strong>: All available symbols and punctuation marks</li>
+                    <li><strong>Non-US Keys</strong>: Additional keys found on non-US keyboards</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <h3>Usage Example</h3>
+                <p>Use these enumerations with the input methods:</p>
+                <pre><code>// Check if the W key is pressed
+if (window->input->isKeyPressed(Raftel::Input::Keys::Key_W)) {
+    // W key action
+}
+
+// Check if the left mouse button is down
+if (window->input->isMouseButtonDown(Raftel::Input::Buttons::Mouse_Left)) {
+    // Left mouse button action
+}
+
+// Check for more complex key combinations
+if (window->input->isKeyDown(Raftel::Input::Keys::Key_Left_Control) && 
+    window->input->isKeyPressed(Raftel::Input::Keys::Key_S)) {
+    // Ctrl+S save action
+}
+
+// Use numpad for camera movements
+if (window->input->isKeyDown(Raftel::Input::Keys::Key_KP_8)) {
+    camera.moveForward(deltaTime);
+} else if (window->input->isKeyDown(Raftel::Input::Keys::Key_KP_2)) {
+    camera.moveBackward(deltaTime);
+}</code></pre>
+            </div>
+
+            <h2>API Reference</h2>
+
+            <p>For a complete reference of the Input class API, check out the <a href="../../doxygen/html/classRaftel_1_1Input.html" target="_blank">Doxygen Documentation</a>.</p>
+
+            <div class="tutorial-nav">
+                <a href="texture.html" class="prev">Textures</a>
+                <a href="lighting.html" class="next">Lighting</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../extra/license.html">License</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy.html">Privacy</a>
+        </div>
+        <div class="footer-copyright">
+            &copy; 2025 Raftel Engine. All rights reserved.
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Documentation for the Lighting system in Raftel Engine.">
+    <meta name="keywords" content="Raftel Engine, Game Development, Graphics Engine, 3D Games, Lighting, Shadows">
+    <meta name="author" content="Your Name or Company">
+    <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Lighting System - Raftel Engine</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <!-- Header fijo -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+            <span>Raftel Engine</span>
+        </div>
+        <div class="header-search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <input type="text" placeholder="Search documentation...">
+        </div>
+        <div class="header-links">
+            <a href="../index.html">Home</a>
+            <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+            <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+            <a href="#community">Community</a>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Sidebar izquierdo -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-category">Getting Started</div>
+                <a href="../index.html" class="sidebar-item">Introduction</a>
+                <a href="../started/installation.html" class="sidebar-item">Installation</a>
+                <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Tutorials</div>
+                <a href="../tutorial/tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+                <a href="../tutorial/tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+                <a href="../tutorial/tutorialinput.html" class="sidebar-item">Handling Input</a>
+                <a href="../tutorial/tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+                <a href="../tutorial/tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+                <a href="../tutorial/tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="../tutorial/tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+                <a href="../tutorial/tutorialecs.html" class="sidebar-item">Entity Component System</a>
+                <a href="../tutorial/tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Core Components</div>
+                <a href="../core/windowsystem.html" class="sidebar-item">Window System</a>
+                <a href="../core/shader.html" class="sidebar-item">Shaders</a>
+                <a href="../core/mesh.html" class="sidebar-item">Meshes</a>
+                <a href="../core/material.html" class="sidebar-item">Materials</a>
+                <a href="../core/texture.html" class="sidebar-item">Textures</a>
+                <a href="../core/lighting.html" class="sidebar-item active">Lighting</a>
+                <a href="../core/input.html" class="sidebar-item">Input</a>
+                <a href="../core/jobsystem.html" class="sidebar-item">JobSystem</a>
+                <a href="../core/rendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="../core/ecs.html" class="sidebar-item">ECS</a>
+            </div>
+
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content">
+            <h1>Lighting System</h1>
+
+            <p>The Lighting System in Raftel Engine provides a robust framework for illuminating your 3D scenes with various types of lights, including directional, point, spot, and ambient lights. The system also supports shadow mapping for creating realistic lighting effects.</p>
+
+            <div class="example-viewer">
+                <div class="example-viewer-header">
+                    <div class="example-viewer-title">Lighting Demo</div>
+                    <div class="example-viewer-actions">
+                        <button>View Code</button>
+                        <button>Edit</button>
+                        <button>Full Screen</button>
+                    </div>
+                </div>
+                <div class="example-viewer-content">
+                    <img src="../img/lighting_demo.jpg" alt="Lighting Demo" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+            </div>
+
+            <h2>Light Types</h2>
+
+            <p>Raftel Engine supports multiple light types, each with specific behaviors and use cases:</p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>Directional Light</h3>
+                    <p>Simulates light from a distant source like the sun. All light rays are parallel and have the same direction, casting shadows in the same direction regardless of object position.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Point Light</h3>
+                    <p>Emits light in all directions from a specific point in space. Ideal for light bulbs, torches, or other localized light sources with a defined range.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Spot Light</h3>
+                    <p>Creates a cone of light from a specific position and direction. Features inner and outer cone angles to control the light's falloff and focus.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Ambient Light</h3>
+                    <p>Provides a base level of illumination to all objects in the scene regardless of their position or orientation. Used to simulate indirect lighting.</p>
+                </div>
+            </div>
+
+            <h2>Light Component</h2>
+
+            <p>In Raftel Engine, lights are managed as components in the Entity Component System (ECS). The <code>LightComponent</code> is the primary class that handles all lighting functionality.</p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Creating a Light
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/ecs.hpp"
+#include "raftel/components.hpp"
+
+// Create an entity
+Raftel::EntityManager entityManager;
+auto entity = entityManager.CreateEntity();
+
+// Add a transform component
+Raftel::TransformComponent transform(
+    glm::vec3(0.0f, 10.0f, 0.0f),   // position
+    glm::vec3(0.0f, 0.0f, 0.0f),    // rotation
+    glm::vec3(1.0f, 1.0f, 1.0f)     // scale
+);
+entity.addTransformComp(std::move(transform));
+
+// Add a directional light component
+Raftel::LightComponent directionalLight(
+    Raftel::LightComponent::LightType::DIRECTIONAL, // light type
+    glm::vec3(1.0f, 1.0f, 1.0f),    // color (white)
+    1.5f,                           // intensity
+    100.0f,                         // range
+    0.0f,                           // inner cone (not used for directional)
+    0.0f,                           // outer cone (not used for directional)
+    glm::ivec2(1024, 1024)          // shadow map resolution
+);
+entity.addLightComp(std::move(directionalLight));</code></pre>
+                </div>
+            </div>
+
+            <h2>Light Properties</h2>
+
+            <p>Each light type has specific properties that can be configured to achieve the desired lighting effect:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Description</th>
+                        <th>Applicable To</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>color</td>
+                        <td>RGB color of the light</td>
+                        <td>All light types</td>
+                    </tr>
+                    <tr>
+                        <td>intensity</td>
+                        <td>Brightness multiplier for the light</td>
+                        <td>All light types</td>
+                    </tr>
+                    <tr>
+                        <td>range</td>
+                        <td>Maximum distance the light affects</td>
+                        <td>Point, Spot</td>
+                    </tr>
+                    <tr>
+                        <td>innerCone</td>
+                        <td>Inner angle of the spotlight cone in degrees</td>
+                        <td>Spot</td>
+                    </tr>
+                    <tr>
+                        <td>outerCone</td>
+                        <td>Outer angle of the spotlight cone in degrees</td>
+                        <td>Spot</td>
+                    </tr>
+                    <tr>
+                        <td>near</td>
+                        <td>Near plane distance for shadow mapping</td>
+                        <td>All lights with shadows</td>
+                    </tr>
+                    <tr>
+                        <td>far</td>
+                        <td>Far plane distance for shadow mapping</td>
+                        <td>All lights with shadows</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Shadow Mapping</h2>
+
+            <p>Raftel Engine supports shadow mapping for creating realistic shadows. When a light is created, you can enable shadow mapping by specifying the shadow map resolution.</p>
+
+            <div class="info-box">
+                <h3>Shadow Map Resolution</h3>
+                <p>Higher shadow map resolutions provide more detailed shadows but require more GPU memory and processing power. For most applications, a resolution of 1024x1024 or 2048x2048 provides a good balance between quality and performance.</p>
+            </div>
+
+            <p>Shadow mapping works differently depending on the light type:</p>
+
+            <ul>
+                <li><strong>Directional Light:</strong> Uses an orthographic projection and a single depth map for the entire visible scene.</li>
+                <li><strong>Spot Light:</strong> Uses a perspective projection and a single depth map from the light's point of view.</li>
+                <li><strong>Point Light:</strong> Uses a cubemap with six faces to capture depth information in all directions from the light source.</li>
+            </ul>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Enabling Shadow Rendering
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// In your rendering loop
+void YourApplication::render() {
+    // Update the camera
+    camera.update();
+
+    // Render the scene with shadows
+    Raftel::RenderSystem::UpdateRenderSystem(
+        entityManager,
+        camera,
+        glm::ivec2(windowWidth, windowHeight),
+        true  // Enable shadow rendering
+    );
+}</code></pre>
+                </div>
+            </div>
+
+            <h2>Ambient Light</h2>
+
+            <p>Unlike directional, point, and spot lights that are added as components to entities, ambient light is set globally through the <code>Engine</code> singleton:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Configuring Ambient Light
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/engine.hpp"
+
+// Enable ambient light
+Raftel::Engine::Instance().has_ambient_light = true;
+
+// Set ambient light color (RGB values between 0.0 and 1.0)
+Raftel::Engine::Instance().ambient_light = glm::vec3(0.1f, 0.1f, 0.15f);  // Slight blue tint</code></pre>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h3>Ambient Light Intensity</h3>
+                <p>Keep ambient light values relatively low (typically around 0.1 to 0.2) to maintain contrast and prevent your scene from looking flat. Ambient light should merely provide some illumination in areas not directly lit by other light sources.</p>
+            </div>
+
+            <h2>Light Blending</h2>
+
+            <p>Raftel Engine supports multiple lights affecting the same objects through an additive blending mechanism. This is handled automatically by the <code>RenderSystem</code>:</p>
+
+            <ol>
+                <li>The first light is rendered normally, overwriting the framebuffer.</li>
+                <li>Subsequent lights are blended additively, enhancing the illumination where multiple lights overlap.</li>
+                <li>Depth writing is disabled after the first light to prevent occlusion issues.</li>
+            </ol>
+
+            <h2>Performance Considerations</h2>
+
+            <p>Lighting and shadows can be computationally expensive. Here are some tips to optimize performance:</p>
+
+            <ul>
+                <li>Use the minimum number of lights necessary for your scene.</li>
+                <li>For distant or less important lights, disable shadow mapping.</li>
+                <li>Adjust the shadow map resolution based on the importance of the light.</li>
+                <li>Use the appropriate light types - point lights with shadows are particularly expensive as they require six shadow map passes.</li>
+                <li>Limit the range of point and spot lights to affect only necessary parts of the scene.</li>
+            </ul>
+
+            <div class="warning-box">
+                <h3>Shadow Rendering Toggle</h3>
+                <p>If your application experiences performance issues, you can disable shadow rendering by setting the <code>shadow</code> parameter to <code>false</code> when calling <code>UpdateRenderSystem</code>. This allows you to implement quality settings or dynamic LOD systems.</p>
+            </div>
+
+            <h2>Complete Example</h2>
+
+            <p>The following example demonstrates setting up a scene with multiple light types:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Complete Lighting Setup Example
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/ecs.hpp"
+#include "raftel/components.hpp"
+#include "raftel/engine.hpp"
+#include "raftel/camera.hpp"
+
+// Set up global ambient light
+void setupAmbientLight() {
+    auto& engine = Raftel::Engine::Instance();
+    engine.has_ambient_light = true;
+    engine.ambient_light = glm::vec3(0.1f, 0.1f, 0.12f);  // Slight blue tint
+}
+
+// Create a directional light (like the sun)
+Raftel::Entity createDirectionalLight(Raftel::EntityManager& entityManager) {
+    auto entity = entityManager.CreateEntity();
+    
+    // Position and orient the light
+    Raftel::TransformComponent transform(
+        glm::vec3(0.0f, 50.0f, 0.0f),  // High position
+        glm::vec3(-45.0f, 30.0f, 0.0f), // Angled downward
+        glm::vec3(1.0f, 1.0f, 1.0f)
+    );
+    entity.addTransformComp(std::move(transform));
+    
+    // Create the light component
+    Raftel::LightComponent light(
+        Raftel::LightComponent::LightType::DIRECTIONAL,
+        glm::vec3(1.0f, 0.95f, 0.8f),  // Warm sunlight color
+        1.2f,                         // Intensity
+        0.0f,                         // Range (not used)
+        0.0f,                         // Inner cone (not used)
+        0.0f,                         // Outer cone (not used)
+        glm::ivec2(2048, 2048)        // Shadow resolution
+    );
+    entity.addLightComp(std::move(light));
+    
+    return entity;
+}
+
+// Create a point light (like a lamp)
+Raftel::Entity createPointLight(Raftel::EntityManager& entityManager, 
+                              const glm::vec3& position,
+                              const glm::vec3& color) {
+    auto entity = entityManager.CreateEntity();
+    
+    // Position the light
+    Raftel::TransformComponent transform(
+        position,
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f)
+    );
+    entity.addTransformComp(std::move(transform));
+    
+    // Create the light component
+    Raftel::LightComponent light(
+        Raftel::LightComponent::LightType::POINT,
+        color,
+        2.0f,                         // Intensity
+        15.0f,                        // Range
+        0.0f,                         // Inner cone (not used)
+        0.0f,                         // Outer cone (not used)
+        glm::ivec2(1024, 1024)        // Shadow resolution
+    );
+    entity.addLightComp(std::move(light));
+    
+    return entity;
+}
+
+// Create a spotlight (like a flashlight)
+Raftel::Entity createSpotlight(Raftel::EntityManager& entityManager,
+                             const glm::vec3& position,
+                             const glm::vec3& direction) {
+    auto entity = entityManager.CreateEntity();
+    
+    // Position and orient the light
+    Raftel::TransformComponent transform(
+        position,
+        direction,
+        glm::vec3(1.0f, 1.0f, 1.0f)
+    );
+    entity.addTransformComp(std::move(transform));
+    
+    // Create the light component
+    Raftel::LightComponent light(
+        Raftel::LightComponent::LightType::SPOT,
+        glm::vec3(1.0f, 1.0f, 0.9f),  // Slightly yellow
+        2.5f,                         // Intensity
+        30.0f,                        // Range
+        15.0f,                        // Inner cone angle
+        30.0f,                        // Outer cone angle
+        glm::ivec2(1024, 1024)        // Shadow resolution
+    );
+    entity.addLightComp(std::move(light));
+    
+    return entity;
+}
+
+// In your application's initialization
+void initializeScene() {
+    Raftel::EntityManager entityManager;
+    
+    // Set up ambient light
+    setupAmbientLight();
+    
+    // Create directional light (sun)
+    auto sunLight = createDirectionalLight(entityManager);
+    
+    // Create some point lights
+    auto redLight = createPointLight(entityManager, 
+        glm::vec3(-5.0f, 1.0f, 2.0f), 
+        glm::vec3(1.0f, 0.2f, 0.2f));  // Red
+        
+    auto blueLight = createPointLight(entityManager, 
+        glm::vec3(5.0f, 1.0f, -2.0f), 
+        glm::vec3(0.2f, 0.4f, 1.0f));  // Blue
+    
+    // Create a spotlight
+    auto spotlight = createSpotlight(entityManager,
+        glm::vec3(0.0f, 5.0f, 0.0f),
+        glm::vec3(-45.0f, 0.0f, 0.0f));  // Pointing downward
+    
+    // Create a camera
+    
+    // In your render loop
+    while (isRunning) {
+        // Update entities, handle input, etc.
+        
+        // Render the scene with shadows
+        Raftel::RenderSystem::UpdateRenderSystem(
+            entityManager,
+            ...,
+            ...,
+            true  // Enable shadows
+        );
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <h2>Next Steps</h2>
+
+            <p>Now that you understand how to work with the lighting system in Raftel Engine, you might want to explore:</p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3><a href="../tutorial/tutoriallighting.html">Lighting Tutorial</a></h3>
+                    <p>A step-by-step guide to creating and configuring lights in your scenes.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="../core/material.html">Materials</a></h3>
+                    <p>Learn how materials interact with lights in Raftel Engine.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="../core/shader.html">Shaders</a></h3>
+                    <p>Understand how to create custom shaders that work with the lighting system.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="../core/rendersystem.html">Render System</a></h3>
+                    <p>Dive deeper into the rendering pipeline and how it handles lighting.</p>
+                </div>
+            </div>
+
+            <div class="tutorial-nav">
+                <a href="../core/texture.html" class="prev">Textures</a>
+                <a href="../core/input.html" class="next">Input</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../extra/license.html">License</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy.html">Privacy</a>
+        </div>
+        <div class="footer-copyright">
+            &copy; 2025 Raftel Engine. All rights reserved.
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to implement and control cameras in Raftel Engine for navigating 3D scenes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <title>Camera Controls - Raftel Engine</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+</head>
+<body>
+  <!-- Header fijo -->
+  <div class="header">
+    <div class="header-logo">
+      <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+      <span>Raftel Engine</span>
+    </div>
+    <div class="header-search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+      </svg>
+      <input type="text" placeholder="Search documentation...">
+    </div>
+    <div class="header-links">
+      <a href="../index.html">Home</a>
+      <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+      <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+      <a href="../index.html#community">Community</a>
+    </div>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="container">
+    <!-- Sidebar izquierdo -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-category">Getting Started</div>
+        <a href="../index.html" class="sidebar-item">Introduction</a>
+        <a href="../started/installation.html" class="sidebar-item">Installation</a>
+        <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-category">Tutorials</div>
+        <a href="tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+        <a href="tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+        <a href="tutorialinput.html" class="sidebar-item">Handling Input</a>
+        <a href="tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+        <a href="tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+        <a href="tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="tutorialcamera.html" class="sidebar-item active">Camera Controls</a>
+        <a href="tutorialecs.html" class="sidebar-item">Entity Component System</a>
+        <a href="tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-category">Core Components</div>
+        <a href="../core/windowsystem.html" class="sidebar-item">Window System</a>
+        <a href="../core/shader.html" class="sidebar-item">Shaders</a>
+        <a href="../core/mesh.html" class="sidebar-item">Meshes</a>
+        <a href="../core/material.html" class="sidebar-item">Materials</a>
+        <a href="../core/texture.html" class="sidebar-item">Textures</a>
+        <a href="../core/lighting.html" class="sidebar-item">Lighting</a>
+        <a href="../core/input.html" class="sidebar-item">Input</a>
+        <a href="../core/jobsystem.html" class="sidebar-item">JobSystem</a>
+        <a href="../core/rendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="../core/ecs.html" class="sidebar-item">ECS</a>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+      <h1>Camera Controls in Raftel Engine</h1>
+      
+      <p>This tutorial walks you through creating and controlling cameras in Raftel Engine, allowing you to navigate and view your 3D scenes from any perspective.</p>
+
+      <div class="tutorial-nav">
+        <a href="tutorialrendersystem.html" class="prev">Previous: RenderSystem</a>
+        <a href="tutorialecs.html" class="next">Next: Entity Component System</a>
+      </div>
+      
+      <h2>What is a Camera?</h2>
+      
+      <p>In a 3D graphics application, a camera acts as the viewer's eyes into the virtual world. It defines:</p>
+      
+      <ul>
+        <li>The position from which the scene is viewed</li>
+        <li>The direction the camera is looking</li>
+        <li>How wide an area the camera can see (field of view)</li>
+        <li>How perspective is applied to distant objects</li>
+      </ul>
+      
+      <div class="info-box">
+        <h3>Matrix and Transforms</h3>
+        <p>A camera in Raftel Engine uses two primary matrices:</p>
+        <ul>
+          <li><strong>View Matrix:</strong> Transforms world coordinates into camera space (what the camera sees)</li>
+          <li><strong>Projection Matrix:</strong> Transforms camera space into clip space (how perspective is applied)</li>
+        </ul>
+      </div>
+      
+      <h2>Creating a Camera</h2>
+      
+      <p>To use a camera in your Raftel Engine application, start by creating a Camera instance:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Creating a Camera</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/window.hpp"
+#include "raftel/camera.hpp"
+
+int main() {
+  auto windowSystemOpt = Raftel::WindowSystem::make();
+  auto windowOpt = Raftel::Window::make("Camera Example", *windowSystemOpt);
+  
+  if (!windowOpt) {
+    std::cerr << "Error creating window.\n";
+    return -1;
+  }
+  
+  windowOpt->MakeContextCurrent();
+  
+  // Create a camera instance
+  Raftel::Camera camera(windowOpt.get());
+  
+  // Main application loop
+  while (!windowOpt->ShouldClose()) {
+    windowOpt->input->updateKeys();
+    windowOpt->clear();
+    
+    // Update the camera (processes movement and updates matrices)
+    camera.Update(windowOpt);
+    
+    // Render your scene...
+    
+    windowOpt->swapBuffers();
+  }
+  
+  return 0;
+}</code></pre>
+        </div>
+      </div>
+      
+      <p>The Camera constructor requires a pointer to a Raftel::Window object, which it uses to access input controls and screen dimensions. The camera is updated each frame to process any movement or rotation input.</p>
+      
+      <h2>Camera States</h2>
+      
+      <p>Raftel Engine cameras can be in one of two states:</p>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>Normal State</h3>
+          <p>In this state, the camera remains static unless explicitly moved through code. This is useful for fixed camera positions or pre-defined camera paths.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Possessed State</h3>
+          <p>In this state, the camera responds to user input for interactive movement. This enables first-person or free-flying camera controls.</p>
+        </div>
+      </div>
+      
+      <p>You can switch between states using the <code>SetState</code> method:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Switching Camera States</div>
+        <div class="example-card-body">
+          <pre><code>// Set to possessed state (user-controlled)
+camera.SetState(Raftel::CameraState::Possessed, windowOpt->window_);
+
+// Set to normal state (static)
+camera.SetState(Raftel::CameraState::Normal, windowOpt->window_);</code></pre>
+        </div>
+      </div>
+      
+      <div class="warning-box">
+        <h3>Cursor Visibility</h3>
+        <p>When in Possessed state, the camera typically hides and captures the cursor to enable mouse-look controls. This is automatically managed by the SetState method.</p>
+      </div>
+      
+      <h2>Interactive Camera Controls</h2>
+      
+      <p>Raftel's Camera class includes built-in controls for interactive navigation when in Possessed state. To enable these controls, call the <code>PresetCamera</code> method in your main loop:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Enabling Camera Controls</div>
+        <div class="example-card-body">
+          <pre><code>while (!windowOpt->ShouldClose()) {
+  windowOpt->input->updateKeys();
+  windowOpt->clear();
+  
+  // Enable preset camera controls
+  camera.PresetCamera(windowOpt.get());
+  
+  // Update camera matrices
+  camera.Update(windowOpt);
+  
+  // Render scene...
+  
+  windowOpt->swapBuffers();
+}</code></pre>
+        </div>
+      </div>
+      
+      <p>The default controls when in Possessed state are:</p>
+      
+      <div class="grid mb-3">
+        <div class="grid-item">
+          <h3>Movement</h3>
+          <ul>
+            <li><strong>W</strong> - Move forward</li>
+            <li><strong>S</strong> - Move backward</li>
+            <li><strong>A</strong> - Strafe left</li>
+            <li><strong>D</strong> - Strafe right</li>
+            <li><strong>Space</strong> - Move up</li>
+            <li><strong>Left Ctrl</strong> - Move down</li>
+          </ul>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Rotation</h3>
+          <ul>
+            <li><strong>Mouse movement</strong> - Look around (yaw and pitch)</li>
+            <li><strong>Q/E</strong> - Roll left/right (if enabled)</li>
+          </ul>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Speed Control</h3>
+          <ul>
+            <li><strong>Left Shift</strong> - Move faster when held</li>
+            <li><strong>Mouse Scroll</strong> - Adjust movement speed</li>
+          </ul>
+        </div>
+        
+        <div class="grid-item">
+          <h3>State Toggle</h3>
+          <ul>
+            <li><strong>Tab</strong> - Toggle between Normal and Possessed states</li>
+            <li><strong>Right Mouse Button</strong> - Also toggles camera state</li>
+          </ul>
+        </div>
+      </div>
+      
+      <h2>Toggling Camera State</h2>
+      
+      <p>You can allow users to toggle between camera states using keyboard keys or mouse buttons:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Toggle Camera State with Key/Button</div>
+        <div class="example-card-body">
+          <pre><code>// Toggle camera state with Tab key
+camera.ToggleState(windowOpt.get(), Raftel::Input::Keys::Key_Tab);
+
+// Toggle camera state with right mouse button
+camera.ToggleState(windowOpt.get(), Raftel::Input::Buttons::Button_Right);</code></pre>
+        </div>
+      </div>
+      
+      <p>These methods check if the specified key/button was pressed this frame and toggle the camera state if so.</p>
+      
+      <h2>Adjusting Camera Movement Speed</h2>
+      
+      <p>You can customize how fast the camera moves through the 3D scene:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Camera Speed Control</div>
+        <div class="example-card-body">
+          <pre><code>// Increase speed while Left Shift is held
+camera.ChangeSpeedWithKey(windowOpt.get(), Raftel::Input::Keys::Key_LeftShift, 10.0f, 3.0f);
+
+// Adjust speed with mouse scroll wheel
+camera.ChangeSpeedWithScroll(windowOpt.get(), 0.1f);</code></pre>
+        </div>
+      </div>
+      
+      <p>The <code>ChangeSpeedWithKey</code> method takes these parameters:</p>
+      <ul>
+        <li>Window pointer</li>
+        <li>Key to check</li>
+        <li>Fast speed (when key is held)</li>
+        <li>Normal speed (when key is not held)</li>
+      </ul>
+      
+      <p>The <code>ChangeSpeedWithScroll</code> method adjusts speed based on mouse scroll input, with the second parameter controlling sensitivity.</p>
+      
+      <h2>Positioning and Orienting the Camera</h2>
+      
+      <p>You can explicitly set the camera's position and rotation:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Camera Positioning</div>
+        <div class="example-card-body">
+          <pre><code>// Set camera position (x, y, z)
+camera.SetPosition(glm::vec3(0.0f, 5.0f, -10.0f));
+
+// Set camera rotation (pitch, yaw, roll) in degrees
+camera.SetRotation(glm::vec3(15.0f, 180.0f, 0.0f));
+
+// Move camera relative to its current position
+camera.Translate(glm::vec3(0.0f, 0.0f, -1.0f));  // Move forward 1 unit
+
+// Rotate camera around an axis
+camera.Rotate(45.0f, glm::vec3(0.0f, 1.0f, 0.0f));  // Rotate 45 degrees around Y axis</code></pre>
+        </div>
+      </div>
+      
+      <h2>Using Camera Matrices in Shaders</h2>
+      
+      <p>The main purpose of a camera is to provide view and projection matrices for rendering. You can apply these matrices to your shaders:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Using Camera Matrices</div>
+        <div class="example-card-body">
+          <pre><code>// Method 1: Get matrices and set them manually
+Raftel::ShaderProgram shaderProgram;
+shaderProgram.use();
+
+// Set view and projection matrices
+glm::mat4 viewMatrix = camera.getViewMatrix();
+glm::mat4 projectionMatrix = camera.getProjectionMatrix();
+
+shaderProgram.setMatrix4("view", viewMatrix);
+shaderProgram.setMatrix4("projection", projectionMatrix);
+
+// Method 2: Let the camera set uniforms automatically
+shaderProgram.use();
+camera.setUniforms(shaderProgram);</code></pre>
+        </div>
+      </div>
+      
+      <div class="tip-box">
+        <h3>Shader Uniform Names</h3>
+        <p>When using <code>camera.setUniforms()</code>, your shader must have uniform variables named <code>view</code> and <code>projection</code> to receive the camera matrices.</p>
+      </div>
+      
+      <h2>Complete Example</h2>
+      
+      <p>Here's a complete example that demonstrates creating and using a camera in a 3D scene:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Complete Camera Example</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/window.hpp"
+#include "raftel/shader.hpp"
+#include "raftel/camera.hpp"
+#include "raftel/mesh.hpp"
+#include "raftel/input.hpp"
+
+int main(void)
+{
+    // Create window system and window
+    auto windowSystemOpt = Raftel::WindowSystem::make();
+    auto windowOpt = Raftel::Window::make("Camera Tutorial", *windowSystemOpt);
+    if (!windowOpt) {
+        std::cerr << "Can't create window\n";
+        return -1;
+    }
+
+    // Make window context
+    windowOpt->MakeContextCurrent();
+
+    // Create camera
+    Raftel::Camera camera(windowOpt.get());
+    
+    // Set initial camera position
+    camera.SetPosition(glm::vec3(0.0f, 5.0f, 10.0f));
+    camera.SetRotation(glm::vec3(-15.0f, 180.0f, 0.0f));
+
+    // Create a mesh to visualize
+    auto cube = Raftel::MeshFactory::createCube(2.0f);
+    auto cube_texture = Raftel::Texture::loadTexture("../assets/textures/cubetex.png");
+    cube->GetMaterialByIndex(0)->setAlbedo(cube_texture);
+    cube->setupMesh();
+    
+    // Load shaders
+    Raftel::ShaderProgram shaderProgram;
+    if (!shaderProgram.load("../assets/shaders/basic.vs", "../assets/shaders/basic.fs")) {
+        std::cerr << "Error loading shaders\n";
+        return -1;
+    }
+
+    // Main loop
+    while (!windowOpt->ShouldClose())
+    {
+        // Update input
+        windowOpt->input->updateKeys();
+        windowOpt->clear();
+
+        // Handle camera state toggle with right mouse button
+        camera.ToggleState(windowOpt.get(), Raftel::Input::Buttons::Button_Right);
+        
+        // Enable sprint with Left Shift
+        camera.ChangeSpeedWithKey(windowOpt.get(), Raftel::Input::Keys::Key_LeftShift, 10.0f, 3.0f);
+        
+        // Allow speed adjustment with mouse wheel
+        camera.ChangeSpeedWithScroll(windowOpt.get(), 0.1f);
+        
+        // Process camera input and update matrices
+        camera.PresetCamera(windowOpt.get());
+        camera.Update(windowOpt);
+
+        // Render the cube
+        shaderProgram.use();
+        
+        // Set camera uniforms
+        camera.setUniforms(shaderProgram);
+        
+        // Set model matrix (position in world space)
+        glm::mat4 model = glm::mat4(1.0f);
+        shaderProgram.setMatrix4("model", model);
+        
+        // Draw the cube
+        cube->draw(shaderProgram);
+
+        // Swap buffers
+        windowOpt->swapBuffers();
+    }
+
+    return 0;
+}</code></pre>
+        </div>
+      </div>
+      
+      <h2>Advanced Camera Techniques</h2>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>Camera Paths</h3>
+          <p>For cinematic sequences, you can animate a camera along a predefined path by updating its position and rotation each frame according to a spline or animation curve.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Follow Camera</h3>
+          <p>To follow a character or object, update the camera position each frame to maintain a relative offset from the target, and orient the camera to look at the target.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Orbit Camera</h3>
+          <p>Create an orbit camera by rotating around a focal point at a fixed distance, useful for object inspection or third-person views.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Multiple Cameras</h3>
+          <p>Create multiple camera instances and switch between them to provide different viewpoints of your scene.</p>
+        </div>
+      </div>
+      
+      <div class="example-card">
+        <div class="example-card-header">Implementing an Orbit Camera</div>
+        <div class="example-card-body">
+          <pre><code>// Orbit camera implementation example
+void updateOrbitCamera(Raftel::Camera& camera, const glm::vec3& targetPosition, float distance, float& yawAngle, float& pitchAngle) {
+    // Update angles based on mouse input
+    yawAngle += mouseX * sensitivity;
+    pitchAngle -= mouseY * sensitivity;
+    
+    // Clamp pitch to avoid gimbal lock
+    pitchAngle = glm::clamp(pitchAngle, -89.0f, 89.0f);
+    
+    // Calculate camera position based on spherical coordinates
+    float x = targetPosition.x + distance * cos(glm::radians(pitchAngle)) * cos(glm::radians(yawAngle));
+    float y = targetPosition.y + distance * sin(glm::radians(pitchAngle));
+    float z = targetPosition.z + distance * cos(glm::radians(pitchAngle)) * sin(glm::radians(yawAngle));
+    
+    // Set camera position and look at target
+    camera.SetPosition(glm::vec3(x, y, z));
+    
+    // Calculate the direction vector
+    glm::vec3 direction = glm::normalize(targetPosition - camera.getPosition());
+    
+    // Convert direction to euler angles
+    float pitch = glm::degrees(asin(direction.y));
+    float yaw = glm::degrees(atan2(direction.z, direction.x));
+    
+    // Set camera rotation
+    camera.SetRotation(glm::vec3(pitch, yaw, 0.0f));
+}</code></pre>
+        </div>
+      </div>
+      
+      <h2>Best Practices</h2>
+      
+      <div class="info-box">
+        <h3>Camera Usage Tips</h3>
+        <ul>
+          <li><strong>Call Update Once Per Frame:</strong> Always call <code>camera.Update()</code> once per frame to ensure matrices are correctly calculated.</li>
+          <li><strong>Use Pos/Rot or Transform:</strong> Either use SetPosition/SetRotation or use Translate/Rotate for movement, but avoid mixing the two approaches.</li>
+          <li><strong>Input Updates:</strong> Ensure <code>windowOpt->input->updateKeys()</code> is called before processing camera input.</li>
+          <li><strong>State Management:</strong> Be aware of which state your camera is in when processing input.</li>
+          <li><strong>Shader Compatibility:</strong> Ensure your shaders have the appropriate uniform variables for view and projection matrices.</li>
+        </ul>
+      </div>
+      
+      <h2>API Reference</h2>
+      
+      <p>Here's a summary of the most important methods in the Camera class:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Camera API Summary</div>
+        <div class="example-card-body">
+          <pre><code>// Constructor
+Camera(Raftel::Window* w);
+
+// Position and rotation
+glm::vec3 getPosition() const;
+glm::vec3 getRotation() const;
+void SetPosition(const glm::vec3& position);
+void SetRotation(const glm::vec3& rotation);
+void Translate(const glm::vec3& translation);
+void Rotate(float angle, const glm::vec3& axis);
+
+// Matrices
+glm::mat4 getViewMatrix() const;
+glm::mat4 getProjectionMatrix() const;
+void Update(const std::unique_ptr<Window>& window);
+void setUniforms(ShaderProgram& prg);
+
+// Camera state
+CameraState GetState() const;
+void SetState(CameraState newState, GLFWwindow* window);
+void ToggleState(Raftel::Window* window, Raftel::Input::Keys key_);
+void ToggleState(Raftel::Window* window, Raftel::Input::Buttons button_);
+
+// Movement speed
+float getMovementSpeed() const;
+void ChangeSpeedWithKey(Raftel::Window* window, Raftel::Input::Keys key_, float fastSpeed, float normalSpeed);
+void ChangeSpeedWithScroll(Raftel::Window* window, float speedOffset);
+
+// Input handling
+void PossessedInput(Raftel::Window* window);
+void PresetCamera(Raftel::Window* window);</code></pre>
+        </div>
+      </div>
+      
+      <p>For complete details, see the <a href="../../doxygen/html/class_raftel_1_1_camera.html"target="_blank">Camera Class Reference</a> in the API documentation.</p>
+      
+      <div class="tutorial-nav">
+        <a href="tutorialrendersystem.html" class="prev">Previous: RenderSystem</a>
+        <a href="tutorialecs.html" class="next">Next: Entity Component System</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-links">
+      <a href="../about.html">About</a>
+      <a href="../extra/license.html">License</a>
+      <a href="../contact.html">Contact</a>
+      <a href="../privacy.html">Privacy</a>
+    </div>
+    <div class="footer-copyright">
+      &copy; 2025 Raftel Engine. All rights reserved.
+    </div>
+  </div>
+
+  <script src="../script.js"></script>
+</body>
+</html>

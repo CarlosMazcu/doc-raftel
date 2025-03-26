@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mesh documentation for Raftel Engine, an advanced graphics engine for creating 3D games.">
+    <meta name="keywords" content="Raftel Engine, Game Development, Graphics Engine, 3D Meshes, 3D Models, OpenGL">
+    <meta name="author" content="Your Name or Company">
+    <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Meshes - Raftel Engine</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <!-- Header fijo -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+            <span>Raftel Engine</span>
+        </div>
+        <div class="header-search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <input type="text" placeholder="Search documentation...">
+        </div>
+        <div class="header-links">
+            <a href="../index.html">Home</a>
+            <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+            <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+            <a href="../index.html#community">Community</a>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Sidebar izquierdo -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-category">Getting Started</div>
+                <a href="../index.html" class="sidebar-item">Introduction</a>
+                <a href="../started/installation.html" class="sidebar-item">Installation</a>
+                <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Tutorials</div>
+                <a href="../tutorial/tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+                <a href="../tutorial/tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+                <a href="../tutorial/tutorialinput.html" class="sidebar-item">Handling Input</a>
+                <a href="../tutorial/tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+                <a href="../tutorial/tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+                <a href="../tutorial/tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="../tutorial/tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+                <a href="../tutorial/tutorialecs.html" class="sidebar-item">Entity Component System</a>
+                <a href="../tutorial/tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Core Components</div>
+                <a href="window.html" class="sidebar-item">Window System</a>
+                <a href="shader.html" class="sidebar-item">Shaders</a>
+                <a href="mesh.html" class="sidebar-item active">Meshes</a>
+                <a href="material.html" class="sidebar-item">Materials</a>
+                <a href="texture.html" class="sidebar-item">Textures</a>
+                <a href="lighting.html" class="sidebar-item">Lighting</a>
+                <a href="input.html" class="sidebar-item">Input</a>
+                <a href="jobsystem.html" class="sidebar-item">JobSystem</a>
+                <a href="rendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="ecs.html" class="sidebar-item">ECS</a>
+            </div>
+
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content">
+            <h1>Meshes</h1>
+
+            <p>
+                Meshes are fundamental components in Raftel Engine that represent 3D geometry in your scenes. The
+                mesh system handles loading, rendering, and manipulation of 3D models, supporting various file formats
+                and providing tools for creating simple geometric shapes programmatically.
+            </p>
+
+            <div class="info-box">
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Support for loading models from OBJ, FBX, DAE, and STL formats</li>
+                    <li>Built-in primitive shape generation (cube, sphere, plane, cone, terrain)</li>
+                    <li>Multi-threaded mesh loading for performance</li>
+                    <li>Material assignment and texture mapping</li>
+                    <li>Submesh handling for complex models</li>
+                    <li>Automatic normal calculation</li>
+                </ul>
+            </div>
+
+            <h2>Architecture Overview</h2>
+
+            <p>
+                The mesh system in Raftel Engine consists of three main components:
+            </p>
+
+            <h3>Vertex Structure</h3>
+            <p>
+                The <code>Vertex</code> structure represents a single vertex in 3D space, containing position, normal,
+                and texture coordinate attributes. Vertices are the building blocks of a mesh and are used to define its
+                shape and surface properties.
+            </p>
+
+            <h3>Mesh Class</h3>
+            <p>
+                The <code>Mesh</code> class manages a collection of vertices and indices (defining triangles) along with
+                associated materials. It handles loading mesh data from files, setting up OpenGL buffers (VAO, VBO, EBO),
+                and rendering the mesh with specified shaders.
+            </p>
+
+            <h3>MeshFactory Class</h3>
+            <p>
+                The <code>MeshFactory</code> class provides factory methods for creating common geometric shapes
+                (cube, sphere, plane, cone, terrain) without requiring external model files. This is useful for
+                prototyping and creating simple objects.
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Class Relationship Diagram
+                </div>
+                <div class="example-card-body">
+                    <pre><code>
++----------------+               +----------------+
+| Vertex         |               | Material       |
++----------------+               +----------------+
+| - position     |               | - textures     |
+| - normal       |&lt;---------+    | - colors       |
+| - texCoord     |          |    | - properties   |
++----------------+          |    +----------------+
+                            |
+                            |    +----------------+
++----------------+          |    | Engine         |
+| MeshFactory    |          |    +----------------+
++----------------+          |    | - meshes       |
+| - createCube() |          |    +----------------+
+| - createSphere()|         |
+| - createPlane()|          |
+| - createCone() |          |
+| - createTerrain()|        |
++----------------+          |
+        |                   |
+        v                   |
++----------------+          |
+| Mesh           |----------+
++----------------+
+| - submeshVertex |
+| - submeshIndices|
+| - materials    |
+| - VAOs, VBOs, EBOs |
++----------------+
+| + loadMesh()   |
+| + draw()       |
+| + setupMesh()  |
++----------------+
+                    </code></pre>
+                </div>
+            </div>
+
+            <h2>Basic Usage</h2>
+
+            <p>
+                Here are some examples of how to use the Mesh system in Raftel Engine:
+            </p>
+
+            <h3>Loading a 3D Model</h3>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Loading a Mesh from File
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/mesh.hpp"
+#include "raftel/shader.hpp"
+
+int main() {
+  // Create a window and initialize OpenGL context (see Window System documentation)
+  
+  // Load a mesh from a file
+  auto modelMesh = Raftel::Mesh::Create("assets/models/character.obj", true);
+  
+  // Create and set up a shader program
+  auto shader = Raftel::ShaderProgram::Create("shaders/default.vert", "shaders/default.frag");
+  
+  // Create a material and assign it to the mesh
+  auto material = std::make_shared<Raftel::Material>();
+  material->setAlbedoColor(glm::vec3(0.8f, 0.2f, 0.2f)); // Red color
+  modelMesh->addMaterial(material);
+  
+  // Main rendering loop
+  while (!window->ShouldClose()) {
+    window->clear();
+    
+    shader->use();
+    // Set up camera and transformation matrices...
+    
+    // Draw the mesh
+    modelMesh->draw(*shader);
+    
+    window->swapBuffers();
+  }
+  
+  return 0;
+}</code></pre>
+                </div>
+            </div>
+
+            <h3>Creating a Primitive Shape</h3>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Creating and Rendering a Sphere
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/mesh.hpp"
+#include "raftel/shader.hpp"
+
+int main() {
+  // Create a window and initialize OpenGL context
+  
+  // Create a sphere with radius 2.0 and 32 segments
+  auto sphereMesh = Raftel::MeshFactory::createSphere(2.0f, 32);
+  
+  // Create and set up a shader program
+  auto shader = Raftel::ShaderProgram::Create("shaders/default.vert", "shaders/default.frag");
+  
+  // Create a material with a texture
+  auto material = std::make_shared<Raftel::Material>();
+  auto texture = Raftel::Texture::loadTexture("assets/textures/earth.jpg");
+  material->setAlbedo(texture);
+  
+  // Assign the material to the sphere mesh
+  sphereMesh->setMaterial(material);
+  
+  // Main rendering loop
+  while (!window->ShouldClose()) {
+    window->clear();
+    
+    shader->use();
+    // Set up camera and transformation matrices...
+    
+    // Draw the sphere
+    sphereMesh->draw(*shader);
+    
+    window->swapBuffers();
+  }
+  
+  return 0;
+}</code></pre>
+                </div>
+            </div>
+
+            <h2>Vertex Structure Reference</h2>
+
+            <div class="method-block">
+                <div class="method-signature">struct Vertex</div>
+                <div class="method-description">
+                    <p>Represents a 3D vertex with attributes like position, normal, and texture coordinates.</p>
+
+                    <h4>Attributes</h4>
+                    <ul>
+                        <li><code>glm::vec3 position</code> - The position of the vertex in 3D space.</li>
+                        <li><code>glm::vec3 normal</code> - The normal vector of the vertex for lighting calculations.</li>
+                        <li><code>glm::vec2 texCoord</code> - The texture coordinates of the vertex.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>Mesh Class Reference</h2>
+
+            <h3>Constructors</h3>
+            <div class="method-block">
+                <div class="method-signature">Mesh()</div>
+                <div class="method-description">
+                    <p>Default constructor for the Mesh class.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">Mesh(const std::string& filePath)</div>
+                <div class="method-description">
+                    <p>Constructs a mesh by loading from a file.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>filePath</code> - Path to the mesh file (OBJ, FBX, DAE, STL)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">Mesh(std::vector&lt;std::vector&lt;Vertex&gt;&gt; verticesPerSubmesh, std::vector&lt;std::vector&lt;unsigned int&gt;&gt; indicesPerSubmesh, std::vector&lt;std::shared_ptr&lt;Material&gt;&gt; mats)</div>
+                <div class="method-description">
+                    <p>Constructs a mesh with provided vertices, indices, and materials.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>verticesPerSubmesh</code> - Vector of vertex arrays for each submesh</li>
+                        <li><code>indicesPerSubmesh</code> - Vector of index arrays for each submesh</li>
+                        <li><code>mats</code> - Vector of materials</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Static Factory Methods</h3>
+            <div class="method-block">
+                <div class="method-signature">static std::shared_ptr&lt;Mesh&gt; Create(const std::string& filePath, bool multithread)</div>
+                <div class="method-description">
+                    <p>Static factory method to create a mesh from a file.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>filePath</code> - Path to the mesh file</li>
+                        <li><code>multithread</code> - Whether to load the mesh in a separate thread</li>
+                    </ul>
+                    <p><strong>Returns:</strong> A shared pointer to the created mesh</p>
+                </div>
+            </div>
+
+            <h3>Mesh Management Methods</h3>
+            <div class="method-block">
+                <div class="method-signature">bool loadMesh(const std::string& filePath)</div>
+                <div class="method-description">
+                    <p>Loads a mesh from a file.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>filePath</code> - Path to the mesh file</li>
+                    </ul>
+                    <p><strong>Returns:</strong> True if the mesh was loaded successfully, false otherwise</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void setupMesh()</div>
+                <div class="method-description">
+                    <p>Sets up OpenGL buffers (VAO, VBO, EBO) for the mesh. This method should be called after loading
+                        the mesh or creating it from scratch.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void computeBoundingBox(glm::vec3& outMin, glm::vec3& outMax) const</div>
+                <div class="method-description">
+                    <p>Computes the axis-aligned bounding box (AABB) of the mesh.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>outMin</code> - Output parameter for the minimum corner of the bounding box</li>
+                        <li><code>outMax</code> - Output parameter for the maximum corner of the bounding box</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Material Management Methods</h3>
+            <div class="method-block">
+                <div class="method-signature">void setMaterials(const std::vector&lt;std::shared_ptr&lt;Material&gt;&gt;& newMaterials)</div>
+                <div class="method-description">
+                    <p>Sets the materials for the mesh.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>newMaterials</code> - Vector of materials to apply to the mesh</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void setMaterial(const std::shared_ptr&lt;Material&gt;& mat)</div>
+                <div class="method-description">
+                    <p>Sets a single material for the entire mesh.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>mat</code> - Material to apply to the mesh</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void addMaterial(const std::shared_ptr&lt;Material&gt;& mat)</div>
+                <div class="method-description">
+                    <p>Adds a material to the mesh's material list.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>mat</code> - Material to add</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">std::shared_ptr&lt;Material&gt; GetMaterialByIndex(int index)</div>
+                <div class="method-description">
+                    <p>Retrieves a material by its index.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>index</code> - The index of the material to retrieve</li>
+                    </ul>
+                    <p><strong>Returns:</strong> A shared pointer to the material at the given index</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">std::vector&lt;std::shared_ptr&lt;Material&gt;&gt;& GetAllMaterials()</div>
+                <div class="method-description">
+                    <p>Retrieves all materials associated with the mesh.</p>
+                    <p><strong>Returns:</strong> A reference to the vector of materials</p>
+                </div>
+            </div>
+
+            <h3>Rendering Methods</h3>
+            <div class="method-block">
+                <div class="method-signature">void draw(ShaderProgram& shader)</div>
+                <div class="method-description">
+                    <p>Renders the mesh using the specified shader program.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>shader</code> - The shader program to use for rendering</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void setUniforms(GLuint shaderProgramID)</div>
+                <div class="method-description">
+                    <p>Sets the model, view, and projection uniform variables for the shader program.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>shaderProgramID</code> - The ID of the shader program</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void renderMaterial(ShaderProgram& shader)</div>
+                <div class="method-description">
+                    <p>Renders the material properties using the specified shader.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>shader</code> - The shader program to use for rendering the material</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>MeshFactory Class Reference</h2>
+
+            <div class="method-block">
+                <div class="method-signature">static std::shared_ptr&lt;Mesh&gt; createPlane(float width, float height)</div>
+                <div class="method-description">
+                    <p>Creates a plane mesh with the specified dimensions.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>width</code> - The width of the plane</li>
+                        <li><code>height</code> - The height of the plane</li>
+                    </ul>
+                    <p><strong>Returns:</strong> A shared pointer to the created plane mesh</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">static std::shared_ptr&lt;Mesh&gt; createCube(float size)</div>
+                <div class="method-description">
+                    <p>Creates a cube mesh with the specified size.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>size</code> - The size of the cube (length of each edge)</li>
+                    </ul>
+                    <p><strong>Returns:</strong> A shared pointer to the created cube mesh</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">static std::shared_ptr&lt;Mesh&gt; createSphere(float radius, int segments)</div>
+                <div class="method-description">
+                    <p>Creates a sphere mesh with the specified radius and number of segments.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>radius</code> - The radius of the sphere</li>
+                        <li><code>segments</code> - The number of segments used to approximate the sphere's surface</li>
+                    </ul>
+                    <p><strong>Returns:</strong> A shared pointer to the created sphere mesh</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">static std::shared_ptr&lt;Mesh&gt; createCone(float radius, float height, int segments)</div>
+                <div class="method-description">
+                    <p>Creates a cone mesh with the specified radius, height, and number of segments.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>radius</code> - The radius of the base of the cone</li>
+                        <li><code>height</code> - The height of the cone</li>
+                        <li><code>segments</code> - The number of segments used to approximate the circular base</li>
+                    </ul>
+                    <p><strong>Returns:</strong> A shared pointer to the created cone mesh</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">static std::shared_ptr&lt;Mesh&gt; createTerrain(const char* heightMapFile, float size, float heightMultiplier, bool isCentered)</div>
+                <div class="method-description">
+                    <p>Creates a terrain mesh from a heightmap image.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>heightMapFile</code> - Path to the heightmap image</li>
+                        <li><code>size</code> - The size of each terrain grid cell</li>
+                        <li><code>heightMultiplier</code> - Multiplier for height values</li>
+                        <li><code>isCentered</code> - Whether the terrain should be centered at (0,0,0)</li>
+                    </ul>
+                    <p><strong>Returns:</strong> A shared pointer to the created terrain mesh</p>
+                </div>
+            </div>
+
+            <h2>Supported File Formats</h2>
+
+            <p>
+                Raftel Engine's mesh system supports the following file formats:
+            </p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>OBJ (.obj)</h3>
+                    <p>Wavefront OBJ files are handled by Raftel Engine's native parser, which supports vertices,
+                        normals, texture coordinates, and materials (MTL).</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>FBX (.fbx)</h3>
+                    <p>Autodesk FBX files are supported through the Assimp library, preserving mesh data, materials,
+                        and texture coordinates.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>COLLADA (.dae)</h3>
+                    <p>COLLADA files are supported through the Assimp library, maintaining mesh structure and
+                        material assignments.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>STL (.stl)</h3>
+                    <p>STL files (both ASCII and binary) are supported through the Assimp library, though they only
+                        contain geometry without material information.</p>
+                </div>
+            </div>
+
+            <h2>Best Practices</h2>
+
+            <ul>
+                <li>Use multi-threaded mesh loading (<code>Mesh::Create(path, true)</code>) for large models to avoid
+                    freezing the main thread.</li>
+                <li>Reuse meshes when possible to reduce memory usage and drawing overhead.</li>
+                <li>Use the appropriate primitive from MeshFactory for simple shapes rather than loading model files.</li>
+                <li>Consider using submeshes for complex models that need different materials applied to different parts.</li>
+                <li>Assign materials before drawing a mesh to ensure proper rendering appearance.</li>
+                <li>When loading terrain from heightmaps, normalize the height values and use an appropriate heightMultiplier to achieve the desired scale.</li>
+                <li>Check for loading errors with <code>getLastError()</code> if a mesh fails to load correctly.</li>
+            </ul>
+
+            <h2>Advanced Features</h2>
+
+            <h3>Multi-Threaded Loading</h3>
+            <p>
+                For large models, Raftel Engine supports loading meshes in background threads to prevent freezing
+                the main thread. This is enabled by passing <code>true</code> as the second parameter to
+                <code>Mesh::Create()</code>. When using multi-threaded loading, the mesh will be loaded in the
+                background, but you'll need to call <code>setupMesh()</code> on the main thread when loading is
+                complete.
+            </p>
+
+            <h3>Submeshes</h3>
+            <p>
+                Complex models often consist of multiple parts that need different materials. Raftel Engine handles
+                this with a submesh system, where each submesh can have its own vertices, indices, and material.
+                When loading models from files, submeshes are automatically created based on the model's structure
+                and material assignments.
+            </p>
+
+            <h3>MTL Material Loading</h3>
+            <p>
+                When loading OBJ files, Raftel Engine automatically loads associated MTL material files and applies
+                the materials to the appropriate submeshes. This preserves the material assignments from the original
+                model.
+            </p>
+
+            <h2>Related Topics</h2>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3><a href="../tutorial/tutorialmesh.html">Loading 3D Meshes Tutorial</a></h3>
+                    <p>Step-by-step guide to loading and rendering 3D meshes in Raftel Engine.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="material.html">Materials</a></h3>
+                    <p>Learn about the material system used to control the appearance of meshes.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="shader.html">Shaders</a></h3>
+                    <p>Understanding shaders that define how meshes are rendered.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="texture.html">Textures</a></h3>
+                    <p>Learn about textures that can be applied to mesh materials.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../extra/license.html">License</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy.html">Privacy</a>
+        </div>
+        <div class="footer-copyright">
+            &copy; 2025 Raftel Engine. All rights reserved.
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>

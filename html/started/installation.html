@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn how to install and set up Raftel Engine on your development machine.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Installation - Raftel Engine</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+</head>
+
+<body>
+    <!-- Header fijo -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+            <span>Raftel Engine</span>
+        </div>
+        <div class="header-search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <input type="text" placeholder="Search documentation...">
+        </div>
+        <div class="header-links">
+            <a href="../index.html">Home</a>
+            <a href="../doxygen/html/index.html" target="_blank">API Reference</a>
+            <a href="https://github.com/" target="_blank">GitHub</a>
+            <a href="index.html#community">Community</a>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Sidebar izquierdo -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-category">Getting Started</div>
+                <a href="../index.html" class="sidebar-item">Introduction</a>
+                <a href="installation.html" class="sidebar-item active">Installation</a>
+                <a href="buidsetup.html" class="sidebar-item">Build Setup</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Tutorials</div>
+                <a href="../tutorial/tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+                <a href="../tutorial/tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+                <a href="../tutorial/tutorialinput.html" class="sidebar-item">Handling Input</a>
+                <a href="../tutorial/tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+                <a href="../tutorial/tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+                <a href="../tutorial/tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="../tutorial/tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+                <a href="../tutorial/tutorialecs.html" class="sidebar-item">Entity Component System</a>
+                <a href="../tutorial/tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+            </div>
+
+            <div class="sidebar-section">
+              <div class="sidebar-category">Core Components</div>
+              <a href="../core/windowsystem.html" class="sidebar-item">Window System</a>
+              <a href="../core/shader.html" class="sidebar-item">Shaders</a>
+              <a href="../core/mesh.html" class="sidebar-item">Meshes</a>
+              <a href="../core/material.html" class="sidebar-item">Materials</a>
+              <a href="../core/texture.html" class="sidebar-item">Textures</a>
+              <a href="../core/lighting.html" class="sidebar-item">Lighting</a>
+              <a href="../core/input.html" class="sidebar-item">Input</a>
+              <a href="../core/jobsystem.html" class="sidebar-item">JobSystem</a>
+              <a href="../core/rendersystem.html" class="sidebar-item">RenderSystem</a>
+              <a href="../core/ecs.html" class="sidebar-item">ECS</a>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content">
+            <h1>Installing Raftel Engine</h1>
+
+            <p>This guide will walk you through the process of installing Raftel Engine and setting up your development
+                environment. Raftel Engine is a high-performance graphics engine built with C++ and OpenGL, designed for
+                creating immersive 3D applications and games.</p>
+<!-- 
+            <div class="example-viewer">
+                <div class="example-viewer-header">
+                    <div class="example-viewer-title">Showcase Example</div>
+                    <div class="example-viewer-actions">
+                        <button>View Code</button>
+                        <button>Full Screen</button>
+                    </div>
+                </div>
+                <div class="example-viewer-content">
+                    <!-- This would typically be an interactive demo or screenshot -->
+                  <!--  <div
+                        style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background-color:#1a1a1a; color:#fff; text-align:center;">
+                        <div>
+                            <h3 style="margin-bottom:20px;">Terrain Rendering with Spot Light</h3>
+                            <div
+                                style="width:80%; height:200px; margin:0 auto; background: linear-gradient(to bottom, #005792 0%, #00334e 100%); border-radius:8px; position:relative;">
+                                <div
+                                    style="position:absolute; top:30px; right:30px; width:20px; height:20px; background-color:#fff; border-radius:50%; box-shadow:0 0 20px 10px rgba(255,255,255,0.6);">
+                                </div>
+                            </div>
+                            <p style="margin-top:20px;">A sample terrain mesh with lighting effects rendered in Raftel
+                                Engine</p>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+-->
+
+            <h2>Prerequisites</h2>
+
+            <p>Before installing Raftel Engine, ensure you have the following software installed on your system:</p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>Python</h3>
+                    <p>Required for running build scripts and tools.</p>
+                    <a href="https://www.python.org/downloads/" target="_blank" class="button button-secondary">Download
+                        Python</a>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Conan</h3>
+                    <p>Package manager for C++ (version &lt; 2.0 required).</p>
+                    <a href="https://conan.io/downloads.html" target="_blank" class="button button-secondary">Download
+                        Conan</a>
+                </div>
+
+                <div class="grid-item">
+                    <h3>CMake</h3>
+                    <p>Cross-platform build system generator.</p>
+                    <a href="https://cmake.org/download/" target="_blank" class="button button-secondary">Download
+                        CMake</a>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Visual Studio</h3>
+                    <p>IDE for development (2019 or 2022 recommended).</p>
+                    <a href="https://visualstudio.microsoft.com/downloads/" target="_blank"
+                        class="button button-secondary">Download Visual Studio</a>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>Compatible Operating Systems</h3>
+                <p>Raftel Engine currently supports Windows development. Support for macOS and Linux is under
+                    development.</p>
+            </div>
+
+            <h2>Installation Steps</h2>
+
+            <h3>Step 1: Download Raftel Engine</h3>
+
+            <p>Clone or download the Raftel Engine repository from GitHub:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">Clone Repository</div>
+                <div class="example-card-body">
+                    <pre><code>git clone https://github.com/your-username/raftel-engine.git
+cd raftel-engine</code></pre>
+                </div>
+            </div>
+
+            <p>Alternatively, you can download the engine as a ZIP file from the <a href="#">releases page</a>.</p>
+
+            <h3>Step 2: Generate Dependencies</h3>
+
+            <p>Run the dependency generator script from the terminal:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">Generate Dependencies</div>
+                <div class="example-card-body">
+                    <pre><code>./tools/gendeps.bat</code></pre>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h3>Dependency Resolution</h3>
+                <p>This script automatically downloads and configures all required third-party libraries using Conan.
+                    Make sure your internet connection is stable during this process.</p>
+            </div>
+
+            <h3>Step 3: Build the Project</h3>
+
+            <p>Navigate to the root directory of the project and build using Premake:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">Build Project</div>
+                <div class="example-card-body">
+                    <pre><code>premake5.exe vs2022  # or vs2019, depending on your Visual Studio version</code></pre>
+                </div>
+            </div>
+
+            <h3>Step 4: Open and Run the Solution</h3>
+
+            <p>Open the generated solution file in Visual Studio:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">Open Solution</div>
+                <div class="example-card-body">
+                    <pre><code>./build/Raftel.sln</code></pre>
+                </div>
+            </div>
+
+            <p>Build and run the solution from within Visual Studio by pressing F5 or selecting "Debug > Start
+                Debugging" from the menu.</p>
+
+            <h2>Verifying Your Installation</h2>
+
+            <p>To verify that Raftel Engine has been installed correctly, try running one of the example projects
+                included with the engine:</p>
+
+            <ol>
+                <li>In Visual Studio's Solution Explorer, right-click on the "Examples" folder</li>
+                <li>Select one of the example projects (e.g., "WindowExample")</li>
+                <li>Set it as the startup project by right-clicking and selecting "Set as StartUp Project"</li>
+                <li>Press F5 to build and run the example</li>
+            </ol>
+
+            <p>If the example runs without errors, congratulations! Raftel Engine is now installed and ready to use.</p>
+
+            <h2>Example: Terrain with Spot Light</h2>
+
+            <p>Here's a simple example that demonstrates how to create a terrain model and display it using Raftel
+                Engine:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">Terrain with Spot Light Example</div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/window.hpp"
+#include "raftel/shader.hpp"
+#include "raftel/ecs.hpp"
+#include "raftel/camera.hpp"
+#include "raftel/imguiRenderer.hpp"
+#include "raftel/systems.hpp"
+#include "raftel/input.hpp"
+#include "raftel/imguiWindows.hpp"
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+
+int main(void)
+{
+  // create window system and window
+  auto windowSystemOpt = Raftel::WindowSystem::make();
+  auto windowOpt = Raftel::Window::make("WindowTest", *windowSystemOpt);
+  if (!windowOpt) {
+    std::cerr &lt;&lt; "Can't create window\n";
+    return -1;
+  }
+
+  // make window context
+  windowOpt->MakeContextCurrent();
+
+  // create input
+  Raftel::Input input(windowOpt->window_);
+
+  //create core shader
+  Raftel::ShaderProgram shader;
+  if (!shader.load("../assets/shaders/lit.vs", "../assets/shaders/lit.fs")) {
+    std::cerr &lt;&lt; "Error al cargar los shaders.\n";
+    return -1;
+  }
+
+  // movable camera
+  Raftel::Camera cam(&input);
+
+  // to create and show entities you need create entity system (ecs)
+  auto ecs = std::make_unique&lt;Raftel::EntityManager&gt;();
+
+  // we will create a entity terrain 
+  // create entity
+  auto terrain = ecs->CreateEntity();
+
+  // create texture and mesh
+  auto cube_t = Raftel::Texture::loadTexture("../assets/textures/cubetex.png");
+  auto terrainMesh = Raftel::MeshFactory::createTerrain("../assets/heightmap/heightMap_test3.png", 1.0f, 200.0f, true);
+  terrainMesh->GetMaterialByIndex(0)->setAlbedo(cube_t);
+  terrainMesh->setupMesh();
+
+  // add components to the entity
+  terrain.addMeshComp(terrainMesh);
+  terrain.addRenderComp(true);
+  terrain.addTransformComp(Raftel::TransformComponent{
+    glm::vec3(0.0f, -200.0f, -400.0f),
+    glm::vec3(0.0f),
+    glm::vec3(1.0f)
+    });
+
+  //add some light
+  auto spotLightEntity = ecs->CreateEntity();
+  spotLightEntity.addLightComp(Raftel::LightComponent(
+    Raftel::LightComponent::LightType::SPOT,
+    glm::vec3(1.0f, 0.8f, 0.6f),
+    glm::vec3(0.0f),
+    glm::vec3(0.0f),
+    1.0f, 1000.0f, 170.0f, 200.0f,
+    windowOpt->getScreenSize()));
+  spotLightEntity.addMeshComp(Raftel::MeshFactory::createSphere(2.0f, 20));
+  spotLightEntity.addRenderComp(true);
+  spotLightEntity.addTransformComp({ glm::vec3(200.0f, -60.0f, -400.0f), glm::vec3(0.0f, 180.0f, -180.0f), glm::vec3(10.0f) });
+
+  // Main render loop
+  while (!windowOpt->ShouldClose())
+  {
+    //update input
+    input.updateKeys();
+
+    //camera controls
+    cam.ChangeSpeedWithScroll(windowOpt.get(), 1.0f);
+    cam.PossessedInput(windowOpt.get());
+    cam.ToggleState(windowOpt.get(), Raftel::Input::Buttons::Mouse_Right);
+
+    windowOpt->clear();
+
+    //update camera
+    cam.Update(windowOpt);
+
+    //render system -> render the entities that you create in the ecs
+    Raftel::RenderSystem::UpdateRenderSystem(*ecs, cam, shader, windowOpt->getScreenSize(), true);
+    
+    windowOpt->swapBuffers();
+  }
+
+  return 0;
+}</code></pre>
+                </div>
+            </div>
+
+            <h2>Troubleshooting</h2>
+
+            <div class="example-card">
+                <div class="example-card-header">Common Issues</div>
+                <div class="example-card-body">
+                    <h4>Dependencies Failed to Download</h4>
+                    <p>If the dependency generator script fails, try the following:</p>
+                    <ul>
+                        <li>Check your internet connection</li>
+                        <li>Make sure Conan is properly installed and in your PATH</li>
+                        <li>Try running the script with administrator privileges</li>
+                    </ul>
+
+                    <h4>Build Errors</h4>
+                    <p>If you encounter build errors:</p>
+                    <ul>
+                        <li>Make sure all prerequisites are installed correctly</li>
+                        <li>Check if the correct Visual Studio version is being used</li>
+                        <li>Try cleaning the solution and rebuilding</li>
+                    </ul>
+
+                    <h4>Runtime Errors</h4>
+                    <p>If you encounter runtime errors:</p>
+                    <ul>
+                        <li>Verify that all asset paths are correct</li>
+                        <li>Check if OpenGL drivers are up to date</li>
+                        <li>Make sure all required DLLs are in the correct location</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>Next Steps</h2>
+
+            <p>Now that you've successfully installed Raftel Engine, you're ready to start exploring its features and
+                creating your first applications.</p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3><a href="../tutorial/tutorialwindow.html">Creating a Window</a></h3>
+                    <p>Learn how to create and manage application windows.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="../tutorial/tutorialtriangle.html">Drawing a Triangle</a></h3>
+                    <p>Start with the fundamentals of rendering geometry.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="examples/ecs.html">Entity Component System</a></h3>
+                    <p>Understand how to organize your scene with ECS architecture.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="examples/lighting.html">Lighting System</a></h3>
+                    <p>Learn how to implement different types of lights in your scene.</p>
+                </div>
+            </div>
+
+            <div class="api-reference">
+                <p>For complete API details, see the <a href="../../doxygen/html/index.html" target="_blank">API Reference
+                        Documentation</a>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="about.html">About</a>
+            <a href="../extra/license.html">License</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy</a>
+        </div>
+        <div class="footer-copyright">
+            &copy; 2025 Raftel Engine. All rights reserved.
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Material documentation for Raftel Engine, an advanced graphics engine for creating 3D games.">
+    <meta name="keywords" content="Raftel Engine, Game Development, Graphics Engine, Materials, PBR, OpenGL">
+    <meta name="author" content="Your Name or Company">
+    <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Materials - Raftel Engine</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <!-- Header fijo -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+            <span>Raftel Engine</span>
+        </div>
+        <div class="header-search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <input type="text" placeholder="Search documentation...">
+        </div>
+        <div class="header-links">
+            <a href="../index.html">Home</a>
+            <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+            <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+            <a href="../index.html#community">Community</a>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Sidebar izquierdo -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-category">Getting Started</div>
+                <a href="../index.html" class="sidebar-item">Introduction</a>
+                <a href="../started/installation.html" class="sidebar-item">Installation</a>
+                <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Tutorials</div>
+                <a href="../tutorial/tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+                <a href="../tutorial/tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+                <a href="../tutorial/tutorialinput.html" class="sidebar-item">Handling Input</a>
+                <a href="../tutorial/tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+                <a href="../tutorial/tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+                <a href="../tutorial/tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="../tutorial/tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+                <a href="../tutorial/tutorialecs.html" class="sidebar-item">Entity Component System</a>
+                <a href="../tutorial/tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Core Components</div>
+                <a href="window.html" class="sidebar-item">Window System</a>
+                <a href="shader.html" class="sidebar-item">Shaders</a>
+                <a href="mesh.html" class="sidebar-item">Meshes</a>
+                <a href="material.html" class="sidebar-item active">Materials</a>
+                <a href="texture.html" class="sidebar-item">Textures</a>
+                <a href="lighting.html" class="sidebar-item">Lighting</a>
+                <a href="input.html" class="sidebar-item">Input</a>
+                <a href="jobsystem.html" class="sidebar-item">JobSystem</a>
+                <a href="rendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="ecs.html" class="sidebar-item">ECS</a>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content">
+            <h1>Materials</h1>
+
+            <p>
+                Materials in Raftel Engine define the surface properties and appearance of 3D objects. Materials
+                control how light interacts with meshes, determining whether surfaces appear shiny, rough, metallic,
+                or matte. Raftel Engine's material system supports both scalar values and textures for various surface
+                properties.
+            </p>
+
+            <div class="info-box">
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Support for physically-based rendering (PBR) properties</li>
+                    <li>Multiple texture maps (albedo, normal, roughness, metallic)</li>
+                    <li>Combined texture and scalar material property system</li>
+                    <li>Easy integration with meshes and shaders</li>
+                    <li>Support for subsurface scattering effects</li>
+                </ul>
+            </div>
+
+            <h2>Material Properties Overview</h2>
+
+            <p>
+                A material in Raftel Engine consists of both textures and scalar values that define its visual
+                appearance:
+            </p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>Albedo (Diffuse)</h3>
+                    <p>
+                        The base color of the material. This can be specified as a solid color or through a texture map.
+                        Albedo represents the color that is reflected when light hits the surface.
+                    </p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Normal Map</h3>
+                    <p>
+                        A texture that provides surface detail without adding geometry. Normal maps create the
+                        illusion of bumps, dents, and other surface irregularities by modifying the direction of
+                        surface normals.
+                    </p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Roughness</h3>
+                    <p>
+                        Defines how rough or smooth a surface is. Rougher surfaces scatter light in multiple directions,
+                        creating a diffuse appearance, while smoother surfaces reflect light more consistently,
+                        creating a glossy appearance.
+                    </p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Metallic</h3>
+                    <p>
+                        Determines the metalness of a surface. Metallic surfaces reflect light differently than
+                        non-metallic (dielectric) surfaces, with more pronounced specular highlights and tinted
+                        reflections.
+                    </p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Shininess</h3>
+                    <p>
+                        Controls the tightness and intensity of specular highlights. Higher shininess values create
+                        smaller, sharper highlights, resembling polished surfaces.
+                    </p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Fresnel</h3>
+                    <p>
+                        Controls the intensity of reflections at glancing angles. Most surfaces reflect more light as
+                        the viewing angle becomes shallower, and the Fresnel value accentuates this effect.
+                    </p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Scattering</h3>
+                    <p>
+                        Controls subsurface scattering, which simulates light that penetrates the surface of translucent
+                        materials and scatters within them. This is essential for materials like skin, wax, or marble.
+                    </p>
+                </div>
+            </div>
+
+            <h2>Basic Usage</h2>
+
+            <p>
+                Here are some examples of how to create and use materials in Raftel Engine:
+            </p>
+
+            <h3>Creating a Simple Material</h3>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Basic Material Creation
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/material.hpp"
+
+// Create a basic material with default properties (white, somewhat rough, non-metallic)
+auto material = std::make_shared<Raftel::Material>();
+
+// Customize the material properties
+material->setAlbedoColor(glm::vec3(0.9f, 0.1f, 0.1f)); // Red color
+material->setRoughness(0.7f); // Fairly rough surface
+material->setMetallic(0.2f); // Slight metallic appearance
+material->setShininess(24.0f); // Moderate shininess</code></pre>
+                </div>
+            </div>
+
+            <h3>Creating a Material with Textures</h3>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Texture-based Material
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/material.hpp"
+#include "raftel/texture.hpp"
+
+// Load texture maps
+auto albedoTexture = Raftel::Texture::loadTexture("assets/textures/wood_albedo.jpg");
+auto normalTexture = Raftel::Texture::loadTexture("assets/textures/wood_normal.jpg");
+auto roughnessTexture = Raftel::Texture::loadTexture("assets/textures/wood_roughness.jpg");
+
+// Create a material with textures
+auto woodMaterial = std::make_shared<Raftel::Material>(
+    albedoTexture, 
+    normalTexture, 
+    roughnessTexture, 
+    nullptr, // No metallic texture
+    glm::vec3(1.0f), // Default color (only used if no albedo texture)
+    32.0f,   // Shininess
+    0.8f,    // Default roughness (only used if no roughness texture)
+    0.0f     // Default metallic (non-metallic)
+);
+
+// Assign the material to a mesh
+myMesh->setMaterial(woodMaterial);</code></pre>
+                </div>
+            </div>
+
+            <h3>Adding a Material to a Mesh</h3>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Assigning Material to Mesh
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/mesh.hpp"
+#include "raftel/material.hpp"
+
+// Create a mesh and a material
+auto cubeMesh = Raftel::MeshFactory::createCube(2.0f);
+auto material = std::make_shared<Raftel::Material>();
+
+// Configure material
+material->setAlbedoColor(glm::vec3(0.2f, 0.5f, 0.8f)); // Blue color
+material->setRoughness(0.3f); // Smooth surface
+material->setMetallic(0.7f); // Metallic appearance
+
+// Assign the material to the mesh
+cubeMesh->setMaterial(material);
+
+// If the mesh has multiple submeshes, you can add more materials
+auto secondMaterial = std::make_shared<Raftel::Material>();
+secondMaterial->setAlbedoColor(glm::vec3(0.8f, 0.2f, 0.2f)); // Red color
+cubeMesh->addMaterial(secondMaterial);</code></pre>
+                </div>
+            </div>
+
+            <h2>Material Class Reference</h2>
+
+            <h3>Constructors</h3>
+            <div class="method-block">
+                <div class="method-signature">Material()</div>
+                <div class="method-description">
+                    <p>Default constructor that creates a basic white material with no textures.</p>
+                    <p>Initial values:</p>
+                    <ul>
+                        <li>Albedo Color: (1.0, 1.0, 1.0) - White</li>
+                        <li>Shininess: 16.0</li>
+                        <li>Roughness: 0.8</li>
+                        <li>Metallic: 0.0</li>
+                        <li>Fresnel: 1.0</li>
+                        <li>Scattering: 0.0</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">Material(
+    std::shared_ptr&lt;Texture&gt; albedo,
+    std::shared_ptr&lt;Texture&gt; normal = nullptr,
+    std::shared_ptr&lt;Texture&gt; roughness = nullptr,
+    std::shared_ptr&lt;Texture&gt; metallic = nullptr,
+    const glm::vec3& albedoColor = glm::vec3(1.0f),
+    float shininess = 32.0f,
+    float roughnessValue = 0.5f,
+    float metallicValue = 0.0f,
+    float fresnel = 1.0f,
+    float scatt = 0.0f
+)</div>
+                <div class="method-description">
+                    <p>Constructs a material with specified textures and properties.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>albedo</code> - Albedo (diffuse) texture</li>
+                        <li><code>normal</code> - Normal map texture</li>
+                        <li><code>roughness</code> - Roughness texture</li>
+                        <li><code>metallic</code> - Metallic texture</li>
+                        <li><code>albedoColor</code> - Base color when no albedo texture is provided</li>
+                        <li><code>shininess</code> - Shininess factor (for Phong lighting model)</li>
+                        <li><code>roughnessValue</code> - Scalar roughness value (0.0 to 1.0)</li>
+                        <li><code>metallicValue</code> - Scalar metallic value (0.0 to 1.0)</li>
+                        <li><code>fresnel</code> - Fresnel reflection coefficient</li>
+                        <li><code>scatt</code> - Scattering factor for subsurface scattering</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Texture Management Methods</h3>
+            <div class="method-block">
+                <div class="method-signature">void setAlbedo(std::shared_ptr&lt;Texture&gt; texture)</div>
+                <div class="method-description">
+                    <p>Sets the albedo (diffuse) texture of the material.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>texture</code> - The texture to set as albedo</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void setNormal(std::shared_ptr&lt;Texture&gt; texture)</div>
+                <div class="method-description">
+                    <p>Sets the normal map texture of the material.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>texture</code> - The texture to set as normal map</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void setRoughness(std::shared_ptr&lt;Texture&gt; texture)</div>
+                <div class="method-description">
+                    <p>Sets the roughness texture of the material.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>texture</code> - The texture to set as roughness map</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void setMetallic(std::shared_ptr&lt;Texture&gt; texture)</div>
+                <div class="method-description">
+                    <p>Sets the metallic texture of the material.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>texture</code> - The texture to set as metallic map</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void deleteAlbedo()</div>
+                <div class="method-description">
+                    <p>Removes the albedo texture from the material.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void deleteNormal()</div>
+                <div class="method-description">
+                    <p>Removes the normal texture from the material.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void deleteRoughness()</div>
+                <div class="method-description">
+                    <p>Removes the roughness texture from the material.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void deleteMetallic()</div>
+                <div class="method-description">
+                    <p>Removes the metallic texture from the material.</p>
+                </div>
+            </div>
+
+            <h3>Texture Retrieval Methods</h3>
+            <div class="method-block">
+                <div class="method-signature">std::shared_ptr&lt;Texture&gt; getAlbedoText()</div>
+                <div class="method-description">
+                    <p>Gets the albedo (diffuse) texture of the material.</p>
+                    <p><strong>Returns:</strong> A shared pointer to the albedo texture, or nullptr if none is assigned</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">std::shared_ptr&lt;Texture&gt; getNormalText()</div>
+                <div class="method-description">
+                    <p>Gets the normal map texture of the material.</p>
+                    <p><strong>Returns:</strong> A shared pointer to the normal texture, or nullptr if none is assigned</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">std::shared_ptr&lt;Texture&gt; getRoughnessText()</div>
+                <div class="method-description">
+                    <p>Gets the roughness texture of the material.</p>
+                    <p><strong>Returns:</strong> A shared pointer to the roughness texture, or nullptr if none is assigned</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">std::shared_ptr&lt;Texture&gt; getMetallicText()</div>
+                <div class="method-description">
+                    <p>Gets the metallic texture of the material.</p>
+                    <p><strong>Returns:</strong> A shared pointer to the metallic texture, or nullptr if none is assigned</p>
+                </div>
+            </div>
+
+            <h3>Property Setting Methods</h3>
+            <div class="method-block">
+                <div class="method-signature">void setAlbedoColor(const glm::vec3& color)</div>
+                <div class="method-description">
+                    <p>Sets the albedo color of the material, used when no albedo texture is provided.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>color</code> - The color to set as albedo</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void setShininess(float value)</div>
+                <div class="method-description">
+                    <p>Sets the shininess value of the material.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>value</code> - The shininess value</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void setRoughness(float value)</div>
+                <div class="method-description">
+                    <p>Sets the roughness value of the material, used when no roughness texture is provided.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>value</code> - The roughness value (0.0 to 1.0)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void setMetallic(float value)</div>
+                <div class="method-description">
+                    <p>Sets the metallic value of the material, used when no metallic texture is provided.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>value</code> - The metallic value (0.0 to 1.0)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void setFresnel(float value)</div>
+                <div class="method-description">
+                    <p>Sets the Fresnel coefficient of the material.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>value</code> - The Fresnel value</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void setScattering(float value)</div>
+                <div class="method-description">
+                    <p>Sets the subsurface scattering factor of the material.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>value</code> - The scattering value (0.0 to 1.0)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Property Retrieval Methods</h3>
+            <div class="method-block">
+                <div class="method-signature">glm::vec3 getAlbedoColor()</div>
+                <div class="method-description">
+                    <p>Gets the albedo color of the material.</p>
+                    <p><strong>Returns:</strong> The albedo color as a glm::vec3</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">float getShininessValue()</div>
+                <div class="method-description">
+                    <p>Gets the shininess value of the material.</p>
+                    <p><strong>Returns:</strong> The shininess value</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">float getRoughnessValue()</div>
+                <div class="method-description">
+                    <p>Gets the roughness value of the material.</p>
+                    <p><strong>Returns:</strong> The roughness value (0.0 to 1.0)</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">float getMetallicValue()</div>
+                <div class="method-description">
+                    <p>Gets the metallic value of the material.</p>
+                    <p><strong>Returns:</strong> The metallic value (0.0 to 1.0)</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">float getFresnelValue()</div>
+                <div class="method-description">
+                    <p>Gets the Fresnel coefficient of the material.</p>
+                    <p><strong>Returns:</strong> The Fresnel value</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">float getScatteringValue()</div>
+                <div class="method-description">
+                    <p>Gets the subsurface scattering factor of the material.</p>
+                    <p><strong>Returns:</strong> The scattering value (0.0 to 1.0)</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">int GetNTextures()</div>
+                <div class="method-description">
+                    <p>Gets the number of textures currently assigned to the material.</p>
+                    <p><strong>Returns:</strong> The number of active textures</p>
+                </div>
+            </div>
+
+            <h2>Material Property Flags</h2>
+
+            <p>
+                The Material class includes boolean flags that indicate whether specific textures are assigned:
+            </p>
+
+            <ul>
+                <li><code>bAlbedo</code> - True if an albedo texture is assigned</li>
+                <li><code>bNormal</code> - True if a normal map texture is assigned</li>
+                <li><code>bRoughness</code> - True if a roughness texture is assigned</li>
+                <li><code>bMetallic</code> - True if a metallic texture is assigned</li>
+            </ul>
+
+            <p>
+                These flags can be checked to determine whether to use texture-based or scalar material properties
+                in your shaders.
+            </p>
+
+            <h2>Physically-Based Rendering (PBR)</h2>
+
+            <p>
+                Raftel Engine's material system is designed with physically-based rendering (PBR) in mind. PBR is a
+                rendering approach that simulates how light interacts with surfaces in the real world, resulting in more
+                realistic graphics. The key material properties for PBR are:
+            </p>
+
+            <ul>
+                <li><strong>Albedo (Base Color)</strong> - The color of the surface without any lighting effects</li>
+                <li><strong>Roughness</strong> - How rough or smooth a surface is, affecting how light scatters</li>
+                <li><strong>Metallic</strong> - Whether a surface is metallic or dielectric (non-metallic)</li>
+                <li><strong>Normal</strong> - Surface detail without additional geometry</li>
+            </ul>
+
+            <p>
+                By combining these properties, Raftel Engine can simulate a wide range of materials, from smooth metals
+                like chrome to rough dielectrics like concrete.
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Common Material Presets
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Create a polished metal material
+auto chromeMaterial = std::make_shared<Raftel::Material>();
+chromeMaterial->setAlbedoColor(glm::vec3(0.95f, 0.95f, 0.95f));
+chromeMaterial->setRoughness(0.05f); // Very smooth
+chromeMaterial->setMetallic(1.0f);   // Fully metallic
+
+// Create a plastic material
+auto plasticMaterial = std::make_shared<Raftel::Material>();
+plasticMaterial->setAlbedoColor(glm::vec3(0.2f, 0.8f, 0.2f)); // Green
+plasticMaterial->setRoughness(0.4f);  // Moderately smooth
+plasticMaterial->setMetallic(0.0f);   // Non-metallic
+
+// Create a ceramic material
+auto ceramicMaterial = std::make_shared<Raftel::Material>();
+ceramicMaterial->setAlbedoColor(glm::vec3(0.9f, 0.9f, 0.9f)); // White
+ceramicMaterial->setRoughness(0.2f);  // Smooth
+ceramicMaterial->setMetallic(0.0f);   // Non-metallic
+ceramicMaterial->setShininess(64.0f); // High shininess
+
+// Create a wood material
+auto woodMaterial = std::make_shared<Raftel::Material>();
+woodMaterial->setAlbedoColor(glm::vec3(0.65f, 0.45f, 0.25f)); // Brown
+woodMaterial->setRoughness(0.9f);     // Very rough
+woodMaterial->setMetallic(0.0f);      // Non-metallic</code></pre>
+                </div>
+            </div>
+
+            <h2>Best Practices</h2>
+
+            <ul>
+                <li><strong>Texture Management</strong> - Use shared pointers for textures to avoid unnecessary duplicates.
+                    Multiple materials can reference the same texture.</li>
+                <li><strong>Texture vs. Scalar Properties</strong> - Use textures for detailed surfaces and scalar values
+                    for simple or uniform materials. Check the boolean flags (e.g., <code>bAlbedo</code>) to determine
+                    whether a texture is available.</li>
+                <li><strong>PBR Guidelines</strong> - Follow physically-based ranges for material properties. Roughness
+                    and metallic values should typically be in the 0-1 range.</li>
+                <li><strong>Material Complexity</strong> - Start with simple materials and add complexity as needed.
+                    Often, a well-configured albedo and roughness can achieve good results before adding normal maps
+                    or other details.</li>
+                <li><strong>LOD Considerations</strong> - Consider using simpler materials (fewer textures) for objects
+                    that will be viewed from a distance.</li>

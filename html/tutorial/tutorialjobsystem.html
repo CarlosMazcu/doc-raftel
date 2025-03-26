@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to use the JobSystem in Raftel Engine for multithreaded task execution.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <title>JobSystem - Raftel Engine</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+</head>
+<body>
+  <!-- Header fijo -->
+  <div class="header">
+    <div class="header-logo">
+      <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+      <span>Raftel Engine</span>
+    </div>
+    <div class="header-search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+      </svg>
+      <input type="text" placeholder="Search documentation...">
+    </div>
+    <div class="header-links">
+      <a href="../index.html">Home</a>
+      <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+      <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+      <a href="../index.html#community">Community</a>
+    </div>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="container">
+    <!-- Sidebar izquierdo -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-category">Getting Started</div>
+        <a href="../index.html" class="sidebar-item">Introduction</a>
+        <a href="../started/installation.html" class="sidebar-item">Installation</a>
+        <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-category">Tutorials</div>
+        <a href="tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+        <a href="tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+        <a href="tutorialinput.html" class="sidebar-item">Handling Input</a>
+        <a href="tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+        <a href="tutorialjobsystem.html" class="sidebar-item active">Using JobSystem</a>
+        <a href="tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+        <a href="tutorialecs.html" class="sidebar-item">Entity Component System</a>
+        <a href="tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+
+
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-category">Core Components</div>
+        <a href="../core/windowsystem.html" class="sidebar-item">Window System</a>
+        <a href="../core/shader.html" class="sidebar-item">Shaders</a>
+        <a href="../core/mesh.html" class="sidebar-item">Meshes</a>
+        <a href="../core/material.html" class="sidebar-item">Materials</a>
+        <a href="../core/texture.html" class="sidebar-item">Textures</a>
+        <a href="../core/lighting.html" class="sidebar-item">Lighting</a>
+        <a href="../core/input.html" class="sidebar-item">Input</a>
+        <a href="../core/jobsystem.html" class="sidebar-item">JobSystem</a>
+        <a href="../core/rendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="../core/ecs.html" class="sidebar-item">ECS</a>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+      <h1>Using the JobSystem in Raftel Engine</h1>
+      
+      <p>This tutorial introduces Raftel Engine's JobSystem, a multi-threaded task execution system that helps you improve performance by distributing work across multiple CPU cores.</p>
+
+      <div class="tutorial-nav">
+        <a href="tutorialmesh.html" class="prev">Previous: Loading 3D Meshes</a>
+        <a href="#" class="next">Next: Advanced Features</a>
+      </div>
+      
+      <h2>What is JobSystem?</h2>
+      
+      <p>The JobSystem is a thread pool implementation that allows you to execute tasks concurrently across multiple CPU cores. It's particularly useful for:</p>
+      
+      <ul>
+        <li>Loading assets in the background while maintaining smooth rendering</li>
+        <li>Performing computationally intensive operations without freezing the UI</li>
+        <li>Processing multiple independent tasks simultaneously</li>
+        <li>Utilizing all available CPU cores for better performance</li>
+      </ul>
+      
+      <div class="info-box">
+        <h3>Thread Safety Note</h3>
+        <p>When using the JobSystem, be careful with tasks that modify shared resources. Use proper synchronization mechanisms (mutexes, atomic variables) to avoid data races.</p>
+      </div>
+      
+      <h2>Basic Usage</h2>
+      
+      <p>Using the JobSystem involves three simple steps:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Basic JobSystem Usage</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/job_system.hpp"
+
+int main() {
+  // Step 1: Create the JobSystem
+  auto jobSystem = Raftel::JobSystem::make();
+  
+  // Step 2: Submit work to the JobSystem
+  auto futureResult = jobSystem->AddWork([](int a, int b) {
+    return a + b;
+  }, 5, 3);
+  
+  // Step 3: Get the result when needed
+  int result = futureResult.get();  // This will be 8
+  
+  return 0;
+}</code></pre>
+        </div>
+      </div>
+      
+      <h2>Creating the JobSystem</h2>
+      
+      <p>To start using the JobSystem, you first need to create an instance:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Creating a JobSystem</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/job_system.hpp"
+
+// Create the JobSystem
+auto jobSystem = Raftel::JobSystem::make();</code></pre>
+        </div>
+      </div>
+      
+      <p>The JobSystem creates a thread pool with one thread per CPU core by default, maximizing your potential for parallel execution.</p>
+      
+      <h2>Submitting Tasks</h2>
+      
+      <p>You can submit tasks to the JobSystem using the <code>AddWork</code> method. This method accepts a function (or lambda) and its arguments:</p>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>Simple Task</h3>
+          <pre><code>// Submit a simple task
+auto future = jobSystem->AddWork([]() {
+  return "Task completed";
+});</code></pre>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Task with Parameters</h3>
+          <pre><code>// Submit a task with parameters
+auto future = jobSystem->AddWork([](int a, int b) {
+  return a * b;
+}, 10, 20);</code></pre>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Task with Member Function</h3>
+          <pre><code>// Submit a task that calls a member function
+auto future = jobSystem->AddWork(&MyClass::compute, 
+                               myObject, param1, param2);</code></pre>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Void Task (No Return Value)</h3>
+          <pre><code>// Submit a task with no return value
+auto future = jobSystem->AddWork([](const std::string& msg) {
+  std::cout << msg << std::endl;
+}, "Processing...");</code></pre>
+        </div>
+      </div>
+      
+      <div class="tip-box">
+        <h3>Understanding Return Values</h3>
+        <p>The <code>AddWork</code> method returns a <code>std::future</code> object that will eventually contain the result of the task. The future's template type will match the return type of your function.</p>
+      </div>
+      
+      <h2>Getting Results</h2>
+      
+      <p>Once you've submitted a task, you can get its result using the <code>get()</code> method of the returned future:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Getting Task Results</div>
+        <div class="example-card-body">
+          <pre><code>// Submit a calculation
+auto futureResult = jobSystem->AddWork([](int a, int b) {
+  return a + b;
+}, 5, 3);
+
+// Do other work here...
+
+// Get the result when needed
+int result = futureResult.get();  // This will block until the result is ready</code></pre>
+        </div>
+      </div>
+      
+      <p>The <code>get()</code> method will block the calling thread until the result is available. If you want to check if the result is ready without blocking, you can use <code>wait_for()</code> instead:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Non-blocking Result Check</div>
+        <div class="example-card-body">
+          <pre><code>// Check if the result is ready without blocking
+if (futureResult.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+  // Result is ready
+  int result = futureResult.get();
+  // Use the result...
+} else {
+  // Result is not ready yet
+  // Continue with other work...
+}</code></pre>
+        </div>
+      </div>
+      
+      <h2>Practical Example: Asynchronous Mesh Loading</h2>
+      
+      <p>A common use case for the JobSystem is loading assets in the background to avoid freezing the rendering loop. Here's an example of asynchronously loading a 3D mesh:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Asynchronous Mesh Loading</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/window.hpp"
+#include "raftel/mesh.hpp"
+#include "raftel/shader.hpp"
+#include "raftel/job_system.hpp"
+#include "raftel/input.hpp"
+
+int main(void) {
+  auto windowSystemOpt = Raftel::WindowSystem::make();
+  auto windowOpt = Raftel::Window::make("Job System Demo", *windowSystemOpt);
+  auto jobSystem = Raftel::JobSystem::make();
+  
+  if (!windowOpt) {
+    std::cerr << "Error creating window.\n";
+    return -1;
+  }
+  
+  windowOpt->MakeContextCurrent();
+  
+  // Define mesh paths
+  std::vector<std::string> meshPaths = {
+    "../assets/obj/luffytrial.obj",
+    "../assets/obj/cube.obj",
+    "../assets/obj/sword.obj",
+  };
+  size_t currentMeshIndex = 0;
+  
+  // Load initial mesh
+  Raftel::Mesh myModel;
+  Raftel::ShaderProgram shaderProgram;
+  
+  if (!myModel.loadMesh(meshPaths[currentMeshIndex])) {
+    std::cerr << "Error loading initial mesh.\n";
+    return -1;
+  }
+  
+  // Set up texture and material
+  auto texture = Raftel::Texture::loadTexture("../assets/textures/luffytextrial.png");
+  auto material = std::make_shared<Raftel::Material>();
+  material->setAlbedo(texture);
+  myModel.setMaterial(material);
+  myModel.setupMesh();
+  
+  // Load shader
+  if (!shaderProgram.load("../assets/shaders/test.vs", "../assets/shaders/test.fs")) {
+    std::cerr << "Error loading shaders.\n";
+    return -1;
+  }
+  
+  // Variables for async loading
+  bool isLoading = false;
+  std::future<std::shared_ptr<Raftel::Mesh>> futureMesh;
+  
+  // Main render loop
+  while (!windowOpt->ShouldClose()) {
+    windowOpt->input->updateKeys();
+    windowOpt->clear();
+    
+    // Check for mesh switch request
+    if (windowOpt->input->isKeyPressed(Raftel::Input::Keys::Key_Space) && !isLoading) {
+      isLoading = true;
+      
+      // Choose next mesh index
+      size_t nextMeshIndex = (currentMeshIndex + 1) % meshPaths.size();
+      
+      // Submit mesh loading job to JobSystem
+      futureMesh = jobSystem->AddWork([&meshPaths, nextMeshIndex]() {
+        auto tempModel = std::make_shared<Raftel::Mesh>();
+        if (!tempModel->loadMesh(meshPaths[nextMeshIndex])) {
+          std::cerr << "Error loading mesh: " << meshPaths[nextMeshIndex] << "\n";
+        }
+        return tempModel;
+      });
+      
+      currentMeshIndex = nextMeshIndex;
+    }
+    
+    // Check if async loading is complete
+    if (futureMesh.valid()) {
+      if (futureMesh.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+        // Mesh loading is complete
+        auto result = futureMesh.get();
+        result->setupMesh();
+        myModel = std::move(*result);
+        isLoading = false;
+      }
+    }
+    
+    // Render current mesh
+    shaderProgram.use();
+    myModel.setUniforms(shaderProgram.GetProgramID());
+    myModel.draw(shaderProgram);
+    
+    windowOpt->swapBuffers();
+  }
+  
+  return 0;
+}</code></pre>
+        </div>
+      </div>
+      
+      <p>In this example:</p>
+      <ol>
+        <li>We load an initial mesh synchronously at startup</li>
+        <li>When the user presses Space, we submit a job to load the next mesh in the background</li>
+        <li>We continue rendering the current mesh while the new one loads</li>
+        <li>We check each frame if the loading job has completed</li>
+        <li>When the job completes, we apply the new mesh</li>
+      </ol>
+      
+      <p>This pattern keeps the application responsive while performing intensive operations like mesh loading.</p>
+      
+      <h2>Best Practices</h2>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>Task Granularity</h3>
+          <p>Create tasks that are substantial enough to offset the overhead of thread switching. Very small tasks may not benefit from parallelization.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Avoid Thread Contention</h3>
+          <p>Design tasks to work on independent data to minimize synchronization needs and maximize parallelism.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Thread Safety</h3>
+          <p>Use proper synchronization (mutexes, atomic variables) when tasks need to access shared resources.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Futures Management</h3>
+          <p>Always check if a future is valid before calling <code>get()</code> or <code>wait_for()</code> to avoid undefined behavior.</p>
+        </div>
+      </div>
+      
+      <h2>When to Use JobSystem</h2>
+      
+      <p>The JobSystem is best used for:</p>
+      
+      <ul>
+        <li><strong>Asset Loading:</strong> Loading meshes, textures, or sounds in the background</li>
+        <li><strong>Physics Calculations:</strong> Distributing physics updates across multiple cores</li>
+        <li><strong>AI Processing:</strong> Running AI algorithms for multiple entities in parallel</li>
+        <li><strong>Data Processing:</strong> Processing large amounts of data in parallel chunks</li>
+        <li><strong>Procedural Generation:</strong> Generating terrain, textures, or other content in the background</li>
+      </ul>
+      
+      <div class="warning-box">
+        <h3>GPU Operations</h3>
+        <p>Remember that the JobSystem runs tasks on CPU threads. For GPU-bound operations, parallelizing with JobSystem may not improve performance since the bottleneck is the GPU, not the CPU.</p>
+      </div>
+      
+      <h2>Complete API Reference</h2>
+      
+      <p>The JobSystem API is simple but powerful:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">JobSystem API</div>
+        <div class="example-card-body">
+          <pre><code>namespace Raftel {
+  class JobSystem {
+  public:
+    // Create a JobSystem instance
+    static std::unique_ptr<JobSystem> make();
+    
+    // Add work to the JobSystem
+    template<typename Function, typename... Args>
+    auto AddWork(Function&& function, Args&&... args) 
+        -> std::future<decltype(function(args...))>;
+  };
+}</code></pre>
+        </div>
+      </div>
+      
+      <p>For complete details, see the <a href="../../doxygen/html/class_raftel_1_1_job_system.html"target="_blank">JobSystem API Reference</a>.</p>
+      
+      <div class="tutorial-nav">
+        <a href="tutorialmesh.html" class="prev">Previous: Loading 3D Meshes</a>
+        <a href="#" class="next">Next: Advanced Features</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-links">
+      <a href="../about.html">About</a>
+      <a href="../extra/license.html">License</a>
+      <a href="../contact.html">Contact</a>
+      <a href="../privacy.html">Privacy</a>
+    </div>
+    <div class="footer-copyright">
+      &copy; 2025 Raftel Engine. All rights reserved.
+    </div>
+  </div>
+
+  <script src="../script.js"></script>
+</body>
+</html>

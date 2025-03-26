@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn how to set up build environments for Raftel Engine development projects.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Build Setup - Raftel Engine</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+</head>
+
+<body>
+    <!-- Header fijo -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+            <span>Raftel Engine</span>
+        </div>
+        <div class="header-search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <input type="text" placeholder="Search documentation...">
+        </div>
+        <div class="header-links">
+            <a href="../index.html">Home</a>
+            <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+            <a href="https://github.com/" target="_blank">GitHub</a>
+            <a href="index.html#community">Community</a>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Sidebar izquierdo -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-category">Getting Started</div>
+                <a href="../index.html" class="sidebar-item">Introduction</a>
+                <a href="installation.html" class="sidebar-item">Installation</a>
+                <a href="build-setup.html" class="sidebar-item active">Build Setup</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Tutorials</div>
+                <a href="../tutorial/tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+                <a href="../tutorial/tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+                <a href="../tutorial/tutorialinput.html" class="sidebar-item">Handling Input</a>
+                <a href="../tutorial/tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+                <a href="../tutorial/tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+                <a href="../tutorial/tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="../tutorial/tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+                <a href="../tutorial/tutorialecs.html" class="sidebar-item">Entity Component System</a>
+        <a href="../tutorial/tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Core Components</div>
+                <a href="../core/windowsystem.html" class="sidebar-item">Window System</a>
+                <a href="../core/shader.html" class="sidebar-item">Shaders</a>
+                <a href="../core/mesh.html" class="sidebar-item">Meshes</a>
+                <a href="../core/material.html" class="sidebar-item">Materials</a>
+                <a href="../core/texture.html" class="sidebar-item">Textures</a>
+                <a href="../core/lighting.html" class="sidebar-item">Lighting</a>
+                <a href="../core/input.html" class="sidebar-item">Input</a>
+                <a href="../core/jobsystem.html" class="sidebar-item">JobSystem</a>
+                <a href="../core/rendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="../core/ecs.html" class="sidebar-item">ECS</a>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content">
+            <h1>Build Setup for Raftel Engine</h1>
+
+            <p>This guide covers the build system setup for Raftel Engine, including how to configure your development
+                environment, manage dependencies, and build your own projects with the engine.</p>
+
+            <div class="tutorial-nav">
+                <a href="installation.html" class="prev">Previous: Installation</a>
+                <a href="../tutorial/tutorialwindow.html" class="next">Next: Creating a Window</a>
+            </div>
+
+            <h2>Build System Overview</h2>
+
+            <p>Raftel Engine uses a combination of these build tools:</p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>CMake</h3>
+                    <p>Cross-platform build system generator that generates native build files for your platform and
+                        IDE.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Premake</h3>
+                    <p>Build configuration tool that generates project files for Visual Studio and other development
+                        environments.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Conan</h3>
+                    <p>C++ package manager that handles third-party library dependencies automatically.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Python Scripts</h3>
+                    <p>Custom scripts that automate parts of the build process and dependency management.</p>
+                </div>
+            </div>
+
+            <h2>Setting Up the Build Environment</h2>
+
+            <h3>Step 1: Clone the Repository</h3>
+
+            <p>Start by cloning the Raftel Engine repository from GitHub:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">Clone Repository</div>
+                <div class="example-card-body">
+                    <pre><code>git clone https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba.git
+cd 3PVG_PMG_24_mazcunyabla_folgadoba</code></pre>
+                </div>
+            </div>
+
+            <h3>Step 2: Install Prerequisites</h3>
+
+            <p>Make sure you have the required tools installed on your system:</p>
+
+            <ul>
+                <li>Python 3.6 or higher</li>
+                <li>Conan package manager (version &lt; 2)</li>
+                <li>CMake 3.20 or higher</li>
+                <li>Visual Studio 2019 or 2022 (on Windows)</li>
+            </ul>
+
+            <div class="tip-box">
+                <h3>Python Version Check</h3>
+                <p>You can verify your Python version by running:</p>
+                <pre><code>python --version</code></pre>
+                <p>Make sure it shows version 3.6 or higher.</p>
+            </div>
+
+            <h3>Step 3: Generate Dependencies</h3>
+
+            <p>Run the dependency generator script to fetch and configure all required third-party libraries:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">Generate Dependencies</div>
+                <div class="example-card-body">
+                    <pre><code>cd tools
+./gendeps.bat</code></pre>
+                </div>
+            </div>
+
+            <p>This script performs the following tasks:</p>
+            <ul>
+                <li>Initializes Conan to manage C++ packages</li>
+                <li>Installs required dependencies like GLFW, GLM, stb_image, etc.</li>
+                <li>Configures the dependencies for your specific platform</li>
+                <li>Prepares the environment for the main build process</li>
+            </ul>
+
+            <div class="info-box">
+                <h3>Dependency Configuration</h3>
+                <p>The <code>gendeps.bat</code> script uses Conan profiles to configure dependencies for different build
+                    configurations. You can find these profiles in the <code>tools/conan</code> directory.</p>
+            </div>
+
+            <h3>Step 4: Generate Project Files</h3>
+
+            <p>Navigate back to the root directory and use Premake to generate project files for your preferred IDE:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">Generate Project Files</div>
+                <div class="example-card-body">
+                    <pre><code>cd ..  # Return to root directory
+premake5.exe vs2022  # For Visual Studio 2022
+# Or
+premake5.exe vs2019  # For Visual Studio 2019</code></pre>
+                </div>
+            </div>
+
+            <p>This command generates the solution and project files in the <code>build</code> directory.</p>
+
+            <h3>Step 5: Open and Build the Solution</h3>
+
+            <p>Open the generated solution file in Visual Studio:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">Open Solution</div>
+                <div class="example-card-body">
+                    <pre><code>cd build
+start Raftel.sln</code></pre>
+                </div>
+            </div>
+
+            <p>Once the solution is open in Visual Studio:</p>
+            <ol>
+                <li>Select the desired build configuration (Debug or Release) from the drop-down menu</li>
+                <li>Right-click on the "Raftel" project in the Solution Explorer</li>
+                <li>Select "Build" to compile the engine</li>
+            </ol>
+
+            <div class="warning-box">
+                <h3>Build Order</h3>
+                <p>If you encounter build errors, make sure to build the projects in the correct order. The "Raftel"
+                    project should be built first, followed by any examples or applications that depend on it.</p>
+            </div>
+
+            <h2>Creating Your Own Project</h2>
+
+            <p>Once you have built Raftel Engine, you can create your own projects that use the engine.</p>
+
+            <h3>Option 1: Using the Project Template</h3>
+
+            <p>The easiest way to create a new Raftel Engine project is to use the provided template:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">Create Project from Template</div>
+                <div class="example-card-body">
+                    <pre><code>cd tools
+python create_project.py --name MyProject --path C:/Projects</code></pre>
+                </div>
+            </div>
+
+            <p>This script creates a new project with the basic structure and configuration files needed to use Raftel
+                Engine.</p>
+
+            <h3>Option 2: Manual Project Setup</h3>
+
+            <p>Alternatively, you can set up a project manually by following these steps:</p>
+
+            <h4>1. Create Project Structure</h4>
+
+            <div class="example-card">
+                <div class="example-card-header">Project Structure</div>
+                <div class="example-card-body">
+                    <pre><code>MyProject/
+├── assets/
+│   ├── models/
+│   ├── shaders/
+│   └── textures/
+├── include/
+├── src/
+│   └── main.cpp
+└── premake5.lua</code></pre>
+                </div>
+            </div>
+
+            <h4>2. Create a Premake Configuration File</h4>
+
+            <p>Create a <code>premake5.lua</code> file in your project root with the following content:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">premake5.lua</div>
+                <div class="example-card-body">
+                    <pre><code>workspace "MyProject"
+   configurations { "Debug", "Release" }
+   platforms { "Win64" }
+   location "build"
+
+project "MyProject"
+   kind "ConsoleApp"
+   language "C++"
+   cppdialect "C++17"
+   targetdir "bin/%{cfg.buildcfg}"
+   
+   files { "src/**.h", "src/**.cpp", "include/**.h" }
+   
+   -- Adjust this path to point to your Raftel Engine installation
+   local RAFTEL_PATH = "C:/Path/To/Raftel"
+   
+   includedirs { 
+      "include",
+      RAFTEL_PATH .. "/include"
+   }
+   
+   libdirs {
+      RAFTEL_PATH .. "/lib"
+   }
+   
+   links { "Raftel" }
+   
+   filter "configurations:Debug"
+      defines { "DEBUG" }
+      symbols "On"
+      runtime "Debug"
+      
+   filter "configurations:Release"
+      defines { "NDEBUG" }
+      optimize "On"
+      runtime "Release"</code></pre>
+                </div>
+            </div>
+
+            <h4>3. Create a Basic Application</h4>
+
+            <p>Create a <code>main.cpp</code> file in the <code>src</code> directory:</p>
+
+            <div class="example-card">
+                <div class="example-card-header">src/main.cpp</div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/window.hpp"
+
+int main(void) {
+    // Initialize window system
+    auto windowSystemOpt = Raftel::WindowSystem::make();
+    auto windowOpt = Raftel::Window::make("My Raftel Application", *windowSystemOpt);
+    
+    if (!windowOpt) {
+        std::cerr &lt; "Error creating window\n";
+        return -1;
+    }
+    
+    // Set up window context
+    windowOpt->MakeContextCurrent();
+    
+    // Main render loop
+    while (!windowOpt->ShouldClose()) {
+        windowOpt->clear();
+        // Your rendering code here
+        windowOpt->swapBuffers();
+    }
+    
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+
+            <h4>4. Generate and Build the Project</h4>
+
+            <div class="example-card">
+                <div class="example-card-header">Build Project</div>
+                <div class="example-card-body">
+                    <pre><code>cd MyProject
+premake5 vs2022
+cd build
+start MyProject.sln</code></pre>
+                </div>
+            </div>
+
+            <h2>Build Configurations</h2>
+
+            <p>Raftel Engine supports two main build configurations:</p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>Debug</h3>
+                    <p>Includes debugging symbols and additional validation. Performance is slower, but it's easier to
+                        find and fix bugs.</p>
+                    <ul>
+                        <li>No optimization</li>
+                        <li>Debug symbols included</li>
+                        <li>Additional runtime checks</li>
+                    </ul>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Release</h3>
+                    <p>Optimized for performance with no debugging features. Use this for final builds or performance
+                        testing.</p>
+                    <ul>
+                        <li>Full optimization</li>
+                        <li>No debug symbols</li>
+                        <li>Minimal runtime checks</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>Troubleshooting</h2>
+
+            <div class="example-card">
+                <div class="example-card-header">Common Build Issues</div>
+                <div class="example-card-body">
+                    <h4>Missing Dependencies</h4>
+                    <p>If you see errors about missing headers or libraries, make sure you ran the
+                        <code>gendeps.bat</code> script and that it completed successfully.</p>
+
+                    <h4>Linker Errors</h4>
+                    <p>If you encounter linker errors when building your project, check that:</p>
+                    <ul>
+                        <li>The path to Raftel Engine in your premake5.lua file is correct</li>
+                        <li>You've built the Raftel Engine library with the same configuration (Debug/Release)</li>
+                        <li>The library file is in the expected location</li>
+                    </ul>
+
+                    <h4>Conan Errors</h4>
+                    <p>If Conan reports errors when generating dependencies, make sure:</p>
+                    <ul>
+                        <li>You're using Conan version &lt; 2.0</li>
+                        <li>Your internet connection is stable</li>
+                        <li>You have sufficient permissions to download and install packages</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>Next Steps</h2>
+
+            <p>Now that you have set up your build environment, you're ready to start developing with Raftel Engine.
+                Check out these tutorials to get started:</p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3><a href="../tutorial/tutorialwindow.html">Creating a Window</a></h3>
+                    <p>Learn how to create and manage a window for your application.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="../tutorial/tutorialtriangle.html">Drawing a Triangle</a></h3>
+                    <p>Start with the fundamentals of rendering geometry.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="../tutorial/tutorialinput.html">Handling Input</a></h3>
+                    <p>Learn how to capture and respond to user input.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="../tutorial/tutorialmesh.html">Loading 3D Meshes</a></h3>
+                    <p>Discover how to load and render 3D models.</p>
+                </div>
+            </div>
+
+            <div class="tutorial-nav">
+                <a href="installation.html" class="prev">Previous: Installation</a>
+                <a href="../tutorial/tutorialwindow.html" class="next">Next: Creating a Window</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="about.html">About</a>
+            <a href="../extra/license.html">License</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy</a>
+        </div>
+        <div class="footer-copyright">
+            &copy; 2025 Raftel Engine. All rights reserved.
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

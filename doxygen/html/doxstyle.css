@@ -1,0 +1,77 @@
+/* Colores temáticos */
+:root {
+  --primary-color: #204056; /* Azul marino profundo */
+  --secondary-color: #f4a261; /* Salmón claro */
+  --accent-color: #e76f51; /* Rojo terracota */
+  --background-color: #f8edeb; /* Marfil suave */
+  --text-color: #333; /* Casi negro */
+}
+
+/* Estilos generales del cuerpo */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: 'Georgia', serif;
+}
+
+/* Encabezados */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary-color);
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* Enlaces */
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: var(--secondary-color);
+}
+
+/* Navegación */
+.navbar {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+  padding: 10px 15px;
+}
+
+.navbar a {
+  color: var(--background-color);
+  padding: 5px 10px;
+}
+
+/* Pie de página */
+footer {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* Código fuente y bloques de código */
+pre {
+  background-color: var(--secondary-color);
+  border: 1px solid var(--primary-color);
+  padding: 10px;
+  color: var(--primary-color);
+}
+
+/* Tablas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid var(--primary-color);
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: var(--accent-color);
+  color: var(--background-color);
+}

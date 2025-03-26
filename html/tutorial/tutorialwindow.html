@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to create a window with Raftel Engine in this step-by-step tutorial.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <title>Creating a Window - Raftel Engine Tutorial</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+</head>
+
+<body>
+  <!-- Header fijo -->
+  <div class="header">
+    <div class="header-logo">
+      <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+      <span>Raftel Engine</span>
+    </div>
+    <div class="header-search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path
+          d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+      </svg>
+      <input type="text" placeholder="Search documentation...">
+    </div>
+    <div class="header-links">
+      <a href="../index.html">Home</a>
+      <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+      <a href="https://github.com/" target="_blank">GitHub</a>
+      <a href="../index.html#community">Community</a>
+    </div>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="container">
+    <!-- Sidebar izquierdo -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-category">Getting Started</div>
+        <a href="../index.html" class="sidebar-item">Introduction</a>
+        <a href="../started/installation.html" class="sidebar-item">Installation</a>
+        <a href="../started/build-setup.html" class="sidebar-item">Build Setup</a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-category">Tutorials</div>
+        <a href="tutorialwindow.html" class="sidebar-item active">Creating a Window</a>
+        <a href="tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+        <a href="tutorialinput.html" class="sidebar-item">Handling Input</a>
+        <a href="tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+        <a href="tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+        <a href="tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+        <a href="tutorialecs.html" class="sidebar-item">Entity Component System</a>
+        <a href="tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-category">Core Components</div>
+        <a href="../core/windowsystem.html" class="sidebar-item">Window System</a>
+        <a href="../core/shader.html" class="sidebar-item">Shaders</a>
+        <a href="../core/mesh.html" class="sidebar-item">Meshes</a>
+        <a href="../core/material.html" class="sidebar-item">Materials</a>
+        <a href="../core/texture.html" class="sidebar-item">Textures</a>
+        <a href="../core/lighting.html" class="sidebar-item">Lighting</a>
+        <a href="../core/input.html" class="sidebar-item">Input</a>
+        <a href="../core/jobsystem.html" class="sidebar-item">JobSystem</a>
+        <a href="../core/rendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="../core/ecs.html" class="sidebar-item">ECS</a>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+      <h1>Creating a Window with Raftel Engine</h1>
+
+      <p>In this tutorial, you will learn how to create a simple window using Raftel Engine. This is the first step in
+        building any graphical application with the engine.</p>
+
+      <div class="tutorial-nav">
+        <a href="../index.html" class="prev">Previous: Introduction</a>
+        <a href="tutorialtriangle.html" class="next">Next: Drawing a Triangle</a>
+      </div>
+
+      <h2>Prerequisites</h2>
+      <p>Before you begin, make sure you have:</p>
+      <ul>
+        <li>Raftel Engine installed on your system</li>
+        <li>A basic understanding of C++ programming</li>
+        <li>A compatible C++ development environment</li>
+      </ul>
+
+      <h2>Creating a Window</h2>
+
+      <h3>Step 1: Include Required Headers</h3>
+
+      <p>Start by including the Raftel window system header in your program:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Including Required Headers</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/window.hpp"</code></pre>
+        </div>
+      </div>
+
+      <h3>Step 2: Initialize the Window System</h3>
+
+      <p>Create an instance of the window system:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Initializing Window System</div>
+        <div class="example-card-body">
+          <pre><code>auto windowSystemOpt = Raftel::WindowSystem::make();</code></pre>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <h3>The Window System</h3>
+        <p>The <code>WindowSystem</code> class manages the platform-specific window functionality. It must be created
+          before any windows can be created.</p>
+      </div>
+
+      <h3>Step 3: Create a Window</h3>
+
+      <p>Using the window system, create a new window with a title:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Creating a Window</div>
+        <div class="example-card-body">
+          <pre><code>auto windowOpt = Raftel::Window::make("WindowTest", *windowSystemOpt);
+if (!windowOpt) {
+  std::cerr << "Can't create window\n";
+  return -1;
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <h3>Error Handling</h3>
+        <p>Always check if the window was created successfully. The <code>make</code> method returns an optional that
+          contains the window instance if successful.</p>
+      </div>
+
+      <h3>Step 4: Set the Window Context</h3>
+
+      <p>Before rendering anything, set the window as the current OpenGL context:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Setting Context</div>
+        <div class="example-card-body">
+          <pre><code>windowOpt->MakeContextCurrent();</code></pre>
+        </div>
+      </div>
+
+      <h3>Step 5: Create the Main Render Loop</h3>
+
+      <p>Create a loop that keeps the window open until the user closes it:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Main Render Loop</div>
+        <div class="example-card-body">
+          <pre><code>while (!windowOpt->ShouldClose()) {
+  windowOpt->clear();
+  windowOpt->swapBuffers();
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <h3>The Render Loop</h3>
+        <p>The render loop performs the following operations:</p>
+        <ul>
+          <li><code>ShouldClose()</code>: Checks if the window should close (e.g., if the user clicked the close button)
+          </li>
+          <li><code>clear()</code>: Clears the window's color and depth buffers</li>
+          <li><code>swapBuffers()</code>: Swaps the front and back buffers to display the rendered frame</li>
+        </ul>
+      </div>
+
+      <h2>Complete Example</h2>
+
+      <p>Here's the complete code for creating a window with Raftel Engine:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Complete Code</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/window.hpp"
+
+int main(void) {
+  auto windowSystemOpt = Raftel::WindowSystem::make();
+  auto windowOpt = Raftel::Window::make("WindowTest", *windowSystemOpt);
+  if (!windowOpt) {
+      std::cerr << "Can't create window\n";
+      return -1;
+  }
+
+  windowOpt->MakeContextCurrent();
+  while (!windowOpt->ShouldClose()) {
+      windowOpt->clear();
+      windowOpt->swapBuffers();
+  }
+
+  return 0;
+}</code></pre>
+        </div>
+      </div>
+
+      <h2>Next Steps</h2>
+
+      <p>Now that you've created a window, you can proceed to the next tutorial to learn how to render basic shapes:</p>
+
+      <div class="grid">
+        <div class="grid-item">
+          <h3><a href="tutorialtriangle.html">Drawing a Triangle</a></h3>
+          <p>Learn how to render a simple triangle using vertices and shaders.</p>
+        </div>
+
+        <div class="grid-item">
+          <h3><a href="tutorialinput.html">Handling Input</a></h3>
+          <p>Discover how to capture and respond to user input through the keyboard and mouse.</p>
+        </div>
+      </div>
+
+      <div class="tutorial-nav">
+        <a href="../index.html" class="prev">Previous: Introduction</a>
+        <a href="tutorialtriangle.html" class="next">Next: Drawing a Triangle</a>
+      </div>
+
+      <div class="api-reference">
+        <p>For complete API details, see the <a href="../../doxygen/html/class_raftel_1_1_window.html"
+            target="_blank">Window Class Reference</a> in the API documentation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-links">
+      <a href="../about.html">About</a>
+      <a href="../extra/license.html">License</a>
+      <a href="../contact.html">Contact</a>
+      <a href="../privacy.html">Privacy</a>
+    </div>
+    <div class="footer-copyright">
+      &copy; 2025 Raftel Engine. All rights reserved.
+    </div>
+  </div>
+
+  <script src="../script.js"></script>
+</body>
+
+</html>

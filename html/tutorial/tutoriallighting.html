@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to implement dynamic lighting and shadows in Raftel Engine.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <title>Lighting and Shadows - Raftel Engine</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+</head>
+<body>
+  <!-- Header fijo -->
+  <div class="header">
+    <div class="header-logo">
+      <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+      <span>Raftel Engine</span>
+    </div>
+    <div class="header-search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+      </svg>
+      <input type="text" placeholder="Search documentation...">
+    </div>
+    <div class="header-links">
+      <a href="../index.html">Home</a>
+      <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+      <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+      <a href="../index.html#community">Community</a>
+    </div>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="container">
+    <!-- Sidebar izquierdo -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-category">Getting Started</div>
+        <a href="../index.html" class="sidebar-item">Introduction</a>
+        <a href="../started/installation.html" class="sidebar-item">Installation</a>
+        <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-category">Tutorials</div>
+        <a href="tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+        <a href="tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+        <a href="tutorialinput.html" class="sidebar-item">Handling Input</a>
+        <a href="tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+        <a href="tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+        <a href="tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+        <a href="tutorialecs.html" class="sidebar-item">Entity Component System</a>
+        <a href="tutoriallighting.html" class="sidebar-item active">Lighting and Shadows</a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-category">Core Components</div>
+        <a href="../core/windowsystem.html" class="sidebar-item">Window System</a>
+        <a href="../core/shader.html" class="sidebar-item">Shaders</a>
+        <a href="../core/mesh.html" class="sidebar-item">Meshes</a>
+        <a href="../core/material.html" class="sidebar-item">Materials</a>
+        <a href="../core/texture.html" class="sidebar-item">Textures</a>
+        <a href="../core/lighting.html" class="sidebar-item">Lighting</a>
+        <a href="../core/input.html" class="sidebar-item">Input</a>
+        <a href="../core/jobsystem.html" class="sidebar-item">JobSystem</a>
+        <a href="../core/rendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="../core/ecs.html" class="sidebar-item">ECS</a>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+      <h1>Lighting and Shadows in Raftel Engine</h1>
+      
+      <p>This tutorial explains how to implement dynamic lighting and shadows in your Raftel Engine application. We'll cover different light types, setting up materials for realistic lighting, and enabling shadow mapping.</p>
+
+      <div class="tutorial-nav">
+        <a href="tutorialecs.html" class="prev">Previous: Entity Component System</a>
+        <a href="../core/window.html" class="next">Next: Window System</a>
+      </div>
+      
+      <h2>Lighting System Overview</h2>
+      
+      <p>Raftel Engine's lighting system is built around these key components:</p>
+      
+      <ul>
+        <li>The <code>LightComponent</code> that defines different types of lights and their properties</li>
+        <li>The <code>Material</code> system that controls how surfaces respond to light</li>
+        <li>Shadow mapping capabilities for realistic shadow rendering</li>
+        <li>Integration with the Entity Component System (ECS)</li>
+      </ul>
+
+      <div class="example-viewer">
+        <div class="example-viewer-header">
+          <div class="example-viewer-title">Lighting and Shadows Preview</div>
+        </div>
+        <div>
+          <img src="../img/lighting.png" alt="Lighting and Shadows Example" style="width:100%; height:auto; object-fit:contain;">
+        </div>
+      </div>
+      
+      <h2>Light Types in Raftel Engine</h2>
+      
+      <p>Raftel Engine supports four main types of lights that can be added to your scenes:</p>
+      
+      <div class="grid mb-3">
+        <div class="grid-item">
+          <h3>Directional Light</h3>
+          <p>Represents distant light sources like the sun that affect all objects in the scene uniformly from a specific direction. Directional lights cast parallel shadows.</p>
+          <img src="../img/directional_light.png" alt="Directional Light" style="width:100%; height:auto;">
+        </div>
+        
+        <div class="grid-item">
+          <h3>Point Light</h3>
+          <p>Emits light in all directions from a specific position, like a light bulb. Intensity diminishes with distance. Point lights cast shadows in all directions.</p>
+          <img src="../img/point_light.png" alt="Point Light" style="width:100%; height:auto;">
+        </div>
+        
+        <div class="grid-item">
+          <h3>Spot Light</h3>
+          <p>Emits light in a cone shape from a position in a specific direction, like a flashlight. Spot lights have inner and outer cone angles that control falloff.</p>
+          <img src="../img/spot_light.png" alt="Spot Light" style="width:100%; height:auto;">
+        </div>
+        
+        <div class="grid-item">
+          <h3>Ambient Light</h3>
+          <p>Provides a base level of illumination to all objects in the scene regardless of their position or orientation, preventing completely dark areas.</p>
+          <img src="../img/ambient_light.png" alt="Ambient Light" style="width:100%; height:auto;">
+        </div>
+      </div>
+      
+      <h2>Creating Lights with ECS</h2>
+      
+      <p>To add lights to your scene, you create entities with <code>LightComponent</code>s:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Creating Different Light Types</div>
+        <div class="example-card-body">
+          <pre><code>// Create a spot light
+auto spotLightEntity = ecs->CreateEntity();
+spotLightEntity.addLightComp(Raftel::LightComponent(
+    Raftel::LightComponent::LightType::SPOT,     // Light type
+    glm::vec3(1.0f, 0.8f, 0.6f),                 // Warm white color
+    1.0f,                                         // Intensity
+    1000.0f,                                      // Range
+    20.0f,                                        // Inner cone angle
+    30.0f,                                        // Outer cone angle
+    windowOpt->getScreenSize()                    // Screen size for shadow mapping
+));
+// Add mesh to visualize the light source
+spotLightEntity.addMeshComp(Raftel::MeshFactory::createSphere(2.0f, 20));
+spotLightEntity.addRenderComp(true);
+// Position and orient the light
+spotLightEntity.addTransformComp({ 
+    glm::vec3(200.0f, -60.0f, -400.0f),          // Position
+    glm::vec3(90.0f, 0.0f, 0.0f),                // Rotation (points downward)
+    glm::vec3(10.0f)                             // Scale
+});
+
+// Create a point light
+auto pointLightEntity = ecs->CreateEntity();
+pointLightEntity.addLightComp(Raftel::LightComponent(
+    Raftel::LightComponent::LightType::POINT,    // Light type
+    glm::vec3(0.2f, 0.8f, 1.0f),                 // Blue-cyan color
+    1.0f,                                         // Intensity
+    500.0f,                                       // Range
+    0.0f,                                         // Not used for point lights
+    0.0f,                                         // Not used for point lights
+    windowOpt->getScreenSize()
+));
+pointLightEntity.addMeshComp(Raftel::MeshFactory::createSphere(1.0f, 20));
+pointLightEntity.addRenderComp(true);
+pointLightEntity.addTransformComp({ 
+    glm::vec3(0.0f, 150.0f, -400.0f),            // Position
+    glm::vec3(0.0f, 0.0f, 0.0f),                 // Rotation (not relevant for point lights)
+    glm::vec3(10.0f)                             // Scale
+});
+
+// Create a directional light (like the sun)
+auto directionalLightEntity = ecs->CreateEntity();
+directionalLightEntity.addLightComp(Raftel::LightComponent(
+    Raftel::LightComponent::LightType::DIRECTIONAL,  // Light type
+    glm::vec3(1.0f, 0.9f, 0.8f),                     // Sunlight color
+    0.8f,                                             // Intensity
+    2000.0f,                                          // Range
+    0.0f,                                             // Not used for directional lights
+    0.0f,                                             // Not used for directional lights
+    windowOpt->getScreenSize()
+));
+directionalLightEntity.addMeshComp(Raftel::MeshFactory::createSphere(5.0f, 20));
+directionalLightEntity.addRenderComp(true);
+directionalLightEntity.addTransformComp({ 
+    glm::vec3(500.0f, 300.0f, -200.0f),              // Position
+    glm::vec3(-45.0f, 30.0f, 0.0f),                  // Direction (via rotation)
+    glm::vec3(1.0f)                                  // Scale
+});</code></pre>
+        </div>
+      </div>
+      
+      <div class="tip-box">
+        <h3>Light Visualization</h3>
+        <p>It's often helpful to add a mesh component to light entities to visualize their position in the scene. Use small spheres for point and spot lights, and larger ones for directional lights.</p>
+      </div>
+      
+      <h2>Setting Up Ambient Light</h2>
+      
+      <p>In addition to entity-based lights, Raftel Engine provides a global ambient light that affects the entire scene:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Configuring Ambient Light</div>
+        <div class="example-card-body">
+          <pre><code>// Enable ambient lighting
+Raftel::Engine::Instance().has_ambient_light = true;
+
+// Set ambient light color (low intensity for night scenes)
+Raftel::Engine::Instance().ambient_light = glm::vec3(0.1f, 0.05f, 0.05f);
+
+// Or for daylight scenes
+// Raftel::Engine::Instance().ambient_light = glm::vec3(0.3f, 0.3f, 0.35f);</code></pre>
+        </div>
+      </div>
+      
+      <p>Ambient light is essential for preventing completely dark areas in your scene where direct light doesn't reach. Keep ambient light subtle to maintain the dramatic effect of your directional, point, and spot lights.</p>
+      
+      <h2>Material Properties for Lighting</h2>
+      
+      <p>To make objects respond realistically to light, you need to configure their material properties:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Setting Up Materials for Lighting</div>
+        <div class="example-card-body">
+          <pre><code>// Create a material with lighting properties
+auto sphereMesh = Raftel::MeshFactory::createSphere(4.0f, 20);
+
+// Set basic material properties
+sphereMesh->GetMaterialByIndex(0)->setAlbedoColor(glm::vec3(1.0f, 0.1f, 0.1f));  // Base color
+sphereMesh->GetMaterialByIndex(0)->setShininess(100.0f);                         // Specular shininess
+sphereMesh->GetMaterialByIndex(0)->setRoughness(0.2f);                           // Surface roughness
+sphereMesh->GetMaterialByIndex(0)->setMetallic(1.0f);                            // Metallic factor
+sphereMesh->GetMaterialByIndex(0)->setFresnel(5.0f);                             // Fresnel effect strength
+
+// Add PBR textures for more realistic lighting
+// Albedo/diffuse texture
+auto gold_a = Raftel::Texture::loadTexture("../assets/textures/gold/Metal048C_2K-JPG_Color.jpg");
+sphereMesh->GetMaterialByIndex(0)->setAlbedo(gold_a);
+
+// Normal map for surface detail
+auto gold_n = Raftel::Texture::loadTexture("../assets/textures/gold/Metal048C_2K-JPG_NormalGL.jpg");
+sphereMesh->GetMaterialByIndex(0)->setNormal(gold_n);
+
+// Roughness map for varying surface smoothness
+auto gold_r = Raftel::Texture::loadTexture("../assets/textures/gold/Metal048C_2K-JPG_Roughness.jpg");
+sphereMesh->GetMaterialByIndex(0)->setRoughness(gold_r);
+
+// Metallic map for varying reflectivity
+auto gold_m = Raftel::Texture::loadTexture("../assets/textures/gold/Metal048C_2K-JPG_Metalness.jpg");
+sphereMesh->GetMaterialByIndex(0)->setMetallic(gold_m);</code></pre>
+        </div>
+      </div>
+      
+      <div class="grid mb-3">
+        <div class="grid-item">
+          <h3>Albedo/Diffuse</h3>
+          <p>The base color of the material. This is the color that the material reflects when light hits it.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Roughness</h3>
+          <p>Controls how rough or smooth a surface appears. Rough surfaces scatter light in many directions (diffuse), while smooth surfaces create sharp reflections.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Metallic</h3>
+          <p>Determines whether the material behaves like a metal or a non-metal (dielectric). Metals absorb light and produce colored reflections.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Normal Map</h3>
+          <p>Adds surface detail without increasing mesh complexity. Normal maps affect how light interacts with the surface on a per-pixel basis.</p>
+        </div>
+      </div>
+      
+      <h2>Enabling Shadows</h2>
+      
+      <p>Raftel Engine includes shadow mapping capabilities to create realistic shadows in your scene. Enabling shadows is simple:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Enabling Shadow Mapping</div>
+        <div class="example-card-body">
+          <pre><code>// In your main rendering loop, pass 'true' as the last parameter to enable shadows
+Raftel::RenderSystem::UpdateRenderSystem(*ecs, camera, windowOpt->getScreenSize(), true);</code></pre>
+        </div>
+      </div>
+      
+      <div class="warning-box">
+        <h3>Performance Consideration</h3>
+        <p>Shadow mapping requires additional rendering passes and can impact performance, especially with multiple lights. If you're experiencing performance issues, you can disable shadows by passing <code>false</code> to the RenderSystem update function.</p>
+      </div>
+      
+      <p>When shadows are enabled, each light that can cast shadows (directional, spot, and point lights) will render the scene from its perspective to generate shadow maps. These shadow maps are then used during the main rendering pass to determine which areas are in shadow.</p>
+      
+      <h2>Adding a Skybox</h2>
+      
+      <p>A skybox adds environmental context to your scene and can contribute to the lighting through reflections. Raftel Engine makes it easy to add a skybox:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Setting Up a Skybox</div>
+        <div class="example-card-body">
+          <pre><code>// Load cubemap textures for the skybox
+std::shared_ptr<Raftel::Texture> skyboxtexture = Raftel::Texture::loadCubemap({
+    "../assets/textures/skybox/px.png",  // Positive X
+    "../assets/textures/skybox/nx.png",  // Negative X
+    "../assets/textures/skybox/py.png",  // Positive Y
+    "../assets/textures/skybox/ny.png",  // Negative Y
+    "../assets/textures/skybox/pz.png",  // Positive Z
+    "../assets/textures/skybox/nz.png"   // Negative Z
+});
+
+// Initialize the render system
+Raftel::RenderSystem::Initialize();
+
+// Set the skybox texture
+Raftel::RenderSystem::SetSkyboxTexture(skyboxtexture);</code></pre>
+        </div>
+      </div>
+      
+      <p>A skybox creates the illusion of a distant environment surrounding your scene. It should be loaded after initializing the RenderSystem but before entering the main rendering loop.</p>
+      
+      <h2>Advanced Lighting Features</h2>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>Shadow Quality</h3>
+          <p>Shadow quality is determined by the resolution of the shadow maps and the filtering technique used. The ShadowMap class in Raftel Engine handles these details automatically.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Light Attenuation</h3>
+          <p>The intensity of point and spot lights diminishes with distance. This attenuation is controlled by the range parameter in the LightComponent constructor.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Dynamic Lights</h3>
+          <p>Lights can be moved and modified during runtime. Update the transform component of light entities to change their position and orientation.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>PBR Lighting</h3>
+          <p>Raftel Engine uses physically-based rendering (PBR) techniques for realistic light interaction with surfaces based on real-world physical properties.</p>
+        </div>
+      </div>
+      
+      <h2>Complete Lighting Example</h2>
+      
+      <p>Here's a complete example that demonstrates setting up various lights with shadows in a scene:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Comprehensive Lighting Example</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/window.hpp"
+#include "raftel/mesh.hpp"
+#include "raftel/texture.hpp"
+#include "raftel/shader.hpp"
+#include "raftel/ecs.hpp"
+#include "raftel/camera.hpp"
+#include "raftel/imguiRenderer.hpp"
+#include "raftel/systems.hpp"
+#include "raftel/engine.hpp"
+
+int main() {
+    // Initialize window and systems
+    auto windowSystemOpt = Raftel::WindowSystem::make();
+    auto windowOpt = Raftel::Window::make("Lighting Demo", *windowSystemOpt);
+    
+    if (!windowOpt) {
+        std::cerr << "Error creating window.\n";
+        return -1;
+    }
+    
+    windowOpt->MakeContextCurrent();
+    
+    // Create camera and ECS
+    Raftel::Camera cam(windowOpt.get());
+    auto ecs = std::make_unique<Raftel::EntityManager>();
+    
+    // Load terrain mesh and texture
+    auto terrainMesh = Raftel::MeshFactory::createTerrain(
+        "../assets/heightmap/heightMap_test3.png", 1.0f, 200.0f, true);
+    auto terrainTexture = Raftel::Texture::loadTexture("../assets/textures/ground.png");
+    terrainMesh->GetMaterialByIndex(0)->setAlbedo(terrainTexture);
+    terrainMesh->setupMesh();
+    
+    // Create terrain entities
+    glm::vec3 terrainPositions[3] = {
+        {-510.0f, -200.0f, -400.0f},
+        {   0.0f, -200.0f, -400.0f},
+        { 510.0f, -200.0f, -400.0f}
+    };
+    
+    for (int i = 0; i < 3; i++) {
+        auto terrain = ecs->CreateEntity();
+        terrain.addMeshComp(terrainMesh);
+        terrain.addRenderComp(true);
+        terrain.addTransformComp(Raftel::TransformComponent{
+            terrainPositions[i],
+            glm::vec3(0.0f),
+            glm::vec3(1.0f)
+        });
+    }
+    
+    // Create a sphere with PBR material
+    auto sphere = ecs->CreateEntity();
+    auto sphereMesh = Raftel::MeshFactory::createSphere(4.0f, 20);
+    
+    // Apply PBR material
+    auto gold_a = Raftel::Texture::loadTexture("../assets/textures/gold/Metal048C_2K-JPG_Color.jpg");
+    auto gold_n = Raftel::Texture::loadTexture("../assets/textures/gold/Metal048C_2K-JPG_NormalGL.jpg");
+    auto gold_r = Raftel::Texture::loadTexture("../assets/textures/gold/Metal048C_2K-JPG_Roughness.jpg");
+    auto gold_m = Raftel::Texture::loadTexture("../assets/textures/gold/Metal048C_2K-JPG_Metalness.jpg");
+    
+    sphereMesh->GetMaterialByIndex(0)->setAlbedo(gold_a);
+    sphereMesh->GetMaterialByIndex(0)->setNormal(gold_n);
+    sphereMesh->GetMaterialByIndex(0)->setRoughness(gold_r);
+    sphereMesh->GetMaterialByIndex(0)->setMetallic(gold_m);
+    sphereMesh->GetMaterialByIndex(0)->setShininess(100.0f);
+    sphereMesh->GetMaterialByIndex(0)->setFresnel(5.0f);
+    
+    sphere.addMeshComp(sphereMesh);
+    sphere.addRenderComp(true);
+    sphere.addTransformComp(Raftel::TransformComponent{
+        glm::vec3(0.0f, -150.0f, -400.0f),
+        glm::vec3(0.0f),
+        glm::vec3(1.0f)
+    });
+    
+    // Create spotlight
+    auto spotLightEntity = ecs->CreateEntity();
+    spotLightEntity.addLightComp(Raftel::LightComponent(
+        Raftel::LightComponent::LightType::SPOT,
+        glm::vec3(1.0f, 0.8f, 0.6f),          // Warm light
+        1.0f, 1000.0f, 20.0f, 30.0f,
+        windowOpt->getScreenSize()));
+    spotLightEntity.addMeshComp(Raftel::MeshFactory::createSphere(2.0f, 20));
+    spotLightEntity.addRenderComp(true);
+    spotLightEntity.addTransformComp({ 
+        glm::vec3(-100.0f, -60.0f, -400.0f), 
+        glm::vec3(90.0f, 0.0f, 0.0f), 
+        glm::vec3(5.0f) 
+    });
+    
+    // Create point light
+    auto pointLightEntity = ecs->CreateEntity();
+    pointLightEntity.addLightComp(Raftel::LightComponent(
+        Raftel::LightComponent::LightType::POINT,
+        glm::vec3(0.2f, 0.8f, 1.0f),           // Cool blue light
+        1.0f, 500.0f, 0.0f, 0.0f,
+        windowOpt->getScreenSize()));
+    pointLightEntity.addMeshComp(Raftel::MeshFactory::createSphere(1.0f, 20));
+    pointLightEntity.addRenderComp(true);
+    pointLightEntity.addTransformComp({ 
+        glm::vec3(100.0f, -150.0f, -350.0f), 
+        glm::vec3(0.0f), 
+        glm::vec3(5.0f) 
+    });
+    
+    // Set ambient light
+    Raftel::Engine::Instance().has_ambient_light = true;
+    Raftel::Engine::Instance().ambient_light = glm::vec3(0.1f, 0.05f, 0.05f);
+    
+    // Load skybox
+    std::shared_ptr<Raftel::Texture> skyboxtexture = Raftel::Texture::loadCubemap({
+        "../assets/textures/skybox/px.png",
+        "../assets/textures/skybox/nx.png",
+        "../assets/textures/skybox/py.png",
+        "../assets/textures/skybox/ny.png",
+        "../assets/textures/skybox/pz.png",
+        "../assets/textures/skybox/nz.png"
+    });
+    
+    // Initialize render system and set skybox
+    Raftel::RenderSystem::Initialize();
+    Raftel::RenderSystem::SetSkyboxTexture(skyboxtexture);
+    
+    // Set up ImGui for editor
+    Raftel::imguiRenderer ImguiWindow(windowOpt->window_);
+    Raftel::Editor editor;
+    
+    // Main render loop
+    float time = 0.0f;
+    while (!windowOpt->ShouldClose()) {
+        windowOpt->input->updateKeys();
+        windowOpt->clear();
+        
+        // Update time for animations
+        time += 0.01f;
+        
+        // Move point light in a circular pattern
+        if (auto transform = pointLightEntity.getTransformComp()) {
+            float radius = 150.0f;
+            transform->position.x = 100.0f + radius * cos(time);
+            transform->position.z = -350.0f + radius * sin(time);
+            transform->Update();
+        }
+        
+        // Update camera
+        cam.PresetCamera(windowOpt.get());
+        cam.Update(windowOpt);
+        
+        // Render scene with shadows enabled
+        Raftel::RenderSystem::UpdateRenderSystem(*ecs, cam, windowOpt->getScreenSize(), true);
+        
+        // Render ImGui editor
+        ImguiWindow.newFrame();
+        editor.Show(cam, *ecs);
+        ImguiWindow.endFrame();
+        
+        windowOpt->swapBuffers();
+    }
+    
+    Raftel::RenderSystem::Shutdown();
+    return 0;
+}</code></pre>
+        </div>
+      </div>
+      
+      <div class="info-box">
+        <h3>Light Animations</h3>
+        <p>The example above demonstrates how to animate lights by updating their transform components in the render loop. This creates dynamic lighting effects that can enhance the atmosphere of your scene.</p>
+      </div>
+      
+      <h2>Best Practices</h2>
+      
+      <div class="info-box">
+        <h3>Lighting Tips</h3>
+        <ul>
+          <li><strong>Performance:</strong> Shadows are expensive to render. Limit the number of shadow-casting lights in your scene.</li>
+          <li><strong>Light Placement:</strong> Strategic light placement is key to good scene illumination. Use fewer well-placed lights rather than many dim lights.</li>
+          <li><strong>Light Colors:</strong> Use complementary colors for different lights to create visual interest.</li>
+          <li><strong>PBR Consistency:</strong> Keep PBR material parameters physically plausible (roughness between 0-1, etc.).</li>
+          <li><strong>Ambient Light:</strong> Keep ambient light subtle (0.1-0.3 intensity) to preserve contrast and shadow definition.</li>
+          <li><strong>Light Range:</strong> Set appropriate range values for your lights to control their influence area and performance impact.</li>
+        </ul>
+      </div>
+      
+      <h2>Tweaking Lighting in the Editor</h2>
+      
+      <p>Raftel Engine's editor interface provides tools for adjusting lighting parameters in real-time:</p>
+      
+      <div class="grid mb-3">
+        <div class="grid-item">
+          <h3>Light Properties</h3>
+          <p>The editor allows you to modify light color, intensity, range, and cone angles for spot lights directly in the inspector panel.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Material Adjustments</h3>
+          <p>You can fine-tune material properties like roughness, metallic, and fresnel effects to achieve the desired surface appearance.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Transform Controls</h3>
+          <p>Precise positioning and rotation of lights is crucial for good lighting. Use the transform controls to adjust light placement.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Ambient Light Settings</h3>
+          <p>The editor provides access to global ambient light settings, allowing you to adjust the overall scene illumination.</p>
+        </div>
+      </div>
+    
+      
+      <h2>Troubleshooting Common Lighting Issues</h2>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>Shadow Acne</h3>
+          <p><strong>Problem:</strong> Moire-like patterns on surfaces receiving shadows.<br>
+          <strong>Solution:</strong> Increase the shadow bias value or adjust the light's near plane distance.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Light Bleeding</h3>
+          <p><strong>Problem:</strong> Shadows appear to leak through solid objects.<br>
+          <strong>Solution:</strong> Ensure proper shadow map resolution and adjust the light's far plane distance.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Washed-out Appearance</h3>
+          <p><strong>Problem:</strong> Scene appears too bright with little contrast.<br>
+          <strong>Solution:</strong> Reduce ambient light intensity or adjust individual light intensities.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Performance Issues</h3>
+          <p><strong>Problem:</strong> Framerate drops with multiple lights.<br>
+          <strong>Solution:</strong> Reduce the number of shadow-casting lights or disable shadows for less important lights.</p>
+        </div>
+      </div>
+      
+      <h2>Conclusion</h2>
+      
+      <p>Lighting is one of the most important aspects of creating visually compelling 3D scenes. Raftel Engine provides a robust lighting system with support for multiple light types, physically-based materials, and realistic shadows. By applying the techniques covered in this tutorial, you can create atmospheric, well-lit environments that enhance your application's visual quality.</p>
+      
+      <div class="tutorial-nav">
+        <a href="tutorialecs.html" class="prev">Previous: Entity Component System</a>
+        <a href="../core/window.html" class="next">Next: Window System</a>
+      </div>
+      
+      <div class="api-reference">
+        <p>For complete details on the lighting system, refer to these API references:</p>
+        <ul>
+          <li><a href="../../doxygen/html/struct_raftel_1_1_light_component.html">LightComponent Class Reference</a></li>
+          <li><a href="../../doxygen/html/class_raftel_1_1_material.html">Material Class Reference</a></li>
+          <li><a href="../../doxygen/html/class_raftel_1_1_render_system.html">RenderSystem Class Reference</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-links">
+      <a href="../about.html">About</a>
+      <a href="../extra/license.html">License</a>
+      <a href="../contact.html">Contact</a>
+      <a href="../privacy.html">Privacy</a>
+    </div>
+    <div class="footer-copyright">
+      &copy; 2025 Raftel Engine. All rights reserved.
+    </div>
+  </div>
+
+  <script src="../script.js"></script>
+</body>
+</html>

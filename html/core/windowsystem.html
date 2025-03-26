@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Window System documentation for Raftel Engine, an advanced graphics engine for creating 3D games.">
+    <meta name="keywords" content="Raftel Engine, Game Development, Graphics Engine, Window System, GLFW, OpenGL">
+    <meta name="author" content="Your Name or Company">
+    <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Window System - Raftel Engine</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <!-- Header fijo -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+            <span>Raftel Engine</span>
+        </div>
+        <div class="header-search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <input type="text" placeholder="Search documentation...">
+        </div>
+        <div class="header-links">
+            <a href="../index.html">Home</a>
+            <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+            <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+            <a href="../index.html#community">Community</a>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Sidebar izquierdo -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-category">Getting Started</div>
+                <a href="../index.html" class="sidebar-item">Introduction</a>
+                <a href="../started/installation.html" class="sidebar-item">Installation</a>
+                <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Tutorials</div>
+                <a href="../tutorial/tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+                <a href="../tutorial/tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+                <a href="../tutorial/tutorialinput.html" class="sidebar-item">Handling Input</a>
+                <a href="../tutorial/tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+                <a href="../tutorial/tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+                <a href="../tutorial/tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="../tutorial/tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+                <a href="../tutorial/tutorialecs.html" class="sidebar-item">Entity Component System</a>
+                <a href="../tutorial/tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Core Components</div>
+                <a href="windowsystem.html" class="sidebar-item">Window System</a>
+                <a href="shader.html" class="sidebar-item">Shaders</a>
+                <a href="mesh.html" class="sidebar-item">Meshes</a>
+                <a href="material.html" class="sidebar-item">Materials</a>
+                <a href="texture.html" class="sidebar-item">Textures</a>
+                <a href="lighting.html" class="sidebar-item">Lighting</a>
+                <a href="input.html" class="sidebar-item">Input</a>
+                <a href="jobsystem.html" class="sidebar-item">JobSystem</a>
+                <a href="rendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="ecs.html" class="sidebar-item">ECS</a>
+            </div>
+
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content">
+            <h1>Window System</h1>
+
+            <p>
+                The Window System is a fundamental component of Raftel Engine that handles window creation,
+                management, and OpenGL context setup. Built on top of GLFW, it provides a high-level abstraction for
+                creating and controlling application windows for your games and applications.
+            </p>
+
+            <div class="info-box">
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Simplified window creation and management</li>
+                    <li>Automatic OpenGL context setup</li>
+                    <li>Input event handling</li>
+                    <li>Window resizing and fullscreen toggling</li>
+                    <li>Debug message callbacks for OpenGL errors</li>
+                </ul>
+            </div>
+
+            <h2>Architecture Overview</h2>
+
+            <p>
+                The Window System in Raftel Engine consists of two main classes:
+            </p>
+
+            <h3>WindowSystem Class</h3>
+            <p>
+                The <code>WindowSystem</code> class handles the initialization and termination of the GLFW library.
+                It's designed to be created once at the beginning of your application and destroyed when your
+                application terminates.
+            </p>
+
+            <h3>Window Class</h3>
+            <p>
+                The <code>Window</code> class represents an individual window in your application. It provides methods
+                for controlling the window, handling input, and managing the OpenGL context. Each window can have its
+                own title, size, and properties.
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Class Relationship Diagram
+                </div>
+                <div class="example-card-body">
+                    <pre><code>
++----------------+       creates       +----------------+
+| WindowSystem   | -----------------> | Window         |
++----------------+                     +----------------+
+| - destroy_     |                     | - window_      |
++----------------+                     | - input        |
+| + make()       |                     | - width/height |
+| + ~WindowSystem|                     | - isFullscreen |
++----------------+                     +----------------+
+                                       | + make()       |
+                                       | + clear()      |
+                                       | + swapBuffers()|
+                                       | + toggleFS()   |
+                                       +----------------+
+                    </code></pre>
+                </div>
+            </div>
+
+            <h2>Basic Usage</h2>
+
+            <p>
+                Here's a basic example of how to use the Window System to create a window and run a simple
+                rendering loop:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Basic Window Creation
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/window.hpp"
+
+int main() {
+  // Initialize window system
+  auto windowSystemOpt = Raftel::WindowSystem::make();
+  if (!windowSystemOpt) {
+    std::cerr << "Failed to initialize window system.\n";
+    return -1;
+  }
+  
+  // Create a window
+  auto windowOpt = Raftel::Window::make("My Raftel Application", *windowSystemOpt);
+  if (!windowOpt) {
+    std::cerr << "Failed to create window.\n";
+    return -1;
+  }
+  
+  // Make the window's OpenGL context current
+  windowOpt->MakeContextCurrent();
+  
+  // Main loop
+  while (!windowOpt->ShouldClose()) {
+    // Clear the window
+    windowOpt->clear();
+    
+    // Render your scene here
+    // ...
+    
+    // Swap buffers and poll events
+    windowOpt->swapBuffers();
+  }
+  
+  return 0;
+}</code></pre>
+                </div>
+            </div>
+
+            <h2>WindowSystem Class Reference</h2>
+
+            <h3>Static Methods</h3>
+            <div class="method-block">
+                <div class="method-signature">static std::unique_ptr&lt;WindowSystem&gt; make()</div>
+                <div class="method-description">
+                    <p>Creates and initializes a new WindowSystem instance. This method initializes the GLFW
+                        library.</p>
+                    <p><strong>Returns:</strong> A unique pointer to the created WindowSystem object, or nullptr if
+                        initialization fails.</p>
+                </div>
+            </div>
+
+            <h3>Constructor and Destructor</h3>
+            <div class="method-block">
+                <div class="method-signature">WindowSystem()</div>
+                <div class="method-description">
+                    <p>Default constructor for WindowSystem. This constructor is called by the make() method.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">~WindowSystem() noexcept</div>
+                <div class="method-description">
+                    <p>Destructor that terminates the GLFW library if necessary. This ensures proper cleanup of GLFW
+                        resources.</p>
+                </div>
+            </div>
+
+            <h3>Move Semantics</h3>
+            <div class="method-block">
+                <div class="method-signature">WindowSystem(WindowSystem&& other) noexcept</div>
+                <div class="method-description">
+                    <p>Move constructor for WindowSystem. This transfers ownership of resources from another
+                        WindowSystem object.</p>
+                </div>
+            </div>
+
+            <h2>Window Class Reference</h2>
+
+            <h3>Static Methods</h3>
+            <div class="method-block">
+                <div class="method-signature">static std::unique_ptr&lt;Window&gt; make(const char* title, WindowSystem& ws, int width = 0, int height = 0, bool fullscreen = false)</div>
+                <div class="method-description">
+                    <p>Creates a new window with the specified properties.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>title</code> - The title of the window</li>
+                        <li><code>ws</code> - The window system to associate the window with</li>
+                        <li><code>width</code> - The width of the window (default 0 for fullscreen resolution)</li>
+                        <li><code>height</code> - The height of the window (default 0 for fullscreen resolution)</li>
+                        <li><code>fullscreen</code> - Whether the window should be fullscreen or not</li>
+                    </ul>
+                    <p><strong>Returns:</strong> A unique pointer to the created Window object, or nullptr if creation
+                        fails.</p>
+                </div>
+            </div>
+
+            <h3>Window Control Methods</h3>
+            <div class="method-block">
+                <div class="method-signature">void MakeContextCurrent()</div>
+                <div class="method-description">
+                    <p>Makes the window context current for OpenGL operations. This method also initializes GLEW
+                        and sets up the OpenGL debug message callback.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">bool ShouldClose(bool allowEscapeKey = true)</div>
+                <div class="method-description">
+                    <p>Checks if the window should close, optionally checking for the Escape key.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>allowEscapeKey</code> - Whether pressing the Escape key should cause the window to
+                            close</li>
+                    </ul>
+                    <p><strong>Returns:</strong> true if the window should close, false otherwise.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void clear()</div>
+                <div class="method-description">
+                    <p>Clears the window's color and depth buffers.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void swapBuffers()</div>
+                <div class="method-description">
+                    <p>Swaps the front and back buffers, displaying the rendered content. This method also
+                        polls for window events.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">glm::ivec2 getScreenSize()</div>
+                <div class="method-description">
+                    <p>Gets the current size of the primary monitor.</p>
+                    <p><strong>Returns:</strong> A glm::ivec2 representing the width and height of the screen.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void toggleFullscreen(GLFWwindow* window)</div>
+                <div class="method-description">
+                    <p>Toggles between fullscreen and windowed modes.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>window</code> - The GLFW window object to toggle</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">void onResize(int newWidth, int newHeight)</div>
+                <div class="method-description">
+                    <p>Handles window resize events, adjusting the OpenGL viewport accordingly.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>newWidth</code> - The new width of the window</li>
+                        <li><code>newHeight</code> - The new height of the window</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>Debug Message Callback</h2>
+
+            <p>
+                The Window System sets up a debug message callback for OpenGL that prints detailed information about
+                errors, warnings, and notifications. This is particularly useful during development to catch OpenGL
+                issues early.
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Debug Output Example
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Sample debug output:
+API, ERROR, HIGH, 1282: Invalid operation
+SHADER COMPILER, PERFORMANCE, MEDIUM, 7: Shader compilation took longer than expected</code></pre>
+                </div>
+            </div>
+
+            <h2>Best Practices</h2>
+
+            <ul>
+                <li>Create only one WindowSystem instance for your entire application.</li>
+                <li>Always check if window creation was successful before using the window.</li>
+                <li>Use the window's swapBuffers() method at the end of your render loop to display your rendered
+                    content.</li>
+                <li>Handle window resize events appropriately to ensure your application looks good at different
+                    resolutions.</li>
+                <li>Consider disabling the escape key functionality for ShouldClose() if you want to implement your own
+                    exit confirmation dialog.</li>
+            </ul>
+
+            <h2>Related Topics</h2>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3><a href="../tutorial/tutorialwindow.html">Creating a Window Tutorial</a></h3>
+                    <p>Step-by-step guide to creating and configuring windows in Raftel Engine.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="input.html">Input System</a></h3>
+                    <p>Learn how to handle keyboard, mouse, and other input devices in your applications.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="../advanced/optimization.html">Performance Optimization</a></h3>
+                    <p>Tips for optimizing window and rendering performance.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../extra/license.html">License</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy.html">Privacy</a>
+        </div>
+        <div class="footer-copyright">
+            &copy; 2025 Raftel Engine. All rights reserved.
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>

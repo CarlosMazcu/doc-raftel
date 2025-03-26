@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to use the Entity Component System in Raftel Engine to organize and manage game objects.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <title>Entity Component System - Raftel Engine</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+</head>
+<body>
+  <!-- Header fijo -->
+  <div class="header">
+    <div class="header-logo">
+      <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+      <span>Raftel Engine</span>
+    </div>
+    <div class="header-search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+      </svg>
+      <input type="text" placeholder="Search documentation...">
+    </div>
+    <div class="header-links">
+      <a href="../index.html">Home</a>
+      <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+      <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+      <a href="../index.html#community">Community</a>
+    </div>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="container">
+    <!-- Sidebar izquierdo -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-category">Getting Started</div>
+        <a href="../index.html" class="sidebar-item">Introduction</a>
+        <a href="../started/installation.html" class="sidebar-item">Installation</a>
+        <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-category">Tutorials</div>
+        <a href="tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+        <a href="tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+        <a href="tutorialinput.html" class="sidebar-item">Handling Input</a>
+        <a href="tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+        <a href="tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+        <a href="tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+        <a href="tutorialecs.html" class="sidebar-item active">Entity Component System</a>
+        <a href="tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+
+
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-category">Core Components</div>
+        <a href="../core/windowsystem.html" class="sidebar-item">Window System</a>
+        <a href="../core/shader.html" class="sidebar-item">Shaders</a>
+        <a href="../core/mesh.html" class="sidebar-item">Meshes</a>
+        <a href="../core/material.html" class="sidebar-item">Materials</a>
+        <a href="../core/texture.html" class="sidebar-item">Textures</a>
+        <a href="../core/lighting.html" class="sidebar-item">Lighting</a>
+        <a href="../core/input.html" class="sidebar-item">Input</a>
+        <a href="../core/jobsystem.html" class="sidebar-item">JobSystem</a>
+        <a href="../core/rendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="../core/ecs.html" class="sidebar-item">ECS</a>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+      <h1>Entity Component System (ECS) in Raftel Engine</h1>
+      
+      <p>This tutorial introduces you to Raftel Engine's Entity Component System (ECS), a powerful architectural pattern that helps you organize your game objects and their behaviors in a flexible and efficient way.</p>
+
+      <div class="tutorial-nav">
+        <a href="tutorialcamera.html" class="prev">Previous: Camera Controls</a>
+        <a href="../core/window.html" class="next">Next: Window System</a>
+      </div>
+      
+      <h2>What is an Entity Component System?</h2>
+      
+      <p>An Entity Component System (ECS) is a software architectural pattern that:</p>
+      
+      <ul>
+        <li>Separates the data (components) from the objects (entities) that use them</li>
+        <li>Promotes composition over inheritance to build complex objects</li>
+        <li>Allows for more efficient memory layouts and better performance</li>
+        <li>Makes it easier to add, remove, or modify behaviors at runtime</li>
+      </ul>
+      
+      <div class="info-box">
+        <h3>ECS Core Concepts</h3>
+        <ul>
+          <li><strong>Entities</strong> are unique identifiers that represent an object in your game world</li>
+          <li><strong>Components</strong> are pure data containers attached to entities</li>
+          <li><strong>Systems</strong> contain the logic that processes entities with specific component combinations</li>
+        </ul>
+      </div>
+      
+      <h2>ECS Architecture in Raftel Engine</h2>
+      
+      <p>Raftel Engine implements a straightforward ECS approach that is both powerful and easy to use. The system consists of:</p>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>EntityManager</h3>
+          <p>The central registry that creates and tracks entities, manages their components, and provides access to them.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Entity</h3>
+          <p>A simple identifier (ID) with helper methods to manipulate its associated components.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Components</h3>
+          <p>Data-only structures that define different aspects of an entity (transform, mesh, rendering, etc.).</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Systems</h3>
+          <p>Logic modules that process entities with specific component types (rendering, physics, etc.).</p>
+        </div>
+      </div>
+      
+      <h2>Creating an Entity Manager</h2>
+      
+      <p>To start using the ECS, you first need to create an EntityManager instance:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Creating an EntityManager</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/ecs.hpp"
+
+// Create an entity manager
+auto ecs = std::make_unique<Raftel::EntityManager>();</code></pre>
+        </div>
+      </div>
+      
+      <p>The EntityManager is the heart of the ECS. It handles:</p>
+      <ul>
+        <li>Creating and tracking entities</li>
+        <li>Managing component storage</li>
+        <li>Providing access to entities and their components</li>
+      </ul>
+      
+      <h2>Creating Entities</h2>
+      
+      <p>Once you have an EntityManager, you can create entities using the <code>CreateEntity</code> method:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Creating Entities</div>
+        <div class="example-card-body">
+          <pre><code>// Create a new entity
+Raftel::Entity entity = ecs->CreateEntity();
+
+// Create multiple entities
+Raftel::Entity player = ecs->CreateEntity();
+Raftel::Entity enemy = ecs->CreateEntity();
+Raftel::Entity terrain = ecs->CreateEntity();</code></pre>
+        </div>
+      </div>
+      
+      <p>Each entity has a unique ID that the EntityManager uses to track its components.</p>
+      
+      <h2>Understanding Components</h2>
+      
+      <p>Components in Raftel Engine are structures that hold specific data about an aspect of an entity. The engine provides several built-in component types:</p>
+      
+      <div class="grid mb-3">
+        <div class="grid-item">
+          <h3>TransformComponent</h3>
+          <p>Defines the entity's position, rotation, and scale in the 3D world.</p>
+          <pre><code>// TransformComponent structure
+struct TransformComponent {
+    glm::vec3 position;  // Position in world space
+    glm::vec3 rotation;  // Rotation in degrees (Euler angles)
+    glm::vec3 scale;     // Scale factors
+    glm::mat4 transform; // Combined transformation matrix
+};</code></pre>
+        </div>
+        
+        <div class="grid-item">
+          <h3>MeshComponent</h3>
+          <p>Associates a 3D mesh with the entity for rendering.</p>
+          <pre><code>// MeshComponent structure
+struct MeshComponent {
+    std::weak_ptr<Mesh> mesh; // Weak pointer to a mesh
+};</code></pre>
+        </div>
+        
+        <div class="grid-item">
+          <h3>RenderComponent</h3>
+          <p>Controls whether the entity should be rendered.</p>
+          <pre><code>// RenderComponent structure
+struct RenderComponent {
+    bool visible; // Whether the entity is visible
+};</code></pre>
+        </div>
+        
+        <div class="grid-item">
+          <h3>LightComponent</h3>
+          <p>Makes the entity act as a light source in the scene.</p>
+          <pre><code>// LightComponent (simplified)
+struct LightComponent {
+    LightType type;    // DIRECTIONAL, POINT, SPOT
+    glm::vec3 color;   // Light color
+    float intensity;   // Light intensity
+    // Other lighting parameters...
+};</code></pre>
+        </div>
+      </div>
+      
+      <div class="grid mb-3">
+        <div class="grid-item">
+          <h3>ScriptComponent</h3>
+          <p>Attaches Lua scripts to entities for custom behaviors.</p>
+          <pre><code>// ScriptComponent (simplified)
+class ScriptComponent {
+    lua_State* luaState;    // Lua scripting state
+    std::string scriptCode; // Lua script source code
+    bool enabled;           // Whether the script is active
+};</code></pre>
+        </div>
+        
+        <div class="grid-item">
+          <h3>BasicComponent</h3>
+          <p>Provides a simple name attribute to identify entities.</p>
+          <pre><code>// BasicComponent structure
+struct BasicComponent {
+    std::string name; // Name of the entity
+};</code></pre>
+        </div>
+      </div>
+      
+      <h2>Adding Components to Entities</h2>
+      
+      <p>To add components to an entity, use the appropriate add methods provided by the Entity class:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Adding Components to an Entity</div>
+        <div class="example-card-body">
+          <pre><code>// Create an entity
+Raftel::Entity entity = ecs->CreateEntity();
+
+// Add a transform component
+entity.addTransformComp({
+    glm::vec3(0.0f, 0.0f, -10.0f),  // Position
+    glm::vec3(0.0f, 0.0f, 0.0f),    // Rotation
+    glm::vec3(1.0f, 1.0f, 1.0f)     // Scale
+});
+
+// Load a mesh
+auto cubeMesh = Raftel::MeshFactory::createCube(2.0f);
+auto texture = Raftel::Texture::loadTexture("../assets/textures/cubetex.png");
+cubeMesh->GetMaterialByIndex(0)->setAlbedo(texture);
+cubeMesh->setupMesh();
+
+// Add a mesh component
+entity.addMeshComp(cubeMesh);
+
+// Add a render component (visible)
+entity.addRenderComp(true);
+
+// Add a light component (optional)
+entity.addLightComp(Raftel::LightComponent(
+    Raftel::LightComponent::LightType::POINT,
+    glm::vec3(1.0f, 0.8f, 0.6f),    // Color
+    1.0f,                           // Intensity
+    50.0f,                          // Range
+    15.0f,                          // Inner cone angle
+    30.0f,                          // Outer cone angle
+    windowOpt->getScreenSize()      // Screen size for shadow mapping
+));</code></pre>
+        </div>
+      </div>
+      
+      <div class="tip-box">
+        <h3>Component Storage Approach</h3>
+        <p>Raftel Engine uses <code>std::optional</code> to store components. This allows for:</p>
+        <ul>
+          <li>Efficient component presence checks</li>
+          <li>Easy addition and removal of components</li>
+          <li>Safe access to component data</li>
+          <li>Clear ownership semantics</li>
+        </ul>
+      </div>
+      
+      <h2>Checking for Components</h2>
+      
+      <p>You can check if an entity has a specific component using the following methods:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Checking Component Presence</div>
+        <div class="example-card-body">
+          <pre><code>// Check if the entity has various components
+if (entity.hasTransformComp()) {
+    // Entity has a transform component
+}
+
+if (entity.hasMeshComp()) {
+    // Entity has a mesh component
+}
+
+if (entity.hasRenderComp()) {
+    // Entity has a render component
+}
+
+if (entity.hasLightComp()) {
+    // Entity has a light component
+}
+
+if (entity.hasScriptComp()) {
+    // Entity has a script component
+}</code></pre>
+        </div>
+      </div>
+      
+      <h2>Accessing and Modifying Components</h2>
+      
+      <p>You can access and modify an entity's components with the corresponding getter methods:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Accessing Components</div>
+        <div class="example-card-body">
+          <pre><code>// Access transform component
+if (auto transformOpt = entity.getTransformComp()) {
+    // Modify position
+    transformOpt->position.x += 1.0f;
+    
+    // Modify rotation
+    transformOpt->rotation.y += 45.0f;
+    
+    // Modify scale
+    transformOpt->scale = glm::vec3(2.0f);
+    
+    // Update the transformation matrix
+    transformOpt->Update();
+}
+
+// Access mesh component
+if (auto meshOpt = entity.getMeshComp()) {
+    // Access the mesh
+    if (auto mesh = meshOpt->mesh.lock()) {
+        // Modify mesh properties
+        // ...
+    }
+}
+
+// Access light component
+if (auto lightOpt = entity.getLightComp()) {
+    // Modify light color
+    lightOpt->color = glm::vec3(1.0f, 0.0f, 0.0f);  // Change to red
+    
+    // Modify light intensity
+    lightOpt->intensity = 2.0f;
+}</code></pre>
+        </div>
+      </div>
+      
+      <div class="warning-box">
+        <h3>Working with Optional Components</h3>
+        <p>Always check if a component exists before trying to access it. Since components are stored as <code>std::optional</code>, you should use conditional access patterns to avoid undefined behavior.</p>
+      </div>
+      
+      <h2>Manipulating Entities Through Helper Methods</h2>
+      
+      <p>The Entity class provides convenient helper methods to manipulate common properties without directly accessing components:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Entity Helper Methods</div>
+        <div class="example-card-body">
+          <pre><code>// Move entity to a specific position
+entity.setPosition(glm::vec3(10.0f, 5.0f, -20.0f));
+
+// Get current position
+glm::vec3 position = entity.getPosition();
+
+// Set rotation
+entity.setRotation(glm::vec3(0.0f, 45.0f, 0.0f));
+
+// Get current rotation
+glm::vec3 rotation = entity.getRotation();
+
+// Set scale
+entity.setScale(glm::vec3(2.0f, 2.0f, 2.0f));
+
+// Get current scale
+glm::vec3 scale = entity.getScale();
+
+// Move entity towards a target position at a given speed
+entity.moveTo(glm::vec3(20.0f, 0.0f, 0.0f), 5.0f);</code></pre>
+        </div>
+      </div>
+      
+      <h2>Systems in Raftel Engine</h2>
+      
+      <p>Systems in Raftel Engine process entities with specific component combinations. The engine includes several built-in systems:</p>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>RenderSystem</h3>
+          <p>Renders entities with mesh and transform components using the appropriate shaders.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>TransformSystem</h3>
+          <p>Updates the transformation matrices of entities based on their position, rotation, and scale.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>ScriptingSystem</h3>
+          <p>Executes Lua scripts attached to entities with script components.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>LightSystem</h3>
+          <p>Processes light components and applies lighting effects to the scene.</p>
+        </div>
+      </div>
+      
+      <p>The RenderSystem is the most commonly used system and can be accessed through static methods:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Using the RenderSystem</div>
+        <div class="example-card-body">
+          <pre><code>// Initialize the RenderSystem
+Raftel::RenderSystem::Initialize();
+
+// In your main loop:
+while (!windowOpt->ShouldClose()) {
+    // Update input, camera, etc.
+    // ...
+    
+    // Clear the window
+    windowOpt->clear();
+    
+    // Process and render all entities with the necessary components
+    Raftel::RenderSystem::UpdateRenderSystem(*ecs, camera, windowOpt->getScreenSize(), false);
+    
+    // Swap buffers
+    windowOpt->swapBuffers();
+}</code></pre>
+        </div>
+      </div>
+      
+      <h2>Entity Selection and Interaction</h2>
+      
+      <p>Raftel Engine provides a utility function for selecting entities through ray-casting from the mouse position:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Entity Selection</div>
+        <div class="example-card-body">
+          <pre><code>// Get mouse position from input
+glm::vec2 mousePos = windowOpt->input->getMousePosition();
+
+// Perform picking ray-cast
+int selectedEntityIndex = Raftel::pickEntity(ecs, camera, mousePos, windowOpt->getScreenSize());
+
+// Check if an entity was selected
+if (selectedEntityIndex >= 0) {
+    // Get the selected entity
+    Raftel::Entity& selectedEntity = ecs->getActiveEntities()[selectedEntityIndex];
+    
+    // Do something with the selected entity
+    // ...
+}</code></pre>
+        </div>
+      </div>
+      
+      <h2>Practical Example: Creating a Dynamic Scene</h2>
+      
+      <p>Let's put everything together to create a dynamic scene with multiple entities that move around:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Complete ECS Example</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/window.hpp"
+#include "raftel/mesh.hpp"
+#include "raftel/texture.hpp"
+#include "raftel/shader.hpp"
+#include "raftel/ecs.hpp"
+#include "raftel/camera.hpp"
+#include "raftel/systems.hpp"
+
+int main() {
+    // Initialize window
+    auto windowSystemOpt = Raftel::WindowSystem::make();
+    auto windowOpt = Raftel::Window::make("ECS Example", *windowSystemOpt);
+    
+    if (!windowOpt) {
+        std::cerr << "Error creating window.\n";
+        return -1;
+    }
+    
+    windowOpt->MakeContextCurrent();
+    
+    // Create camera
+    Raftel::Camera camera(windowOpt.get());
+    camera.SetPosition(glm::vec3(0.0f, 10.0f, 30.0f));
+    
+    // Create entity manager
+    auto ecs = std::make_unique<Raftel::EntityManager>();
+    
+    // Initialize render system
+    Raftel::RenderSystem::Initialize();
+    
+    // Load meshes and textures
+    auto cubeMesh = Raftel::MeshFactory::createCube(2.0f);
+    auto sphereMesh = Raftel::MeshFactory::createSphere(1.0f, 20);
+    
+    auto cubeTexture = Raftel::Texture::loadTexture("../assets/textures/cubetex.png");
+    cubeMesh->GetMaterialByIndex(0)->setAlbedo(cubeTexture);
+    cubeMesh->setupMesh();
+    
+    auto sphereTexture = Raftel::Texture::loadTexture("../assets/textures/earth.png");
+    sphereMesh->GetMaterialByIndex(0)->setAlbedo(sphereTexture);
+    sphereMesh->setupMesh();
+    
+    // Create entities
+    std::vector<Raftel::Entity> entities;
+    
+    // Create a central sphere
+    auto centralEntity = ecs->CreateEntity();
+    centralEntity.addMeshComp(sphereMesh);
+    centralEntity.addTransformComp({
+        glm::vec3(0.0f, 0.0f, 0.0f),       // Position
+        glm::vec3(0.0f, 0.0f, 0.0f),       // Rotation
+        glm::vec3(3.0f, 3.0f, 3.0f)        // Scale
+    });
+    centralEntity.addRenderComp(true);
+    
+    // Create orbiting cubes
+    for (int i = 0; i < 10; i++) {
+        auto entity = ecs->CreateEntity();
+        entity.addMeshComp(cubeMesh);
+        
+        // Calculate initial position in a circle
+        float angle = (float)i / 10.0f * glm::two_pi<float>();
+        float radius = 15.0f;
+        float x = radius * cos(angle);
+        float z = radius * sin(angle);
+        
+        entity.addTransformComp({
+            glm::vec3(x, 0.0f, z),                     // Position
+            glm::vec3(0.0f, 0.0f, 0.0f),               // Rotation
+            glm::vec3(1.0f, 1.0f, 1.0f)                // Scale
+        });
+        entity.addRenderComp(true);
+        
+        entities.push_back(entity);
+    }
+    
+    // Add a directional light
+    auto lightEntity = ecs->CreateEntity();
+    lightEntity.addLightComp(Raftel::LightComponent(
+        Raftel::LightComponent::LightType::DIRECTIONAL,
+        glm::vec3(1.0f, 1.0f, 1.0f),       // White light
+        1.0f, 100.0f, 20.0f, 30.0f,
+        windowOpt->getScreenSize()
+    ));
+    lightEntity.addTransformComp({
+        glm::vec3(50.0f, 50.0f, 50.0f),    // Position
+        glm::vec3(45.0f, 45.0f, 0.0f),     // Direction (via rotation)
+        glm::vec3(1.0f, 1.0f, 1.0f)        // Scale
+    });
+    
+    // Main loop
+    float time = 0.0f;
+    while (!windowOpt->ShouldClose()) {
+        windowOpt->input->updateKeys();
+        
+        // Update time
+        time += 0.01f;
+        
+        // Update camera
+        camera.PresetCamera(windowOpt.get());
+        camera.Update(windowOpt);
+        
+        // Update orbiting entities
+        for (size_t i = 0; i < entities.size(); i++) {
+            if (auto transform = entities[i].getTransformComp()) {
+                // Update position to orbit around center
+                float angle = (float)i / (float)entities.size() * glm::two_pi<float>() + time;
+                float radius = 15.0f;
+                float x = radius * cos(angle);
+                float z = radius * sin(angle);
+                float y = 2.0f * sin(time * 0.5f + (float)i);  // Add some vertical movement
+                
+                transform->position = glm::vec3(x, y, z);
+                
+                // Rotate the cube
+                transform->rotation.y += 1.0f;
+                transform->rotation.x += 0.5f;
+                
+                // Update the transformation matrix
+                transform->Update();
+            }
+        }
+        
+        // Rotate the central sphere
+        if (auto transform = centralEntity.getTransformComp()) {
+            transform->rotation.y += 0.2f;
+            transform->Update();
+        }
+        
+        // Clear window and render
+        windowOpt->clear();
+        Raftel::RenderSystem::UpdateRenderSystem(*ecs, camera, windowOpt->getScreenSize(), false);
+        windowOpt->swapBuffers();
+    }
+    
+    return 0;
+}</code></pre>
+        </div>
+      </div>
+      
+      <p>This example creates a scene with:</p>
+      <ul>
+        <li>A central sphere representing a planet</li>
+        <li>Multiple cubes orbiting around the sphere</li>
+        <li>A directional light to illuminate the scene</li>
+        <li>Camera controls for interactive viewing</li>
+      </ul>
+      <h2>Using the Editor with ImGui</h2>
+
+      <p>Raftel Engine includes a powerful editor built with ImGui that allows you to inspect and modify entities and their components at runtime. The Editor class provides a visual interface for managing your ECS.</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Initializing and Using the Editor</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/imguiRenderer.hpp"
+#include "raftel/imguiWindows.hpp"
+
+// Initialize ImGui renderer
+Raftel::imguiRenderer ImguiWindow(windowOpt->window_);
+
+// Create editor instance
+Raftel::Editor editor;
+
+// Main loop
+while (!windowOpt->ShouldClose()) {
+    // Update input and clear window
+    windowOpt->input->updateKeys();
+    windowOpt->clear();
+    
+    // Update camera
+    cam.PresetCamera(windowOpt.get());
+    cam.Update(windowOpt);
+    
+    // Render your scene
+    Raftel::RenderSystem::UpdateRenderSystem(*ecs, cam, windowOpt->getScreenSize(), true);
+    
+    // Begin ImGui frame
+    ImguiWindow.newFrame();
+    
+    // Display the editor UI
+    editor.Show(cam, *ecs);
+    
+    // Add your custom ImGui windows here
+    // ImGui::Begin("My Custom Window");
+    // ImGui::Text("Hello from ImGui!");
+    // ImGui::End();
+    
+    // End ImGui frame
+    ImguiWindow.endFrame();
+    
+    // Swap buffers
+    windowOpt->swapBuffers();
+}</code></pre>
+        </div>
+      </div>
+      
+      <div class="warning-box">
+        <h3>Important Note About ImGui</h3>
+        <p>When using ImGui in Raftel Engine, always place your ImGui code between <code>ImguiWindow.newFrame()</code> and <code>ImguiWindow.endFrame()</code> calls. This includes:</p>
+        <ul>
+          <li>The editor UI with <code>editor.Show(cam, *ecs)</code></li>
+          <li>Any custom ImGui windows or controls you want to add</li>
+          <li>Debug displays, property editors, and other UI elements</li>
+        </ul>
+        <p>Failing to maintain this order will result in rendering errors or crashes.</p>
+      </div>
+      
+      <div class="info-box">
+        <h3>ImGui Credits</h3>
+        <p>Raftel Engine's editor UI is built using <a href="https://github.com/ocornut/imgui" target="_blank">Dear ImGui</a>, an immediate-mode graphical user interface library created by Omar Cornut. Dear ImGui is a powerful, lightweight UI system designed specifically for game development and content creation tools.</p>
+      </div>
+      
+      <div class="example-viewer">
+        <div class="example-viewer-header">
+          <div class="example-viewer-title">Editor Interface</div>
+        </div>
+      <div>
+        <img src="../img/editor_interface.png" alt="Rendered 3D Mesh" style="width:50%; height:auto; display:block; margin:0 auto;">
+      </div>
+      </div>
+      <h2>Best Practices</h2>
+      
+      <div class="info-box">
+        <h3>Tips for Working with ECS</h3>
+        <ul>
+          <li><strong>Component Composition:</strong> Design entities as collections of components rather than trying to build complex inheritance hierarchies.</li>
+          <li><strong>Component Access:</strong> Always check if a component exists before accessing it using conditional patterns.</li>
+          <li><strong>System Separation:</strong> Keep systems focused on processing specific component combinations rather than creating monolithic update methods.</li>
+          <li><strong>Performance Considerations:</strong> For large numbers of entities, consider organizing them by component types to optimize system iterations.</li>
+          <li><strong>Memory Management:</strong> Use smart pointers (like <code>std::shared_ptr</code>) for resources that entities share, such as meshes and textures.</li>
+          <li><strong>Component Updates:</strong> Remember to call <code>Update()</code> on TransformComponent after modifying position, rotation, or scale.</li>
+        </ul>
+      </div>
+      
+      <h2>Advanced ECS Techniques</h2>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>Entity Relationships</h3>
+          <p>To create parent-child relationships between entities, you can implement a hierarchy component that tracks these relationships and updates transformations accordingly.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Custom Components</h3>
+          <p>You can extend the ECS by creating your own component types. Simply define a struct or class with your data and add it to the EntityManager's component storage.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Custom Systems</h3>
+          <p>For specialized behaviors, you can create your own systems that process entities with specific component combinations according to your game's needs.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Entity Tags and Layers</h3>
+          <p>Implement tagging systems using components to categorize entities for filtering and selective processing in your systems.</p>
+        </div>
+      </div>
+      
+      <h2>API Reference</h2>
+      
+      <p>For complete details on the ECS API, see the following classes in the API documentation:</p>
+      
+      <ul>
+        <li><a href="../../doxygen/html/class_raftel_1_1_entity_manager.html" target="_blank">EntityManager Class Reference</a></li>
+        <li><a href="../../doxygen/html/struct_raftel_1_1_light_component.html"target="_blank">Light Component Reference</a></li>
+        <li><a href="../../doxygen/html/struct_raftel_1_1_mesh_component.html" target="_blank">Mesh Component Reference</a></li>
+        <li><a href="../../doxygen/html/struct_raftel_1_1_transform_component.html" target="_blank">Transform Component Reference</a></li>
+        </ul>
+        <div class="tutorial-nav">
+            <a href="tutorialrendersystem.html" class="prev">Previous: Camera Controls</a>
+            <a href="tutoriallighting.html" class="next">Next: Lighting</a>
+          </div>
+        </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-links">
+              <a href="../about.html">About</a>
+              <a href="../extra/license.html">License</a>
+              <a href="../contact.html">Contact</a>
+              <a href="../privacy.html">Privacy</a>
+            </div>
+            <div class="footer-copyright">
+              &copy; 2025 Raftel Engine. All rights reserved.
+            </div>
+          </div>
+        
+          <script src="../script.js"></script>
+        </body>
+        </html>

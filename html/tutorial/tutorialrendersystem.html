@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to use the RenderSystem in Raftel Engine to render entities and manage the rendering pipeline.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <title>RenderSystem - Raftel Engine</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+</head>
+<body>
+  <!-- Header fijo -->
+  <div class="header">
+    <div class="header-logo">
+      <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+      <span>Raftel Engine</span>
+    </div>
+    <div class="header-search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+      </svg>
+      <input type="text" placeholder="Search documentation...">
+    </div>
+    <div class="header-links">
+      <a href="../index.html">Home</a>
+      <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+      <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+      <a href="../index.html#community">Community</a>
+    </div>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="container">
+    <!-- Sidebar izquierdo -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-category">Getting Started</div>
+        <a href="../index.html" class="sidebar-item">Introduction</a>
+        <a href="../started/installation.html" class="sidebar-item">Installation</a>
+        <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-category">Tutorials</div>
+        <a href="tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+        <a href="tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+        <a href="tutorialinput.html" class="sidebar-item">Handling Input</a>
+        <a href="tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+        <a href="tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+        <a href="tutorialrendersystem.html" class="sidebar-item active">RenderSystem</a>
+        <a href="tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+        <a href="tutorialecs.html" class="sidebar-item">Entity Component System</a>
+        <a href="tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-category">Core Components</div>
+        <a href="../core/windowsystem.html" class="sidebar-item">Window System</a>
+        <a href="../core/shader.html" class="sidebar-item">Shaders</a>
+        <a href="../core/mesh.html" class="sidebar-item">Meshes</a>
+        <a href="../core/material.html" class="sidebar-item">Materials</a>
+        <a href="../core/texture.html" class="sidebar-item">Textures</a>
+        <a href="../core/lighting.html" class="sidebar-item">Lighting</a>
+        <a href="../core/input.html" class="sidebar-item">Input</a>
+        <a href="../core/jobsystem.html" class="sidebar-item">JobSystem</a>
+        <a href="../core/rendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="../core/ecs.html" class="sidebar-item">ECS</a>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+      <h1>Using the RenderSystem in Raftel Engine</h1>
+      
+      <p>This tutorial introduces the RenderSystem - a core component of Raftel Engine that manages the rendering pipeline, handling entities, cameras, lighting, and more.</p>
+
+      <div class="tutorial-nav">
+        <a href="tutorialjobsystem.html" class="prev">Previous: Using JobSystem</a>
+        <a href="tutorialcamera.html" class="next">Next: Camera Controls</a>
+      </div>
+      
+      <h2>What is the RenderSystem?</h2>
+      
+      <p>The RenderSystem is a central part of Raftel Engine's rendering architecture. It's responsible for:</p>
+      
+      <ul>
+        <li>Managing the rendering pipeline</li>
+        <li>Handling entity rendering</li>
+        <li>Camera updates and transformations</li>
+        <li>Lighting and shadow calculations</li>
+        <li>Skybox rendering</li>
+      </ul>
+      
+      <p>Unlike many other components in Raftel Engine, the RenderSystem is a static class with internal shaders and state management, designed to be the central coordinator for all rendering operations.</p>
+      
+      <div class="info-box">
+        <h3>RenderSystem and Other Components</h3>
+        <p>The RenderSystem works in tandem with the Entity Component System and Camera classes. Understanding RenderSystem is essential before working with these other components.</p>
+      </div>
+      
+      <h2>Getting Started with RenderSystem</h2>
+      
+      <p>Using the RenderSystem involves a few key steps:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Basic RenderSystem Usage</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/window.hpp"
+#include "raftel/ecs.hpp"
+#include "raftel/camera.hpp"
+#include "raftel/systems.hpp"
+
+int main() {
+  // Create window and make context current
+  auto windowSystemOpt = Raftel::WindowSystem::make();
+  auto windowOpt = Raftel::Window::make("RenderSystem Demo", *windowSystemOpt);
+  windowOpt->MakeContextCurrent();
+  
+  // Create camera
+  Raftel::Camera cam(windowOpt.get());
+  
+  // Create entity manager (ECS)
+  auto ecs = std::make_unique<Raftel::EntityManager>();
+  
+  // Initialize the RenderSystem
+  Raftel::RenderSystem::Initialize();
+  
+  // Main render loop
+  while (!windowOpt->ShouldClose()) {
+    windowOpt->clear();
+    
+    // Update camera
+    cam.Update(windowOpt);
+    
+    // Render all entities
+    Raftel::RenderSystem::UpdateRenderSystem(*ecs, cam, windowOpt->getScreenSize(), false);
+    
+    windowOpt->swapBuffers();
+  }
+  
+  // Clean up RenderSystem
+  Raftel::RenderSystem::Shutdown();
+  
+  return 0;
+}</code></pre>
+        </div>
+      </div>
+      
+      <h2>RenderSystem Initialization and Shutdown</h2>
+      
+      <p>Before using the RenderSystem, you need to initialize it. After you're done, make sure to properly shut it down:</p>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3>Initialization</h3>
+          <pre><code>// Always initialize before using
+Raftel::RenderSystem::Initialize();</code></pre>
+          <p>This sets up internal shaders, framebuffers, and other resources needed for rendering.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3>Shutdown</h3>
+          <pre><code>// Always clean up when done
+Raftel::RenderSystem::Shutdown();</code></pre>
+          <p>This properly releases all OpenGL resources used by the RenderSystem.</p>
+        </div>
+      </div>
+      
+      <div class="warning-box">
+        <h3>Memory Management</h3>
+        <p>Always call <code>Shutdown()</code> before your application exits to prevent resource leaks. The RenderSystem manages internal GPU resources that need to be explicitly freed.</p>
+      </div>
+      
+      <h2>Rendering Entities</h2>
+      
+      <p>The main function of the RenderSystem is to render entities from an EntityManager:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Rendering Entities</div>
+        <div class="example-card-body">
+          <pre><code>// Inside your render loop
+Raftel::RenderSystem::UpdateRenderSystem(
+  *ecs,              // EntityManager containing entities to render
+  camera,            // Camera for viewpoint
+  windowOpt->getScreenSize(),  // Screen resolution
+  false              // Whether to use shadows (optional, default is false)
+);</code></pre>
+        </div>
+      </div>
+      
+      <p>This single call takes care of:</p>
+      <ul>
+        <li>Updating entity transforms</li>
+        <li>Setting up camera view and projection matrices</li>
+        <li>Configuring lighting</li>
+        <li>Rendering all visible entities</li>
+        <li>Applying post-processing effects (if configured)</li>
+      </ul>
+      
+      <h2>Creating Renderable Entities</h2>
+      
+      <p>For an entity to be renderable by the RenderSystem, it needs at least these components:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Creating a Renderable Entity</div>
+        <div class="example-card-body">
+          <pre><code>// Create an entity
+auto entity = ecs->CreateEntity();
+
+// Add a mesh component
+auto mesh = Raftel::MeshFactory::createCube(30.0f);
+entity.addMeshComp(mesh);
+
+// Add a render component (this marks it as renderable)
+entity.addRenderComp(true);
+
+// Add a transform component
+entity.addTransformComp(Raftel::TransformComponent{
+  glm::vec3(0.0f, 0.0f, -5.0f),  // Position
+  glm::vec3(0.0f),               // Rotation
+  glm::vec3(1.0f)                // Scale
+});</code></pre>
+        </div>
+      </div>
+      
+      <div class="tip-box">
+        <h3>Entity Visibility</h3>
+        <p>The boolean parameter in <code>addRenderComp(bool)</code> controls whether the entity should be rendered. You can toggle this value to show or hide entities without removing them from the scene.</p>
+      </div>
+      
+      <h2>Adding Textures to Entities</h2>
+      
+      <p>To add textures to entities, you need to set up materials on their meshes:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Adding Textures to Entities</div>
+        <div class="example-card-body">
+          <pre><code>// Load a texture
+auto texture = Raftel::Texture::loadTexture("../assets/textures/cube_texture.png");
+
+// Get the mesh's material and set the texture as its albedo
+mesh->GetMaterialByIndex(0)->setAlbedo(texture);
+
+// Always set up the mesh after modifying materials
+mesh->setupMesh();</code></pre>
+        </div>
+      </div>
+      
+      <h2>Using a Skybox</h2>
+      
+      <p>The RenderSystem also handles skybox rendering, which provides a background environment for your scene:</p>
+      <div class="example-card">
+        <div class="example-card-header">Setting Up a Skybox</div>
+        <div class="example-card-body">
+          <pre><code>// Load a cubemap texture
+auto skyboxTexture = Raftel::Texture::loadCubemap({
+  "../assets/skybox/right.jpg",
+  "../assets/skybox/left.jpg",
+  "../assets/skybox/top.jpg",
+  "../assets/skybox/bottom.jpg",
+  "../assets/skybox/front.jpg",
+  "../assets/skybox/back.jpg"
+});
+
+// Set the skybox texture in the RenderSystem
+Raftel::RenderSystem::SetSkyboxTexture(skyboxTexture);</code></pre>
+        </div>
+      </div>
+      <div>The images must be provided in the following order:
+      <ul>
+        <li>Right (+X)</li>
+        <li>Left (-X)</li>
+        <li>Top (+Y)</li>
+        <li>Bottom (-Y)</li>
+        <li>Front (+Z)</li>
+        <li>Back (-Z)</li>
+      </ul>  
+      </div>
+      <p>Once set, the skybox will automatically be rendered as the background of your scene.</p>
+      
+      <h2>Working with Camera</h2>
+      
+      <p>The Camera class works closely with the RenderSystem. It provides view and projection matrices that the RenderSystem uses for rendering:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Camera Setup</div>
+        <div class="example-card-body">
+          <pre><code>// Create a camera attached to the window
+Raftel::Camera camera(windowOpt.get());
+
+// In your render loop
+camera.Update(windowOpt);  // Update camera state
+
+// The RenderSystem will use the camera's matrices
+Raftel::RenderSystem::UpdateRenderSystem(*ecs, camera, windowOpt->getScreenSize(), false);</code></pre>
+        </div>
+      </div>
+      
+      <p>The camera determines what is visible in your scene and provides the viewpoint for rendering. See the <a href="tutorialcamera.html">Camera tutorial</a> for more details on camera controls and options.</p>
+      
+      <h2>Working with Lighting</h2>
+      
+      <p>Lighting in Raftel Engine is handled through entity components. The RenderSystem automatically manages lights defined in your EntityManager:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Adding a Light</div>
+        <div class="example-card-body">
+          <pre><code>// Create a light entity
+auto lightEntity = ecs->CreateEntity();
+
+// Add a light component
+lightEntity.addLightComp(Raftel::LightComponent(
+  Raftel::LightComponent::LightType::DIRECTIONAL,  // Light type
+  glm::vec3(1.0f, 1.0f, 1.0f),                    // Light color
+  glm::vec3(0.0f),                                // Position (for point/spot lights)
+  glm::vec3(-0.5f, -1.0f, -0.3f),                 // Direction
+  1.0f,                                          // Intensity
+  1000.0f                                        // Range
+));
+
+// Optionally, add transform and render components if you want
+// to visualize the light as an object
+</code></pre>
+        </div>
+      </div>
+      
+      <p>The RenderSystem will automatically detect and apply all lights in your scene during rendering.</p>
+      
+      <h2>Advanced: Shadow Mapping</h2>
+      
+      <p>The RenderSystem can also render shadows, but this requires additional setup:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Enabling Shadows</div>
+        <div class="example-card-body">
+          <pre><code>// Set the last parameter to true to enable shadows
+Raftel::RenderSystem::UpdateRenderSystem(*ecs, camera, windowOpt->getScreenSize(), true);</code></pre>
+        </div>
+      </div>
+      
+      <div class="info-box">
+        <h3>Shadow Performance</h3>
+        <p>Enabling shadows has a significant performance impact, especially with many entities. Use it judiciously and consider disabling shadows for performance-critical applications.</p>
+      </div>
+      
+      <h2>Complete Example</h2>
+      
+      <p>Here's a complete example that demonstrates setting up the RenderSystem with entities, camera, and a skybox:</p>
+      
+      <div class="example-card">
+        <div class="example-card-header">Complete RenderSystem Example</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/window.hpp"
+#include "raftel/shader.hpp"
+#include "raftel/ecs.hpp"
+#include "raftel/camera.hpp"
+#include "raftel/systems.hpp"
+#include "raftel/input.hpp"
+
+int main(void) {
+  // Initialize window
+  auto windowSystemOpt = Raftel::WindowSystem::make();
+  auto windowOpt = Raftel::Window::make("RenderSystem Demo", *windowSystemOpt);
+  if (!windowOpt) {
+    std::cerr << "Can't create window\n";
+    return -1;
+  }
+  
+  // Set up window context
+  windowOpt->MakeContextCurrent();
+  
+  // Create camera
+  Raftel::Camera cam(windowOpt.get());
+  
+  // Create entity manager
+  auto ecs = std::make_unique&lt;Raftel::EntityManager&gt;();
+  
+  // Create a terrain entity
+  auto terrainMesh = Raftel::MeshFactory::createTerrain(
+    "../assets/heightmap/heightMap_test3.png", 
+    1.0f, 
+    200.0f, 
+    true
+  );
+  
+  // Apply texture to terrain
+  auto terrainTexture = Raftel::Texture::loadTexture("../assets/textures/cubetex.png");
+  terrainMesh->GetMaterialByIndex(0)->setAlbedo(terrainTexture);
+  terrainMesh->setupMesh();
+  
+  // Create terrain entity
+  auto terrain = ecs->CreateEntity();
+  terrain.addMeshComp(terrainMesh);
+  terrain.addRenderComp(true);
+  terrain.addTransformComp(Raftel::TransformComponent{
+    glm::vec3(0.0f, -200.0f, -400.0f),  // Position
+    glm::vec3(0.0f),                    // Rotation
+    glm::vec3(1.0f)                     // Scale
+  });
+  
+  // Add a directional light
+  auto light = ecs->CreateEntity();
+  light.addLightComp(Raftel::LightComponent(
+    Raftel::LightComponent::LightType::DIRECTIONAL,
+    glm::vec3(1.0f, 0.9f, 0.8f),  // Warm sunlight color
+    glm::vec3(0.0f),
+    glm::vec3(-0.5f, -1.0f, -0.3f),  // Direction
+    1.0f,  // Intensity
+    1000.0f  // Range
+  ));
+  
+  // Initialize the RenderSystem
+  Raftel::RenderSystem::Initialize();
+  
+  // Load and set skybox (optional)
+  auto skyboxTexture = Raftel::Texture::loadCubemap({
+    "../assets/skybox/right.jpg",
+    "../assets/skybox/left.jpg",
+    "../assets/skybox/top.jpg",
+    "../assets/skybox/bottom.jpg",
+    "../assets/skybox/front.jpg",
+    "../assets/skybox/back.jpg"
+  });
+  Raftel::RenderSystem::SetSkyboxTexture(skyboxTexture);
+  
+  // Main render loop
+  while (!windowOpt->ShouldClose()) {
+    // Update input
+    windowOpt->input->updateKeys();
+    
+    // Clear window
+    windowOpt->clear();
+    
+    // Update camera
+    cam.PresetCamera(windowOpt.get());
+    cam.Update(windowOpt);
+    
+    // Render the scene
+    Raftel::RenderSystem::UpdateRenderSystem(*ecs, cam, windowOpt->getScreenSize(), false);
+    
+    // Swap buffers
+    windowOpt->swapBuffers();
+  }
+  
+  // Cleanup
+  Raftel::RenderSystem::Shutdown();
+  
+  return 0;
+}</code></pre>
+        </div>
+      </div>
+      <div>
+        <img src="../img/rendersystem.png" alt="Rendered 3D Mesh" style="width:50%; height:auto; display:block; margin:0 auto;">
+      </div>
+      <h2>Internal Shaders</h2>
+      
+      <p>The RenderSystem uses internal shaders that are not directly accessible to users. These shaders handle:</p>
+      
+      <ul>
+        <li>Standard forward rendering with Shadow Mapping</li>
+        <li>Deferred rendering with Shadow Mapping</li>
+        <li>Skybox rendering</li>
+      </ul>
+      
+      <p>While you can't directly access or modify these shaders, they're designed to work with the material system, allowing you to customize the appearance of your entities.</p>
+      
+      <div class="tip-box">
+        <h3>Future Customization</h3>
+        <p>Future versions of Raftel Engine may allow for more customization of the rendering pipeline and shaders.</p>
+      </div>
+      <div class="api-reference">
+        <p>For complete API details, see the <a href="../../doxygen/html/class_raftel_1_1_render_system.html"
+            target="_blank">Render System Reference</a> in the API documentation.</p>
+      </div>
+      <h2>Next Steps</h2>
+      
+      <p>Now that you understand the basics of the RenderSystem, you can explore these related topics:</p>
+      
+      <div class="grid">
+        <div class="grid-item">
+          <h3><a href="tutorialcamera.html">Camera Controls</a></h3>
+          <p>Learn how to create and control a camera for navigating your 3D scenes.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3><a href="tutorialecs.html">Entity Component System</a></h3>
+          <p>Master the ECS architecture to organize your game objects and logic.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3><a href="../core/material.html">Materials</a></h3>
+          <p>Discover how to create and customize materials for your entities.</p>
+        </div>
+        
+        <div class="grid-item">
+          <h3><a href="../core/lighting.html">Lighting System</a></h3>
+          <p>Learn how to use different types of lights to illuminate your scenes.</p>
+        </div>
+      </div>
+      
+      <div class="tutorial-nav">
+        <a href="tutorialjobsystem.html" class="prev">Previous: Using JobSystem</a>
+        <a href="tutorialcamera.html" class="next">Next: Camera Controls</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-links">
+      <a href="../about.html">About</a>
+      <a href="../license.html">License</a>
+      <a href="../contact.html">Contact</a>
+      <a href="../privacy.html">Privacy</a>
+    </div>
+    <div class="footer-copyright">
+      &copy; 2025 Raftel Engine. All rights reserved.
+    </div>
+  </div>
+
+  <script src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to draw a triangle with Raftel Engine in this step-by-step tutorial.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <title>Drawing a Triangle - Raftel Engine Tutorial</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+</head>
+
+<body>
+  <!-- Header fijo -->
+  <div class="header">
+    <div class="header-logo">
+      <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+      <span>Raftel Engine</span>
+    </div>
+    <div class="header-search">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path
+          d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+      </svg>
+      <input type="text" placeholder="Search documentation...">
+    </div>
+    <div class="header-links">
+      <a href="../index.html">Home</a>
+      <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+      <a href="https://github.com/" target="_blank">GitHub</a>
+      <a href="../index.html#community">Community</a>
+    </div>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="container">
+    <!-- Sidebar izquierdo -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-category">Getting Started</div>
+        <a href="../index.html" class="sidebar-item">Introduction</a>
+        <a href="../started/installation.html" class="sidebar-item">Installation</a>
+        <a href="../started/build-setup.html" class="sidebar-item">Build Setup</a>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-category">Tutorials</div>
+        <a href="tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+        <a href="tutorialtriangle.html" class="sidebar-item active">Drawing a Triangle</a>
+        <a href="tutorialinput.html" class="sidebar-item">Handling Input</a>
+        <a href="tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+        <a href="tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+        <a href="tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+        <a href="tutorialecs.html" class="sidebar-item">Entity Component System</a>
+        <a href="tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-category">Core Components</div>
+        <a href="../core/windowsystem.html" class="sidebar-item">Window System</a>
+        <a href="../core/shader.html" class="sidebar-item">Shaders</a>
+        <a href="../core/mesh.html" class="sidebar-item">Meshes</a>
+        <a href="../core/material.html" class="sidebar-item">Materials</a>
+        <a href="../core/texture.html" class="sidebar-item">Textures</a>
+        <a href="../core/lighting.html" class="sidebar-item">Lighting</a>
+        <a href="../core/input.html" class="sidebar-item">Input</a>
+        <a href="../core/jobsystem.html" class="sidebar-item">JobSystem</a>
+        <a href="../core/rendersystem.html" class="sidebar-item">RenderSystem</a>
+        <a href="../core/ecs.html" class="sidebar-item">ECS</a>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+      <h1>Drawing a Triangle with Raftel Engine</h1>
+
+      <p>This tutorial will guide you through the process of drawing a simple triangle using Raftel Engine. This is a
+        fundamental skill that forms the basis for more complex rendering operations.</p>
+
+      <div class="tutorial-nav">
+        <a href="tutorialwindow.html" class="prev">Previous: Creating a Window</a>
+        <a href="tutorialinput.html" class="next">Next: Handling Input</a>
+      </div>
+
+      <div class="example-viewer">
+        <div class="example-viewer-header">
+          <div class="example-viewer-title">Triangle Preview</div>
+          <div class="example-viewer-actions">
+            <button>View Code</button>
+            <button>Full Screen</button>
+          </div>
+        </div>
+        <div class="example-viewer-content">
+          <img src="../img/tri.png" alt="Rendered Triangle" style="width:100%; height:100%; object-fit:contain;">
+        </div>
+      </div>
+
+      <h2>Prerequisites</h2>
+      <p>Before you begin, make sure you have:</p>
+      <ul>
+        <li>Raftel Engine installed on your system</li>
+        <li>Completed the <a href="tutorialwindow.html">Creating a Window tutorial</a></li>
+        <li>A basic understanding of C++ programming</li>
+        <li>Familiarity with fundamental 3D graphics concepts</li>
+      </ul>
+
+      <h2>Drawing a Triangle</h2>
+
+      <h3>Step 1: Include Required Headers</h3>
+
+      <p>Start by including the necessary headers for window management and shape rendering:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Including Required Headers</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/window.hpp"
+#include "raftel/shape.hpp"</code></pre>
+        </div>
+      </div>
+
+      <h3>Step 2: Initialize the Window</h3>
+
+      <p>Create a window as we learned in the previous tutorial:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Window Initialization</div>
+        <div class="example-card-body">
+          <pre><code>int main(void) {
+  auto windowSystemOpt = Raftel::WindowSystem::make();
+  auto windowOpt = Raftel::Window::make("WindowTest", *windowSystemOpt);
+  if (!windowOpt) {
+      std::cerr << "Error creating window\n";
+      return -1;
+  }
+  windowOpt->MakeContextCurrent();
+}</code></pre>
+        </div>
+      </div>
+
+      <h3>Step 3: Define Triangle Vertices</h3>
+
+      <p>Define the vertices that will form your triangle. Each vertex consists of three coordinates (x, y, z):</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Triangle Vertices</div>
+        <div class="example-card-body">
+          <pre><code>std::vector<float> triangleVertices = {
+   0.0f,  0.5f,  0.0f, // Top vertex
+   0.5f, -0.5f,  0.0f, // Bottom right vertex
+  -0.5f, -0.5f,  0.0f  // Bottom left vertex
+};</code></pre>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <h3>Understanding Coordinates</h3>
+        <p>In Raftel Engine, the coordinate system ranges from -1.0 to 1.0 for both the x and y axes, with the origin
+          (0,0) at the center of the screen. The z-axis points out of the screen, with negative values going into the
+          screen.</p>
+      </div>
+
+      <h3>Step 4: Create a Shape Object</h3>
+
+      <p>Create a <code>Shape</code> object using the vertices you defined:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Shape Creation</div>
+        <div class="example-card-body">
+          <pre><code>Raftel::Shape triangle(triangleVertices);</code></pre>
+        </div>
+      </div>
+
+      <h3>Step 5: Set Up the Render Loop</h3>
+
+      <p>Create a render loop to draw the triangle continuously:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Render Loop</div>
+        <div class="example-card-body">
+          <pre><code>while (!windowOpt->ShouldClose()) {
+  windowOpt->clear();
+  triangle.draw();
+  windowOpt->swapBuffers();
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <h3>Render Loop Explained</h3>
+        <p>The render loop performs these steps in each iteration:</p>
+        <ol>
+          <li><code>windowOpt->clear()</code>: Clears the window to prepare for new rendering</li>
+          <li><code>triangle.draw()</code>: Draws the triangle shape to the back buffer</li>
+          <li><code>windowOpt->swapBuffers()</code>: Swaps the front and back buffers to display the rendering</li>
+        </ol>
+      </div>
+
+      <h2>Complete Example</h2>
+
+      <p>Here's the complete code for drawing a triangle with Raftel Engine:</p>
+
+      <div class="example-card">
+        <div class="example-card-header">Complete Code</div>
+        <div class="example-card-body">
+          <pre><code>#include "raftel/window.hpp"
+#include "raftel/shape.hpp"
+
+int main(void) {
+  // Initialize window
+  auto windowSystemOpt = Raftel::WindowSystem::make();
+  auto windowOpt = Raftel::Window::make("WindowTest", *windowSystemOpt);
+  if (!windowOpt) {
+      std::cerr << "Error creating window\n";
+      return -1;
+  }
+  windowOpt->MakeContextCurrent();
+  
+  // Define triangle vertices
+  std::vector<float> triangleVertices = {
+     0.0f,  0.5f,  0.0f, // Top vertex
+     0.5f, -0.5f,  0.0f, // Bottom right vertex
+    -0.5f, -0.5f,  0.0f  // Bottom left vertex
+  };
+  
+  // Create triangle shape
+  Raftel::Shape triangle(triangleVertices);
+  
+  // Main render loop
+  while (!windowOpt->ShouldClose()) {
+    windowOpt->clear();
+    triangle.draw();
+    windowOpt->swapBuffers();
+  }
+  
+  return 0;
+}</code></pre>
+        </div>
+      </div>
+      <h2>Next Steps</h2>
+
+      <p>Now that you've learned to draw a basic triangle, you can move on to more advanced topics:</p>
+
+      <div class="grid">
+        <div class="grid-item">
+          <h3><a href="tutorialinput.html">Handling Input</a></h3>
+          <p>Learn how to respond to user input to make your applications interactive.</p>
+        </div>
+
+        <div class="grid-item">
+          <h3><a href="tutorialmesh.html">Loading 3D Meshes</a></h3>
+          <p>Move beyond simple shapes to load and render complex 3D models.</p>
+        </div>
+      </div>
+
+      <div class="tutorial-nav">
+        <a href="tutorialwindow.html" class="prev">Previous: Creating a Window</a>
+        <a href="tutorialinput.html" class="next">Next: Handling Input</a>
+      </div>
+
+      <div class="api-reference">
+        <p>For complete API details, see the <a href="../../doxygen/html/class_raftel_1_1_shape.html"
+            target="_blank">Shape Class Reference</a> in the API documentation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-links">
+      <a href="../about.html">About</a>
+      <a href="../extra/license.html">License</a>
+      <a href="../contact.html">Contact</a>
+      <a href="../privacy.html">Privacy</a>
+    </div>
+    <div class="footer-copyright">
+      &copy; 2025 Raftel Engine. All rights reserved.
+    </div>
+  </div>
+
+  <script src="../script.js"></script>
+</body>
+
+</html>

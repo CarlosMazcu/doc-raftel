@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Texture documentation for Raftel Engine, an advanced graphics engine for creating 3D games.">
+    <meta name="keywords" content="Raftel Engine, Game Development, Graphics Engine, Textures, OpenGL">
+    <meta name="author" content="Your Name or Company">
+    <link rel="icon" href="../../doxygen/resources/raftellogo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Textures - Raftel Engine</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <!-- Header fijo -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="../../doxygen/resources/raftellogo.png" alt="Raftel Engine Logo">
+            <span>Raftel Engine</span>
+        </div>
+        <div class="header-search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <input type="text" placeholder="Search documentation...">
+        </div>
+        <div class="header-links">
+            <a href="../index.html">Home</a>
+            <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+            <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+            <a href="../index.html#community">Community</a>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Sidebar izquierdo -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-category">Getting Started</div>
+                <a href="../index.html" class="sidebar-item">Introduction</a>
+                <a href="../started/installation.html" class="sidebar-item">Installation</a>
+                <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Tutorials</div>
+                <a href="../tutorial/tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+                <a href="../tutorial/tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+                <a href="../tutorial/tutorialinput.html" class="sidebar-item">Handling Input</a>
+                <a href="../tutorial/tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+                <a href="../tutorial/tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+                <a href="../tutorial/tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="../tutorial/tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+                <a href="../tutorial/tutorialecs.html" class="sidebar-item">Entity Component System</a>
+                <a href="../tutorial/tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Core Components</div>
+                <a href="window.html" class="sidebar-item">Window System</a>
+                <a href="shader.html" class="sidebar-item">Shaders</a>
+                <a href="mesh.html" class="sidebar-item">Meshes</a>
+                <a href="material.html" class="sidebar-item">Materials</a>
+                <a href="texture.html" class="sidebar-item active">Textures</a>
+                <a href="lighting.html" class="sidebar-item">Lighting</a>
+                <a href="input.html" class="sidebar-item">Input</a>
+                <a href="jobsystem.html" class="sidebar-item">JobSystem</a>
+                <a href="rendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="ecs.html" class="sidebar-item">ECS</a>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content">
+            <h1>Textures</h1>
+
+            <p>
+                Textures are fundamental components in Raftel Engine that allow you to add visual detail and realism to 3D objects.
+                They provide a way to map 2D images onto 3D surfaces, creating the appearance of complex materials and surfaces
+                without needing to model every detail in geometry.
+            </p>
+
+            <div class="info-box">
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Support for common image formats (PNG, JPG, BMP, TGA, etc.)</li>
+                    <li>2D textures for standard surface mapping</li>
+                    <li>Cubemap textures for environment mapping and skyboxes</li>
+                    <li>Automatic mipmap generation for optimized rendering at different distances</li>
+                    <li>Error handling and resource management with shared pointers</li>
+                    <li>Built on top of stb_image for versatile image loading</li>
+                </ul>
+            </div>
+
+            <h2>Architecture Overview</h2>
+
+            <p>
+                The texture system in Raftel Engine consists of two primary classes:
+            </p>
+
+            <h3>TextureImage Class</h3>
+            <p>
+                The <code>TextureImage</code> class serves as a container for raw image data loaded from files. It stores:
+            </p>
+            <ul>
+                <li>Raw pixel data</li>
+                <li>Width and height dimensions</li>
+                <li>Number of color channels</li>
+            </ul>
+            <p>
+                This class is primarily used as an intermediate representation before creating OpenGL textures. It handles 
+                the memory management of the loaded image data.
+            </p>
+
+            <h3>Texture Class</h3>
+            <p>
+                The <code>Texture</code> class wraps the OpenGL texture object, providing:
+            </p>
+            <ul>
+                <li>Methods for creating and managing OpenGL textures</li>
+                <li>Support for 2D textures and cubemaps</li>
+                <li>Functions to bind textures to shader samplers</li>
+                <li>Static methods for loading textures from files</li>
+            </ul>
+            <p>
+                This class is the primary interface for working with textures in Raftel Engine.
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Class Structure
+                </div>
+                <div class="example-card-body">
+                    <pre><code>
+namespace Raftel {
+    class TextureImage {
+    public:
+        unsigned char* data;  // Raw image data
+        int width;            // Image width
+        int height;           // Image height
+        int n_channel;        // Number of channels (3=RGB, 4=RGBA)
+        
+        // Methods for construction and memory management
+        // ...
+    };
+    
+    enum class TextureType {
+        TEXTURE_2D,  // Standard 2D texture
+        CUBEMAP      // Cube map texture for environment mapping
+    };
+    
+    class Texture {
+    public:
+        GLuint id;            // OpenGL texture ID
+        TextureType type;     // Type of texture (2D or Cubemap)
+        
+        // Methods for loading, binding, and managing textures
+        // ...
+        
+        static std::shared_ptr<Texture> loadTexture(const std::string& path);
+        static std::shared_ptr<Texture> loadCubemap(const std::vector<std::string>& faces);
+        
+        void bind(int unit) const;
+    };
+}</code></pre>
+                </div>
+            </div>
+
+            <h2>Basic Usage</h2>
+
+            <p>
+                Here are some common examples of how to use the Texture system in Raftel Engine:
+            </p>
+
+            <h3>Loading a 2D Texture</h3>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Basic Texture Loading
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/texture.hpp"
+#include "raftel/material.hpp"
+
+int main() {
+    try {
+        // Load a texture from a file
+        auto brickTexture = Raftel::Texture::loadTexture("assets/textures/brick.png");
+        
+        // Create a material and apply the texture
+        auto material = std::make_shared<Raftel::Material>();
+        material->setAlbedo(brickTexture);
+        
+        // The texture will be used when rendering objects with this material
+        myMesh->setMaterial(material);
+        
+        // ...
+    } catch (const std::exception& e) {
+        std::cerr << "Error loading texture: " << e.what() << std::endl;
+    }
+    
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+
+            <h3>Creating a Skybox with Cubemap</h3>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Loading and Using Cubemap Textures
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/texture.hpp"
+#include "raftel/shader.hpp"
+
+void setupSkybox() {
+    // Define paths to the six faces of the cubemap
+    std::vector<std::string> skyboxFaces = {
+        "assets/skybox/right.jpg",  // +X
+        "assets/skybox/left.jpg",   // -X
+        "assets/skybox/top.jpg",    // +Y
+        "assets/skybox/bottom.jpg", // -Y
+        "assets/skybox/front.jpg",  // +Z
+        "assets/skybox/back.jpg"    // -Z
+    };
+    
+    // Load the cubemap texture
+    auto skyboxTexture = Raftel::Texture::loadCubemap(skyboxFaces);
+    
+    // Use the cubemap in a shader
+    skyboxShader->use();
+    skyboxTexture->bind(0);
+    skyboxShader->setUniform("skybox", 0);
+    
+    // Render skybox...
+}</code></pre>
+                </div>
+            </div>
+
+            <h2>TextureImage Class Reference</h2>
+
+            <h3>Attributes</h3>
+            <div class="method-block">
+                <div class="method-signature">unsigned char* data</div>
+                <div class="method-description">
+                    <p>A pointer to the raw image data in memory. The format depends on the number of channels (RGB or RGBA).</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">int width</div>
+                <div class="method-description">
+                    <p>The width of the image in pixels.</p>
+                </div>
+            </div>
+            
+            <div class="method-block">
+                <div class="method-signature">int height</div>
+                <div class="method-description">
+                    <p>The height of the image in pixels.</p>
+                </div>
+            </div>
+            
+            <div class="method-block">
+                <div class="method-signature">int n_channel</div>
+                <div class="method-description">
+                    <p>The number of color channels in the image (3 for RGB, 4 for RGBA).</p>
+                </div>
+            </div>
+
+            <h3>Constructor and Destructor</h3>
+            <div class="method-block">
+                <div class="method-signature">TextureImage(unsigned char* data, int width, int height, int n_channel)</div>
+                <div class="method-description">
+                    <p>Constructs a TextureImage with the provided image data and dimensions.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>data</code> - The raw image data</li>
+                        <li><code>width</code> - The width of the image in pixels</li>
+                        <li><code>height</code> - The height of the image in pixels</li>
+                        <li><code>n_channel</code> - The number of color channels (3 for RGB, 4 for RGBA)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="method-block">
+                <div class="method-signature">~TextureImage()</div>
+                <div class="method-description">
+                    <p>Destructor that frees the image data using stbi_image_free().</p>
+                </div>
+            </div>
+
+            <h3>Move Operations</h3>
+            <div class="method-block">
+                <div class="method-signature">TextureImage(TextureImage&& other) noexcept</div>
+                <div class="method-description">
+                    <p>Move constructor that transfers ownership of image data from another TextureImage.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>other</code> - The TextureImage to move from</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="method-block">
+                <div class="method-signature">TextureImage& operator=(TextureImage&& other) noexcept</div>
+                <div class="method-description">
+                    <p>Move assignment operator that transfers ownership of image data.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>other</code> - The TextureImage to move from</li>
+                    </ul>
+                    <p><strong>Returns:</strong> A reference to this TextureImage</p>
+                </div>
+            </div>
+
+            <h2>TextureType Enumeration</h2>
+
+            <div class="method-block">
+                <div class="method-signature">enum class TextureType</div>
+                <div class="method-description">
+                    <p>Defines the different types of textures supported by Raftel Engine.</p>
+                    <p><strong>Values:</strong></p>
+                    <ul>
+                        <li><code>TEXTURE_2D</code> - Standard 2D texture used for most surface mapping</li>
+                        <li><code>CUBEMAP</code> - Cubemap texture used for skyboxes and environment mapping</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>Texture Class Reference</h2>
+
+            <h3>Attributes</h3>
+            <div class="method-block">
+                <div class="method-signature">GLuint id</div>
+                <div class="method-description">
+                    <p>The OpenGL texture ID assigned to this texture.</p>
+                </div>
+            </div>
+            
+            <div class="method-block">
+                <div class="method-signature">TextureType type</div>
+                <div class="method-description">
+                    <p>The type of texture (TEXTURE_2D or CUBEMAP).</p>
+                </div>
+            </div>
+
+            <h3>Constructors and Destructor</h3>
+            <div class="method-block">
+                <div class="method-signature">Texture()</div>
+                <div class="method-description">
+                    <p>Default constructor that initializes the texture ID to 0 and type to TEXTURE_2D.</p>
+                </div>
+            </div>
+            
+            <div class="method-block">
+                <div class="method-signature">Texture(TextureImage image)</div>
+                <div class="method-description">
+                    <p>Constructor that creates an OpenGL texture from a TextureImage. This generates mipmaps automatically.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>image</code> - The TextureImage containing the raw image data</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="method-block">
+                <div class="method-signature">Texture(const std::vector&lt;std::string&gt;& faces)</div>
+                <div class="method-description">
+                    <p>Constructor that creates a cubemap texture from six image files.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>faces</code> - A vector containing the file paths of the six cubemap faces in order: right (+X), left (-X), top (+Y), bottom (-Y), front (+Z), back (-Z)</li>
+                    </ul>
+                    <p><strong>Throws:</strong> std::runtime_error if any face fails to load or if fewer than 6 faces are provided</p>
+                </div>
+            </div>
+            
+            <div class="method-block">
+                <div class="method-signature">~Texture()</div>
+                <div class="method-description">
+                    <p>Destructor that deletes the OpenGL texture.</p>
+                </div>
+            </div>
+
+            <h3>Static Factory Methods</h3>
+            <div class="method-block">
+                <div class="method-signature">static std::shared_ptr&lt;Texture&gt; loadTexture(const std::string& texturePath)</div>
+                <div class="method-description">
+                    <p>Static factory method to load a 2D texture from a file.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>texturePath</code> - The file path to the texture image</li>
+                    </ul>
+                    <p><strong>Returns:</strong> A shared pointer to the loaded Texture</p>
+                    <p><strong>Throws:</strong> std::runtime_error if the texture fails to load</p>
+                </div>
+            </div>
+            
+            <div class="method-block">
+                <div class="method-signature">static std::shared_ptr&lt;Texture&gt; loadCubemap(const std::vector&lt;std::string&gt;& faces)</div>
+                <div class="method-description">
+                    <p>Static factory method to load a cubemap texture from six image files.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>faces</code> - A vector containing the file paths of the six cubemap faces</li>
+                    </ul>
+                    <p><strong>Returns:</strong> A shared pointer to the loaded cubemap Texture</p>
+                    <p><strong>Throws:</strong> std::runtime_error if any face fails to load or if fewer than 6 faces are provided</p>
+                </div>
+            </div>
+            
+            <div class="method-block">
+                <div class="method-signature">static TextureImage LoadTexture(const char* path)</div>
+                <div class="method-description">
+                    <p>Static method to load raw image data from a file.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>path</code> - The file path to the image</li>
+                    </ul>
+                    <p><strong>Returns:</strong> A TextureImage containing the loaded image data</p>
+                    <p><strong>Throws:</strong> std::runtime_error if the image fails to load</p>
+                </div>
+            </div>
+
+            <h3>Instance Methods</h3>
+            <div class="method-block">
+                <div class="method-signature">void bind(int unit) const</div>
+                <div class="method-description">
+                    <p>Binds this texture to the specified texture unit for use in shaders.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>unit</code> - The texture unit to bind to (0, 1, 2, etc.)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="method-block">
+                <div class="method-signature">GLuint getID() const</div>
+                <div class="method-description">
+                    <p>Gets the OpenGL texture ID.</p>
+                    <p><strong>Returns:</strong> The OpenGL texture ID</p>
+                </div>
+            </div>
+            
+            <div class="method-block">
+                <div class="method-signature">const std::string& getLastError() const</div>
+                <div class="method-description">
+                    <p>Gets the last error message from texture operations.</p>
+                    <p><strong>Returns:</strong> The last error message</p>
+                </div>
+            </div>
+
+            <h3>Move Operations</h3>
+            <div class="method-block">
+                <div class="method-signature">Texture(Texture&& other) noexcept</div>
+                <div class="method-description">
+                    <p>Move constructor that transfers ownership of the OpenGL texture.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>other</code> - The Texture to move from</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="method-block">
+                <div class="method-signature">Texture& operator=(Texture&& other) noexcept</div>
+                <div class="method-description">
+                    <p>Move assignment operator that transfers ownership of the OpenGL texture.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>other</code> - The Texture to move from</li>
+                    </ul>
+                    <p><strong>Returns:</strong> A reference to this Texture</p>
+                </div>
+            </div>
+
+            <h2>Supported Image Formats</h2>
+
+            <p>
+                Raftel Engine uses the stb_image library to load textures, which supports most common image formats:
+            </p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>PNG (.png)</h3>
+                    <p>Supports full transparency and lossless compression. Ideal for textures with sharp edges, text, or transparency.</p>
+                </div>
+                
+                <div class="grid-item">
+                    <h3>JPEG (.jpg, .jpeg)</h3>
+                    <p>Provides smaller file sizes with lossy compression. Good for photo-realistic textures without transparency.</p>
+                </div>
+                
+                <div class="grid-item">
+                    <h3>BMP (.bmp)</h3>
+                    <p>Uncompressed bitmap format. Simple but produces larger files with no compression artifacts.</p>
+                </div>
+                
+                <div class="grid-item">
+                    <h3>TGA (.tga)</h3>
+                    <p>Supports alpha channels and is common in game development. Good for textures requiring transparency.</p>
+                </div>
+                
+                <div class="grid-item">
+                    <h3>PSD (.psd)</h3>
+                    <p>Adobe Photoshop format. Only the flattened image is imported.</p>
+                </div>
+                
+                <div class="grid-item">
+                    <h3>HDR (.hdr)</h3>
+                    <p>High Dynamic Range format for environment maps and lighting scenarios requiring a wider color range.</p>
+                </div>
+            </div>
+
+            <h2>Texture Parameters and Settings</h2>
+
+            <p>
+                When creating textures, Raftel Engine applies default OpenGL texture parameters to control filtering, wrapping,
+                and other behaviors. These defaults are:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Default Texture Parameters
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// For 2D textures:
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+// For cubemaps:
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);</code></pre>
+                </div>
+            </div>
+
+            <h3>Parameter Explanations</h3>
+            <ul>
+                <li><strong>Wrap Mode</strong> - Controls what happens when texture coordinates go outside the [0,1] range:
+                    <ul>
+                        <li><code>GL_REPEAT</code> - Repeats the texture (default for 2D textures)</li>
+                        <li><code>GL_CLAMP_TO_EDGE</code> - Clamps to the edge (default for cubemaps)</li>
+                    </ul>
+                </li>
+                <li><strong>Filtering</strong> - Controls how textures are sampled:
+                    <ul>
+                        <li><code>GL_LINEAR</code> - Bilinear filtering for smooth results</li>
+                        <li><code>GL_LINEAR_MIPMAP_LINEAR</code> - Trilinear filtering with mipmaps for distance rendering</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2>Using Textures with Materials and Shaders</h2>
+
+            <p>
+                Textures are most commonly used as part of material definitions. Here's how to use textures with materials
+                and shaders in Raftel Engine:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Complete Texture Usage Example
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/texture.hpp"
+#include "raftel/material.hpp"
+#include "raftel/shader.hpp"
+#include "raftel/mesh.hpp"
+
+void setupTexturedObject() {
+    // 1. Load textures
+    auto diffuseMap = Raftel::Texture::loadTexture("assets/textures/stone_diffuse.png");
+    auto normalMap = Raftel::Texture::loadTexture("assets/textures/stone_normal.png");
+    auto roughnessMap = Raftel::Texture::loadTexture("assets/textures/stone_roughness.png");
+    
+    // 2. Create material with textures
+    auto material = std::make_shared<Raftel::Material>();
+    material->setAlbedo(diffuseMap);
+    material->setNormal(normalMap);
+    material->setRoughness(roughnessMap);
+    
+    // 3. Apply material to mesh
+    auto mesh = Raftel::MeshFactory::createCube(1.0f);
+    mesh->setMaterial(material);
+    
+    // 4. Render in your main loop
+    auto shader = Raftel::ShaderProgram::Create("shaders/pbr.vert", "shaders/pbr.frag");
+    
+    // ... in render loop
+    shader->use();
+    
+    // The material system will automatically:
+    // - Bind textures to appropriate texture units
+    // - Set uniforms in the shader for texture samplers
+    // - Set flags for which textures are available
+    
+    mesh->draw(*shader);
+}
+
+// In your fragment shader:
+// uniform sampler2D albedoMap;
+// uniform sampler2D normalMap;
+// uniform sampler2D roughnessMap;
+// uniform int hasAlbedoMap;
+// uniform int hasNormalMap;
+// uniform int hasRoughnessMap;
+//
+// void main() {
+//     vec3 albedo = hasAlbedoMap == 1 ? texture(albedoMap, texCoord).rgb : albedoColor;
+//     vec3 normal = hasNormalMap == 1 ? perturbNormal() : normalVector;
+//     float roughness = hasRoughnessMap == 1 ? texture(roughnessMap, texCoord).r : roughnessValue;
+//     
+//     // Continue with PBR calculations...
+// }</code></pre>
+                </div>
+            </div>
+
+            <h2>Creating and Using Cubemaps for Skyboxes</h2>
+
+            <p>
+                Cubemaps are a special type of texture consisting of six faces arranged in a cube configuration. They are commonly used for skyboxes, environment maps, and reflections. Here's how to create and use a skybox with cubemaps in Raftel Engine:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Complete Skybox Implementation
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// 1. Load the cubemap texture
+std::vector<std::string> skyboxFaces = {
+    "assets/skybox/right.jpg",  // +X
+    "assets/skybox/left.jpg",   // -X
+    "assets/skybox/top.jpg",    // +Y
+    "assets/skybox/bottom.jpg", // -Y
+    "assets/skybox/front.jpg",  // +Z
+    "assets/skybox/back.jpg"    // -Z
+};
+auto skyboxTexture = Raftel::Texture::loadCubemap(skyboxFaces);
+
+//2. Initialize Render System and Set SkyBox
+Raftel::RenderSystem::Initialize();
+Raftel::RenderSystem::SetSkyboxTexture(skyboxTexture);
+
+// 3. Render in your render loop
+void renderSkybox(Camera& camera) {
+  [...code]
+  Raftel::RenderSystem::UpdateRenderSystem(...);
+
+}
+// 4. Shutdown Render System
+Raftel::RenderSystem::Shutdown();
+</code></pre>
+                </div>
+            </div>
+
+         <!--    <p>
+                Your skybox vertex shader should transform the position with the view and projection matrices,
+                while your fragment shader samples the skybox using the vertex position as a direction vector:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Skybox Shaders
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// skybox.vert
+#version 330 core
+layout (location = 0) in vec3 aPos;
+
+out vec3 texCoords;
+
+uniform mat4 view;
+uniform mat4 projection;
+
+void main() {
+    texCoords = aPos;
+    vec4 pos = projection * view * vec4(aPos, 1.0);
+    gl_Position = pos.xyww;  // Force depth to be maximum
+}
+
+// skybox.frag
+#version 330 core
+in vec3 texCoords;
+
+out vec4 FragColor;
+
+uniform samplerCube skybox;
+
+void main() {    
+    FragColor = texture(skybox, texCoords);
+}</code></pre>
+                </div>
+            </div> -->
+
+            <h2>Advanced Texture Techniques</h2>
+
+            <h3>Procedural Textures</h3>
+            <p>
+                Instead of loading textures from files, you can generate textures procedurally for effects like noise
+                patterns, gradients, or other algorithmic textures:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Creating a Procedural Checkerboard Texture
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Create a procedural checkerboard texture
+std::shared_ptr<Raftel::Texture> createCheckerboardTexture(int width = 256, int height = 256) {
+    // Create image data
+    unsigned char* data = new unsigned char[width * height * 4]; // RGBA
+    
+    // Generate checkerboard pattern
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            int index = (y * width + x) * 4;
+            
+            // Create a checkerboard pattern
+            bool isWhite = ((x / 32) + (y / 32)) % 2 == 0;
+            
+            data[index + 0] = isWhite ? 255 : 64;     // R
+            data[index + 1] = isWhite ? 255 : 64;     // G
+            data[index + 2] = isWhite ? 255 : 64;     // B
+            data[index + 3] = 255;                    // A (fully opaque)
+        }
+    }
+    
+    // Create a TextureImage with our data
+    Raftel::TextureImage image(data, width, height, 4);
+    
+    // Don't delete 'data' - TextureImage takes ownership of it
+    
+    // Create and return the texture
+    return std::make_shared<Raftel::Texture>(std::move(image));
+}</code></pre>
+                </div>
+            </div>
+
+        <!--     <h3>Using Multiple Textures in Shaders</h3>
+            <p>
+                Complex materials often use multiple textures simultaneously. Here's how to use them together in shaders:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Multi-Texture Material in Shaders
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Fragment shader example for PBR material with multiple textures
+#version 330 core
+
+in vec2 TexCoords;
+in vec3 WorldPos;
+in vec3 Normal;
+in mat3 TBN;  // Tangent-Bitangent-Normal matrix for normal mapping
+
+out vec4 FragColor;
+
+// Material textures
+uniform sampler2D albedoMap;
+uniform sampler2D normalMap;
+uniform sampler2D metallicMap;
+uniform sampler2D roughnessMap;
+uniform sampler2D aoMap;
+
+// Material parameters
+uniform vec3 albedoColor;
+uniform float metallicValue;
+uniform float roughnessValue;
+uniform float aoValue;
+
+// Texture availability flags
+uniform int hasAlbedoMap;
+uniform int hasNormalMap;
+uniform int hasMetallicMap;
+uniform int hasRoughnessMap;
+uniform int hasAoMap;
+
+// ... lighting uniforms ...
+
+void main() {
+    // Sample material parameters or use defaults
+    vec3 albedo = hasAlbedoMap == 1 ? texture(albedoMap, TexCoords).rgb : albedoColor;
+    float metallic = hasMetallicMap == 1 ? texture(metallicMap, TexCoords).r : metallicValue;
+    float roughness = hasRoughnessMap == 1 ? texture(roughnessMap, TexCoords).r : roughnessValue;
+    float ao = hasAoMap == 1 ? texture(aoMap, TexCoords).r : aoValue;
+    
+    // Compute normal
+    vec3 N;
+    if (hasNormalMap == 1) {
+        // Get normal from normal map, transform to world space
+        vec3 normalMap = texture(normalMap, TexCoords).rgb * 2.0 - 1.0;
+        N = normalize(TBN * normalMap);
+    } else {
+        // Use interpolated normal
+        N = normalize(Normal);
+    }
+    
+    // ... PBR lighting calculations ...
+    
+    FragColor = vec4(finalColor, 1.0);
+}</code></pre>
+                </div>
+            </div>
+
+            <h2>Best Practices</h2>
+
+            <ul>
+                <li><strong>Texture Dimensions</strong> - Use power-of-two dimensions (128, 256, 512, 1024, etc.) for best compatibility and performance with mipmapping.</li>
+                <li><strong>Memory Management</strong> - Use shared pointers to manage textures to prevent duplicate loading and ensure proper cleanup.</li>
+                <li><strong>Error Handling</strong> - Always check for errors when loading textures, especially from external files that might be missing or corrupted.</li>
+                <li><strong>Format Selection</strong> - Choose appropriate image formats:
+                    <ul>
+                        <li>PNG for textures with transparency or sharp details</li>
+                        <li>JPEG for photorealistic textures where compression artifacts are less noticeable</li>
+                        <li>HDR for environment maps and lighting</li>
+                    </ul>
+                </li>
+                <li><strong>Mipmap Usage</strong> - Let Raftel Engine automatically generate mipmaps for better performance at different viewing distances.</li>
+                <li><strong>UV Coordinates</strong> - Ensure your meshes have proper UV coordinates mapped to use textures effectively.</li>
+                <li><strong>Performance Considerations</strong> - Large or numerous textures can impact performance. Monitor texture memory usage and consider using texture atlases for multiple small textures.</li>
+            </ul> -->
+
+            <h2>Related Topics</h2>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3><a href="material.html">Materials</a></h3>
+                    <p>Learn about the material system that uses textures to define surface properties.</p>
+                </div>
+                
+                <div class="grid-item">
+                    <h3><a href="shader.html">Shaders</a></h3>
+                    <p>Understand how to use textures in GLSL shader programs.</p>
+                </div>
+                
+                <div class="grid-item">
+                    <h3><a href="../tutorial/tutorialmesh.html">Loading 3D Meshes</a></h3>
+                    <p>Tutorial on loading meshes with UV coordinates for texturing.</p>
+                </div>
+                
+                <div class="grid-item">
+                    <h3><a href="../tutorial/tutorialrendersystem.html">Render System Tutorial</a></h3>
+                    <p>Advanced techniques using textures for screen-space effects.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../extra/license.html">License</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy.html">Privacy</a>
+        </div>
+        <div class="footer-copyright">
+            &copy; 2025 Raftel Engine. All rights reserved.
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>
