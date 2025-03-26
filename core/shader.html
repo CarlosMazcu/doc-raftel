@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shader documentation for Raftel Engine, an advanced graphics engine for creating 3D games.">
+    <meta name="keywords" content="Raftel Engine, Game Development, Graphics Engine, Shaders, OpenGL, GLSL">
+    <meta name="author" content="Your Name or Company">
+    <link rel="icon" href="../../img/raftellogo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Shaders - Raftel Engine</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <!-- Header fijo -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="../../img/raftellogo.png" alt="Raftel Engine Logo">
+            <span>Raftel Engine</span>
+        </div>
+        <div class="header-search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <input type="text" placeholder="Search documentation...">
+        </div>
+        <div class="header-links">
+            <a href="../index.html">Home</a>
+            <a href="../../doxygen/html/index.html" target="_blank">API Reference</a>
+            <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+            <a href="../index.html#community">Community</a>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Sidebar izquierdo -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-category">Getting Started</div>
+                <a href="../index.html" class="sidebar-item">Introduction</a>
+                <a href="../started/installation.html" class="sidebar-item">Installation</a>
+                <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Tutorials</div>
+                <a href="../tutorial/tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+                <a href="../tutorial/tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+                <a href="../tutorial/tutorialinput.html" class="sidebar-item">Handling Input</a>
+                <a href="../tutorial/tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+                <a href="../tutorial/tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+                <a href="../tutorial/tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="../tutorial/tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+                <a href="../tutorial/tutorialecs.html" class="sidebar-item">Entity Component System</a>
+                <a href="../tutorial/tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Core Components</div>
+                <a href="windowsystem.html" class="sidebar-item">Window System</a>
+                <a href="shader.html" class="sidebar-item active">Shaders</a>
+                <a href="mesh.html" class="sidebar-item">Meshes</a>
+                <a href="material.html" class="sidebar-item">Materials</a>
+                <a href="texture.html" class="sidebar-item">Textures</a>
+                <a href="lighting.html" class="sidebar-item">Lighting</a>
+                <a href="input.html" class="sidebar-item">Input</a>
+                <a href="jobsystem.html" class="sidebar-item">JobSystem</a>
+                <a href="rendersystem.html" class="sidebar-item">RenderSystem</a>
+                <a href="ecs.html" class="sidebar-item">ECS</a>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content">
+            <h1>Shaders</h1>
+
+            <p>
+                Shaders are the core of any modern graphics engine, allowing fine control over the rendering process. 
+                In Raftel Engine, shaders are used to define how 3D content is processed and displayed on screen. The engine 
+                provides a robust shader system that allows developers to create custom visual effects while maintaining compatibility 
+                with the engine's rendering pipeline.
+            </p>
+
+            <div class="info-box">
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Support for vertex, fragment, and geometry shaders</li>
+                    <li>PBR (Physically Based Rendering) pipeline</li>
+                    <li>Built-in forward rendering system</li>
+                    <li>Support for shadow mapping (directional, point, and spot lights)</li>
+                    <li>Ability to replace the core shader with custom ones</li>
+                    <li>Predefined uniforms for common rendering tasks</li>
+                </ul>
+            </div>
+
+            <h2>Shader Architecture</h2>
+
+            <p>
+                Raftel Engine uses a forward rendering pipeline by default, with a core shader that handles common rendering tasks 
+                such as lighting, shadows, and material properties. While the engine handles many aspects of the rendering process 
+                internally, you can create and use your own custom shaders through the RenderSystem interface.
+            </p>
+
+            <p>
+                Shaders in Raftel Engine follow the GLSL (OpenGL Shading Language) syntax and structure. The engine supports:
+            </p>
+
+            <ul>
+                <li><strong>Vertex Shaders</strong>: Responsible for transforming vertex positions and passing attributes to the fragment shader.</li>
+                <li><strong>Fragment Shaders</strong>: Responsible for calculating the final color of each pixel.</li>
+                <li><strong>Geometry Shaders</strong>: Optional shaders that can generate or modify geometry.</li>
+            </ul>
+
+            <h2>Using Custom Shaders</h2>
+
+            <p>
+                While Raftel Engine uses its own internal shaders for most rendering operations, you can replace the core 
+                shader with your own custom shader to achieve specific visual effects. This is done through the RenderSystem's 
+                ChangeCoreShader methods.
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Changing the Core Shader
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Option 1: Load shaders from files
+Raftel::RenderSystem::ChangeCoreShader("shaders/myVertexShader.vert", "shaders/myFragmentShader.frag");
+
+// Option 2: Load shaders from files with a geometry shader
+Raftel::RenderSystem::ChangeCoreShader("shaders/myVertexShader.vert", "shaders/myFragmentShader.frag", "shaders/myGeometryShader.geom");
+
+// Option 3: Use shader code from memory
+const char* vertexShaderCode = "..."; // Your vertex shader code
+const char* fragmentShaderCode = "..."; // Your fragment shader code
+Raftel::RenderSystem::ChangeCoreShader(vertexShaderCode, fragmentShaderCode);
+
+// Option 4: Use shader code from memory with a geometry shader
+const char* geometryShaderCode = "..."; // Your geometry shader code
+Raftel::RenderSystem::ChangeCoreShader(vertexShaderCode, fragmentShaderCode, geometryShaderCode);
+
+// Option 5: Reset to the default core shader
+Raftel::RenderSystem::SetDefaultCoreShader();</code></pre>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h3>Best Practice</h3>
+                <p>
+                    When creating custom shaders, it's recommended to start with the engine's default shaders and modify them 
+                    incrementally to ensure compatibility with the engine's rendering pipeline.
+                </p>
+            </div>
+
+            <h2>Required Shader Inputs and Outputs</h2>
+
+            <p>
+                For your custom shaders to work correctly with Raftel Engine, they must include specific inputs, outputs, and 
+                uniforms that the engine expects. Below are the required elements for your vertex and fragment shaders.
+            </p>
+
+            <h3>Vertex Shader Requirements</h3>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Vertex Shader Structure
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#version 460 core
+// Vertex attributes (inputs)
+layout(location = 0) in vec3 aPos;       // Vertex position
+layout(location = 1) in vec3 aNormal;    // Vertex normal
+layout(location = 2) in vec2 aTexCoord;  // Texture coordinates
+layout(location = 3) in vec3 aTangent;   // Tangent vector (for normal mapping)
+
+// Outputs to fragment shader
+out vec3 FragPos;              // World space position
+out vec3 Normal;               // World space normal
+out vec2 TexCoord;             // Texture coordinates
+out vec4 FragPosLightSpace;    // Position in light space (for shadow mapping)
+
+// Required uniforms
+uniform mat4 model;            // Model matrix
+uniform mat4 view;             // View matrix
+uniform mat4 projection;       // Projection matrix
+uniform mat4 lightSpaceMatrix; // Light space transformation matrix
+
+// When implementing your main function, make sure to include these transformations:
+// FragPos = vec3(model * vec4(aPos, 1.0));
+// Normal = normalize(mat3(transpose(inverse(model))) * aNormal);
+// TexCoord = aTexCoord;
+// FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
+// gl_Position = projection * view * vec4(FragPos, 1.0);</code></pre>
+                </div>
+            </div>
+
+            <h3>Fragment Shader Requirements</h3>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Fragment Shader Structure and Required Uniforms
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#version 460 core
+// Outputs
+out vec4 FragColor;  // Final color output
+
+// Inputs from vertex shader
+in vec3 FragPos;              // World space position
+in vec3 Normal;               // World space normal
+in vec2 TexCoord;             // Texture coordinates
+in vec4 FragPosLightSpace;    // Position in light space (for shadow mapping)
+
+// Material texture uniforms
+layout(binding = 0) uniform sampler2D albedoTexture;    // Base color texture
+uniform int has_alb_text;                              // Flag indicating if albedo texture exists
+
+layout(binding = 1) uniform sampler2D normalTexture;    // Normal map texture
+uniform int has_norm_text;                             // Flag indicating if normal map exists
+
+layout(binding = 2) uniform sampler2D roughnessTexture; // Roughness texture
+uniform int has_rough_text;                            // Flag indicating if roughness texture exists
+
+layout(binding = 3) uniform sampler2D metallicTexture;  // Metallic texture 
+uniform int has_met_text;                              // Flag indicating if metallic texture exists
+
+// Shadow mapping uniforms
+layout(binding = 10) uniform sampler2D shadowMap;       // Shadow map for directional/spot lights
+layout(binding = 10) uniform samplerCube pointShadowMap; // Shadow cubemap for point lights
+uniform float farPlane;                                // Far plane for point light shadows
+
+// Material properties uniforms
+uniform vec3 u_color;            // Base material color
+uniform float u_shininess;       // Specular shininess factor
+uniform float u_roughnessValue;  // Base roughness value
+uniform float u_metallicValue;   // Base metallic value
+uniform float u_fresnel;         // Fresnel effect factor
+uniform float u_ssFactor;        // Subsurface scattering factor
+
+// Camera uniform
+uniform vec3 cam_pos;            // Camera position
+
+// Ambient light uniforms
+uniform int has_ambient_light;   // Flag indicating if ambient light exists
+uniform vec3 ambient_color;      // Ambient light color
+
+// Light structure uniform
+struct Light {
+    int type;                // Light type: 0 = directional, 1 = point, 2 = spot
+    vec3 color;              // Light color
+    vec3 position;           // Light position (for point/spot lights)
+    vec3 direction;          // Light direction (for directional/spot lights)
+    float intensity;         // Light intensity
+    float range;             // Maximum range (for point/spot lights)
+    float innerCone;         // Inner cone angle (for spot lights)
+    float outerCone;         // Outer cone angle (for spot lights)
+};
+uniform Light lights;        // Light data
+
+// Your main function should implement custom lighting and shading
+// while ensuring to output the final color to FragColor</code></pre>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>Important</h3>
+                <p>
+                    The uniform names, input/output names, and binding points must match exactly as shown above for your shader 
+                    to work correctly with the Raftel Engine rendering pipeline. If you need to add custom uniforms or inputs/outputs, 
+                    you can do so alongside the required ones.
+                </p>
+            </div>
+
+            <h2>Shader Features</h2>
+
+            <p>
+                The Raftel Engine shader system supports a variety of rendering features that you can utilize in your custom shaders:
+            </p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>PBR Lighting</h3>
+                    <p>Physically Based Rendering with support for metallic-roughness workflow, allowing realistic material rendering.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Shadow Mapping</h3>
+                    <p>Support for shadows from directional, point, and spot lights with PCF filtering for smoother shadow edges.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Normal Mapping</h3>
+                    <p>Add surface detail without increasing geometry complexity by using normal maps.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Material System</h3>
+                    <p>Comprehensive material properties with support for albedo, roughness, metallic, and normal maps.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Fresnel Effect</h3>
+                    <p>Support for realistic angle-dependent reflections and edge highlighting.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Subsurface Scattering</h3>
+                    <p>Simulate light transport through translucent materials like skin, wax, or marble.</p>
+                </div>
+            </div>
+
+            <h2>Light Types</h2>
+
+            <p>
+                Raftel Engine supports three types of lights that you can use in your shaders:
+            </p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>Directional Light</h3>
+                    <p>
+                        Light rays that are parallel and come from a specific direction, simulating distant light sources like the sun.
+                        <br>
+                        <strong>Light Type:</strong> 0
+                    </p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Point Light</h3>
+                    <p>
+                        Light that emanates from a single point in all directions, like a light bulb.
+                        <br>
+                        <strong>Light Type:</strong> 1
+                    </p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Spot Light</h3>
+                    <p>
+                        Light that emanates from a single point in a cone shape, like a flashlight.
+                        <br>
+                        <strong>Light Type:</strong> 2
+                    </p>
+                </div>
+            </div>
+
+            <h2>Texture Binding Points</h2>
+
+            <p>
+                When using textures in your shaders, you need to adhere to the following binding points to ensure compatibility with the Raftel Engine material system:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Texture Binding Points
+                </div>
+                <div class="example-card-body">
+                    <pre><code>layout(binding = 0) uniform sampler2D albedoTexture;    // Base color texture
+layout(binding = 1) uniform sampler2D normalTexture;    // Normal map texture
+layout(binding = 2) uniform sampler2D roughnessTexture; // Roughness texture
+layout(binding = 3) uniform sampler2D metallicTexture;  // Metallic texture
+layout(binding = 10) uniform sampler2D shadowMap;       // Shadow map for directional/spot lights
+layout(binding = 10) uniform samplerCube pointShadowMap; // Shadow cubemap for point lights</code></pre>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h3>Texture Flag Variables</h3>
+                <p>
+                    For each texture type, there is a corresponding flag variable that indicates whether the texture exists:
+                </p>
+                <ul>
+                    <li><code>has_alb_text</code>: Flag for albedo texture</li>
+                    <li><code>has_norm_text</code>: Flag for normal map texture</li>
+                    <li><code>has_rough_text</code>: Flag for roughness texture</li>
+                    <li><code>has_met_text</code>: Flag for metallic texture</li>
+                </ul>
+                <p>
+                    Always check these flags before attempting to use the corresponding textures to handle cases where textures aren't provided.
+                </p>
+            </div>
+
+            <h2>Creating Custom Shaders</h2>
+
+            <p>
+                When creating custom shaders for Raftel Engine, follow these steps to ensure compatibility with the engine's rendering pipeline:
+            </p>
+
+            <ol>
+                <li>
+                    <strong>Create Vertex and Fragment Shaders:</strong> Write your shader code following the requirements outlined above, ensuring that all required inputs, outputs, and uniforms are properly defined.
+                </li>
+                <li>
+                    <strong>Save Your Shaders:</strong> Save your vertex and fragment shaders as separate files with appropriate extensions (.vert, .frag, .geom).
+                </li>
+                <li>
+                    <strong>Replace the Core Shader:</strong> Use the RenderSystem's ChangeCoreShader methods to replace the default shader with your custom one.
+                </li>
+            </ol>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Custom Shader Structure Requirements
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Vertex Shader: Must have these attributes and outputs
+#version 460 core
+layout(location = 0) in vec3 aPos;        // Required: Vertex position
+layout(location = 1) in vec3 aNormal;     // Required: Vertex normal
+layout(location = 2) in vec2 aTexCoord;   // Required: Texture coordinates
+layout(location = 3) in vec3 aTangent;    // Required: Tangent vector
+
+// Required outputs
+out vec3 FragPos;              // World space position
+out vec3 Normal;               // World space normal
+out vec2 TexCoord;             // Texture coordinates
+out vec4 FragPosLightSpace;    // Position in light space
+
+// Required uniforms
+uniform mat4 model;            // Model matrix
+uniform mat4 view;             // View matrix
+uniform mat4 projection;       // Projection matrix
+uniform mat4 lightSpaceMatrix; // Light space transformation matrix
+
+// Fragment Shader: Must have these inputs and uniforms
+#version 460 core
+out vec4 FragColor;            // Required: Final output color
+
+// Required inputs (must match vertex shader outputs)
+in vec3 FragPos;
+in vec3 Normal;
+in vec2 TexCoord;
+in vec4 FragPosLightSpace;
+
+// Required texture uniforms with specific binding points
+layout(binding = 0) uniform sampler2D albedoTexture;
+uniform int has_alb_text;
+
+// Plus all other required uniforms as shown in the previous section</code></pre>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>Usage in Application</h3>
+                <pre><code>// In your application code:
+// Load and use custom shader
+Raftel::RenderSystem::ChangeCoreShader("shaders/custom.vert", "shaders/custom.frag");</code></pre>
+            </div>
+
+            <h2>Advanced Shader Techniques</h2>
+
+            <p>
+                Raftel Engine's shader system enables a variety of advanced rendering techniques. Here are some examples of what you can implement in your custom shaders:
+            </p>
+
+            <h3>PBR (Physically Based Rendering)</h3>
+            <p>
+                PBR is a rendering approach that simulates how light interacts with materials based on physical principles. Raftel Engine's default shaders already implement PBR, but you can customize these techniques in your own shaders.
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Key PBR Components to Consider
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Reflectance at normal incidence (F0)
+vec3 F0 = mix(vec3(0.04), albedo, metallic);
+
+// Commonly used PBR functions:
+// 1. Normal Distribution Function (GGX/Trowbridge-Reitz)
+// 2. Geometry Function (Smith's method with GGX)
+// 3. Fresnel Equation (Schlick's approximation)
+// 4. BRDF (Bidirectional Reflectance Distribution Function)</code></pre>
+                </div>
+            </div>
+
+            <h3>Shadow Techniques</h3>
+            <p>
+                You can customize how shadows are rendered in your shaders. The engine supports several shadow mapping techniques.
+            </p>
+
+            <div class="info-box">
+                <h3>Shadow Mapping Features</h3>
+                <ul>
+                    <li><strong>PCF (Percentage Closer Filtering)</strong>: Soften shadow edges by sampling multiple points</li>
+                    <li><strong>Bias adjustment</strong>: Prevent shadow acne based on surface orientation</li>
+                    <li><strong>Cubemap shadows</strong>: For point lights that cast shadows in all directions</li>
+                </ul>
+            </div>
+
+            <h2>Using RenderSystem to Manage Shaders</h2>
+
+            <p>
+                The RenderSystem class provides several methods for managing and changing shaders in your application:
+            </p>
+
+            <div class="method-block">
+                <div class="method-signature">static void ChangeCoreShader(const char* vertexSource, const char* fragmentSource)</div>
+                <div class="method-description">
+                    <p>Changes the core shader program using source code in memory.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>vertexSource</code> - The vertex shader source code</li>
+                        <li><code>fragmentSource</code> - The fragment shader source code</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">static void ChangeCoreShader(const char* vertexSource, const char* fragmentSource, const char* geometrySource)</div>
+                <div class="method-description">
+                    <p>Changes the core shader program using source code in memory, including a geometry shader.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>vertexSource</code> - The vertex shader source code</li>
+                        <li><code>fragmentSource</code> - The fragment shader source code</li>
+                        <li><code>geometrySource</code> - The geometry shader source code</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">static void ChangeCoreShader(const std::string& vertexPath, const std::string& fragmentPath, const std::string& geometryPath)</div>
+                <div class="method-description">
+                    <p>Changes the core shader program by loading shader code from files, including a geometry shader.</p>
+                    <p><strong>Parameters:</strong></p>
+                    <ul>
+                        <li><code>vertexPath</code> - Path to the vertex shader file</li>
+                        <li><code>fragmentPath</code> - Path to the fragment shader file</li>
+                        <li><code>geometryPath</code> - Path to the geometry shader file</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-signature">static void SetDefaultCoreShader()</div>
+                <div class="method-description">
+                    <p>Resets the core shader to the default forward rendering shader provided by the engine.</p>
+                </div>
+            </div>
+
+            <h2>Best Practices</h2>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>Shader Organization</h3>
+                    <p>Keep your shader files organized in a dedicated "shaders" directory in your project.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Naming Conventions</h3>
+                    <p>Use consistent naming for shader files. For example: <code>effect_name.vert</code>, <code>effect_name.frag</code>, etc.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Performance</h3>
+                    <p>Be mindful of shader complexity. Complex fragment shaders can significantly impact performance, especially on mobile platforms.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Version Compatibility</h3>
+                    <p>Always specify the GLSL version at the top of your shader files. Raftel Engine uses GLSL 4.60 by default.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Error Handling</h3>
+                    <p>Always check for shader compilation and linking errors in your application logs when creating custom shaders.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Shader Reuse</h3>
+                    <p>Consider creating a library of reusable shader effects that you can mix and match for different visual styles.</p>
+                </div>
+            </div>
+
+            <h2>Common Uniforms Reference</h2>
+
+            <p>
+                This section provides a quick reference of all the uniforms available in Raftel Engine shaders:
+            </p>
+
+            <h3>Transformation Uniforms</h3>
+            <div class="example-card">
+                <div class="example-card-header">
+                    Matrices
+                </div>
+                <div class="example-card-body">
+                    <pre><code>uniform mat4 model;            // Model matrix for transforming from object to world space
+uniform mat4 view;             // View matrix for transforming from world to view space
+uniform mat4 projection;       // Projection matrix for transforming from view to clip space
+uniform mat4 lightSpaceMatrix; // Matrix for transforming vertices to light space (for shadow mapping)</code></pre>
+                </div>
+            </div>
+
+            <h3>Camera Uniforms</h3>
+            <div class="example-card">
+                <div class="example-card-header">
+                    Camera
+                </div>
+                <div class="example-card-body">
+                    <pre><code>uniform vec3 cam_pos;  // Camera position in world space</code></pre>
+                </div>
+            </div>
+
+            <h3>Material Uniforms</h3>
+            <div class="example-card">
+                <div class="example-card-header">
+                    Material Properties
+                </div>
+                <div class="example-card-body">
+                    <pre><code>uniform vec3 u_color;            // Base material color
+uniform float u_shininess;       // Specular shininess factor
+uniform float u_roughnessValue;  // Base roughness value
+uniform float u_metallicValue;   // Base metallic value
+uniform float u_fresnel;         // Fresnel effect factor
+uniform float u_ssFactor;        // Subsurface scattering factor</code></pre>
+                </div>
+            </div>
+
+            <h3>Texture Uniforms</h3>
+            <div class="example-card">
+                <div class="example-card-header">
+                    Material Textures and Flags
+                </div>
+                <div class="example-card-body">
+                    <pre><code>layout(binding = 0) uniform sampler2D albedoTexture;    // Base color texture
+uniform int has_alb_text;                              // Flag indicating if albedo texture exists
+
+layout(binding = 1) uniform sampler2D normalTexture;    // Normal map texture
+uniform int has_norm_text;                             // Flag indicating if normal map exists
+
+layout(binding = 2) uniform sampler2D roughnessTexture; // Roughness texture
+uniform int has_rough_text;                            // Flag indicating if roughness texture exists
+
+layout(binding = 3) uniform sampler2D metallicTexture;  // Metallic texture
+uniform int has_met_text;                              // Flag indicating if metallic texture exists</code></pre>
+                </div>
+            </div>
+
+            <h3>Lighting Uniforms</h3>
+            <div class="example-card">
+                <div class="example-card-header">
+                    Light Structure and Ambient Light
+                </div>
+                <div class="example-card-body">
+                    <pre><code>struct Light {
+    int type;                // Light type: 0 = directional, 1 = point, 2 = spot
+    vec3 color;              // Light color
+    vec3 position;           // Light position (for point/spot lights)
+    vec3 direction;          // Light direction (for directional/spot lights)
+    float intensity;         // Light intensity
+    float range;             // Maximum range (for point/spot lights)
+    float innerCone;         // Inner cone angle (for spot lights)
+    float outerCone;         // Outer cone angle (for spot lights)
+};
+uniform Light lights;        // Light data
+
+uniform int has_ambient_light;   // Flag indicating if ambient light exists
+uniform vec3 ambient_color;      // Ambient light color</code></pre>
+                </div>
+            </div>
+
+            <h3>Shadow Mapping Uniforms</h3>
+            <div class="example-card">
+                <div class="example-card-header">
+                    Shadow Maps
+                </div>
+                <div class="example-card-body">
+                    <pre><code>layout(binding = 10) uniform sampler2D shadowMap;       // Shadow map for directional/spot lights
+layout(binding = 10) uniform samplerCube pointShadowMap; // Shadow cubemap for point lights
+uniform float farPlane;                                  // Far plane for point light shadows</code></pre>
+                </div>
+            </div>
+
+            <h2>Example: Creating and Using a Custom Shader</h2>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Application Code
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/systems.hpp"
+#include "raftel/window.hpp"
+
+int main() {
+    // Initialize engine systems
+    auto windowSystem = Raftel::WindowSystem::make();
+    auto window = Raftel::Window::make("Raftel Custom Shader Demo", *windowSystem);
+    
+    // Initialize render system
+    Raftel::RenderSystem::Initialize();
+    
+    // Load custom shader
+    Raftel::RenderSystem::ChangeCoreShader("shaders/custom.vert", "shaders/custom.frag");
+    
+    // Create scene and entities
+    // ...
+    
+    // Main render loop
+    while (!window->ShouldClose()) {
+        // Update and render scene
+        // ...
+        
+        // Switch back to default shader if needed
+        // Raftel::RenderSystem::SetDefaultCoreShader();
+        
+        window->swapBuffers();
+    }
+    
+    // Cleanup
+    Raftel::RenderSystem::Shutdown();
+    
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+
+            <h2>Related Topics</h2>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3><a href="material.html">Materials</a></h3>
+                    <p>Learn about the material system that integrates with shaders to define surface properties.</p>
+                </div>
+                
+                <div class="grid-item">
+                    <h3><a href="lighting.html">Lighting</a></h3>
+                    <p>Explore how light sources interact with shaders for realistic illumination.</p>
+                </div>
+                
+                <div class="grid-item">
+                    <h3><a href="rendersystem.html">RenderSystem</a></h3>
+                    <p>Understand the rendering pipeline and how it manages shaders and rendering states.</p>
+                </div>
+                
+                <div class="grid-item">
+                    <h3><a href="../tutorial/tutorialtriangle.html">Drawing a Triangle</a></h3>
+                    <p>Basic tutorial that introduces shader usage in Raftel Engine.</p>
+                </div>
+            </div>
+
+            <h2>Technical Specifications</h2>
+
+            <div class="info-box">
+                <h3>Supported GLSL Version</h3>
+                <p>
+                    Raftel Engine's shader system is built on OpenGL and supports GLSL version 4.60 as a standard. Always use the 
+                    <code>#version 460 core</code> directive at the beginning of your shader files for maximum compatibility.
+                </p>
+            </div>
+
+            <h3>Vertex Attribute Locations</h3>
+            <p>
+                When creating custom vertex shaders, you must use these specific attribute locations:
+            </p>
+            <ul>
+                <li><code>layout(location = 0) in vec3 aPos</code> - Vertex position</li>
+                <li><code>layout(location = 1) in vec3 aNormal</code> - Vertex normal</li>
+                <li><code>layout(location = 2) in vec2 aTexCoord</code> - Texture coordinates</li>
+                <li><code>layout(location = 3) in vec3 aTangent</code> - Tangent vector (for normal mapping)</li>
+            </ul>
+
+            <h3>Limitations</h3>
+            <ul>
+                <li>When using custom shaders, you are responsible for implementing all lighting and material calculations.</li>
+                <li>The engine currently supports a single active light at a time through the uniform <code>Light lights</code>.</li>
+                <li>Custom shaders must handle all required uniforms even if they don't use them.</li>
+                <li>Changing shaders during runtime can have a performance impact, so it's best to limit shader switches.</li>
+            </ul>
+
+            <h2>Conclusion</h2>
+
+            <p>
+                The Raftel Engine shader system provides a powerful way to customize the rendering of your 3D scenes. By 
+                understanding the shader requirements and using the RenderSystem's shader management functions, you can create 
+                custom visual effects while maintaining compatibility with the engine's rendering pipeline.
+            </p>
+
+            <p>
+                Remember that while custom shaders give you more control over the rendering process, they also require a 
+                deeper understanding of GLSL and rendering techniques. Start with simple modifications to the engine's default 
+                shaders before attempting more complex effects.
+            </p>
+
+            <div class="tutorial-nav">
+                <a href="windowsystem.html" class="prev">Window System</a>
+                <a href="mesh.html" class="next">Meshes</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../extra/license.html">License</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy.html">Privacy</a>
+        </div>
+        <div class="footer-copyright">
+            &copy; 2025 Raftel Engine. All rights reserved.
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>
