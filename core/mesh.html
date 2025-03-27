@@ -90,7 +90,7 @@
             <div class="info-box">
                 <h3>Key Features</h3>
                 <ul>
-                    <li>Support for loading models from OBJ, FBX, DAE, and STL formats</li>
+                    <li>Support for loading models from OBJ, FBX, DAE, STL, GLB and GLTF formats</li>
                     <li>Built-in primitive shape generation (cube, sphere, plane, cone, terrain)</li>
                     <li>Multi-threaded mesh loading for performance</li>
                     <li>Material assignment and texture mapping</li>
@@ -293,7 +293,7 @@ int main() {
                     <p>Constructs a mesh by loading from a file.</p>
                     <p><strong>Parameters:</strong></p>
                     <ul>
-                        <li><code>filePath</code> - Path to the mesh file (OBJ, FBX, DAE, STL)</li>
+                        <li><code>filePath</code> - Path to the mesh file (OBJ, FBX, DAE, STL, GLB, GLTF)</li>
                     </ul>
                 </div>
             </div>
@@ -545,6 +545,17 @@ int main() {
                     <p>STL files (both ASCII and binary) are supported through the Assimp library, though they only
                         contain geometry without material information.</p>
                 </div>
+                <div class="grid-item">
+                  <h3>GLTF (.gltf)</h3>
+                  <p>GLTF format is supported for efficient transmission and loading of 3D models in applications,
+                      maintaining a rich scene representation including animations and node hierarchies.</p>
+              </div>
+          
+              <div class="grid-item">
+                  <h3>GLB (.glb)</h3>
+                  <p>GLB format is the binary version of GLTF, supported for efficient streaming and loading of 3D models with
+                      embedded resources such as textures and shaders, commonly used in AR and VR platforms.</p>
+              </div>
             </div>
 
             <h2>Best Practices</h2>
