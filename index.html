@@ -129,7 +129,7 @@
 
                 <div class="grid-item">
                     <h3>Cross-Platform</h3>
-                    <p>Develop once and deploy everywhere with support for Windows, macOS, and Linux platforms.</p>
+                    <p>Develop once and deploy everywhere with support for Windows.</p>
                 </div>
 
                 <div class="grid-item">
@@ -219,33 +219,94 @@ int main() {
                 </div>
             </div>
 
-            <h2 id="downloads">Downloads</h2>
-
-            <p>Get started with Raftel Engine by downloading the latest version below:</p>
-
-            <div class="mb-3">
-                <a href="#" class="button">Download v1.0.0 (Windows)</a>
-                <a href="#" class="button">Download v1.0.0 (macOS)</a>
-                <a href="#" class="button">Download v1.0.0 (Linux)</a>
+        <h2 id="downloads">Downloads</h2>
+        
+        <p>Get started with Raftel Engine by downloading the latest version below:</p>
+        
+        <div class="downloads-container">
+            <div class="download-card">
+                <div class="download-header">
+                    <h3>Raftel Engine v0.1.6</h3>
+                    <span class="download-date">Released on March 13, 2025</span>
+                </div>
+            <div class="download-content">
+                <p>This version includes support for multiple 3D model formats, advanced rendering features, and much more.</p>
+                <div class="download-buttons">
+                    <a href="files/Raftel-v0.1.6.zip" class="button" download="Raftel-v0.1.6.zip">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="margin-right: 8px;">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download v0.1.6 (Windows)
+                    </a>
+                    <a href="#release-notes" class="button button-secondary">View Release Notes</a>
+                </div>
             </div>
-
-            <p class="mb-4">Released on March 13, 2025 | <a href="#">View changelog</a></p>
-
-            <div class="info-box">
-                <h3>Build from Source</h3>
-                <p>If you prefer to build from source or need the latest development version, check out our <a
-                        href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/">GitHub repository</a> and follow the build instructions.</p>
             </div>
-
-            <h2 id="community">Join Our Community</h2>
-
-            <p>Connect with other Raftel Engine developers, get support, and share your creations:</p>
-
-            <div class="mb-3">
-                <a href="#" class="button">Discord Server</a>
-                <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" class="button">GitHub Repository</a>
-                <a href="#" class="button">Developer Forum</a>
+        </div>
+        
+        <div class="info-box">
+            <h3>Build from Source</h3>
+            <p>If you prefer to build from source or need the latest development version, check out our <a
+                    href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/">GitHub repository</a> and follow the
+                build instructions.</p>
+        </div>
+        
+        <!-- Sección de Release Notes -->
+        <div class="release-notes" id="release-notes">
+            <h2>Release Notes - v0.1.6</h2>
+        
+            <div class="release-section">
+                <h3>3D Model Support</h3>
+                <ul>
+                    <li><strong>Multiple Format Support:</strong> Added support for OBJ, FBX, STL, GLB/GLTF, and DAE (Collada)
+                        formats</li>
+                    <li><strong>Material Files:</strong> Automatic loading and processing of MTL material files</li>
+                    <li><strong>Enhanced Parsing:</strong> Improved material property detection and application</li>
+                </ul>
             </div>
+        
+            <div class="release-section">
+                <h3>Rendering Features</h3>
+                <ul>
+                    <li><strong>Forward Rendering:</strong> Implemented a complete forward rendering pipeline</li>
+                    <li><strong>Multiple Lights:</strong> Support for various light types in a single scene</li>
+                    <li><strong>Shadow Mapping:</strong> Real-time shadows for directional and spot lights</li>
+                    <li><strong>Ambient Lighting:</strong> Global illumination system for realistic lighting</li>
+                    <li><strong>Skybox:</strong> Customizable skybox with 6-sided cube mapping</li>
+                </ul>
+            </div>
+        
+            <div class="release-section">
+                <h3>Editor Features</h3>
+                <ul>
+                    <li><strong>Entity Management:</strong> Default window for entity manipulation at runtime</li>
+                    <li><strong>ImGui Integration:</strong> API for creating custom editor windows with ImGui</li>
+                    <li><strong>Property Editors:</strong> Visual editors for component properties</li>
+                </ul>
+            </div>
+        
+            <div class="release-section">
+                <h3>Scripting System</h3>
+                <ul>
+                    <li><strong>Lua Integration:</strong> Full Lua scripting support for game logic</li>
+                    <li><strong>API Bindings:</strong> Comprehensive bindings to engine features</li>
+                    <li><strong>Component Scripting:</strong> Attach scripts to entities through the component system</li>
+                </ul>
+            </div>
+        
+            <div class="release-section">
+                <h3>Performance Improvements</h3>
+                <ul>
+                    <li><strong>JobSystem:</strong> Multi-threaded task management for parallel processing</li>
+                    <li><strong>Worker Threads:</strong> Optimized thread pool for background tasks</li>
+                    <li><strong>Memory Optimization:</strong> Reduced memory footprint for large scenes</li>
+                </ul>
+            </div>
+        </div>
 
             <p>We're excited to see what you'll create with Raftel Engine! Share your projects with us using the hashtag
                 <strong>#RaftelEngine</strong> on social media.</p>
