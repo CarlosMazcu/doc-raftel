@@ -116,7 +116,197 @@
                 <li><strong>Fragment Shaders</strong>: Responsible for calculating the final color of each pixel.</li>
                 <li><strong>Geometry Shaders</strong>: Optional shaders that can generate or modify geometry.</li>
             </ul>
+            <h2>Creación de Shaders</h2>
 
+            <p>
+                Raftel Engine proporciona varias formas de crear y utilizar shaders en tu aplicación. Las clases <code>Shader</code> y <code>ShaderProgram</code> 
+                son las encargadas de gestionar la carga, compilación y vinculación de shaders.
+            </p>
+            
+            <h3>Clase ShaderProgram</h3>
+            
+            <p>
+                La clase <code>ShaderProgram</code> es la principal interfaz para trabajar con shaders en Raftel. Permite cargar, compilar y vincular 
+                shaders de vértice, fragmento, geometría y computación. Existen múltiples formas de crear un programa de shader:
+            </p>
+            
+            <div class="example-card">
+                <div class="example-card-header">
+                    Creación de un ShaderProgram desde archivos
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Método 1: Usando el constructor
+            Raftel::ShaderProgram myShader("shaders/vertex.vert", "shaders/fragment.frag");
+            
+            // Método 2: Usando el método load
+            Raftel::ShaderProgram myShader;
+            myShader.load("shaders/vertex.vert", "shaders/fragment.frag");
+            
+            // Con shader de geometría:
+            Raftel::ShaderProgram myShader("shaders/vertex.vert", "shaders/fragment.frag", "shaders/geometry.geom");
+            
+            // Con shader de computación:
+            Raftel::ShaderProgram computeShader("", "", "", "shaders/compute.comp");</code></pre>
+                </div>
+            </div>
+            
+            <div class="tip-box">
+                <h3>Omitiendo etapas de shader</h3>
+                <p>
+                    Para omitir una etapa específica de shader, simplemente pasa una cadena vacía (<code>""</code>) para esa etapa.
+                    Por ejemplo, para crear un programa con solo un shader de fragmento, puedes hacer:
+                    <code>Raftel::ShaderProgram fragmentOnly("", "shaders/effect.frag");</code>
+                </p>
+            </div>
+            
+            <h3>Cargando Shaders desde Memoria</h3>
+            
+            <p>
+                Además de cargar shaders desde archivos, Raftel Engine permite cargar shaders directamente desde código fuente en memoria,
+                lo que es útil para shaders integrados o generados dinámicamente:
+            </p>
+            
+            <div class="example-card">
+                <div class="example-card-header">
+                    Cargando shaders desde código fuente
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Método 1: Desde cadenas individuales
+            const char* vertexSource = "#version 460 core\n..."
+            const char* fragmentSource = "#version 460 core\n..."
+            Raftel::ShaderProgram myShader;
+            myShader.loadFromMemory(vertexSource, fragmentSource);
+            
+            // Método 2: Para shaders muy largos divididos en múltiples cadenas
+            std::vector&lt;const char*&gt; vertexSourceParts = { vertexPart1, vertexPart2 };
+            std::vector&lt;const char*&gt; fragmentSourceParts = { fragmentPart1, fragmentPart2 };
+            Raftel::ShaderProgram myShader;
+            myShader.loadFromMemory(vertexSourceParts, fragmentSourceParts);</code></pre>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3>Verificación de Errores</h3>
+                <p>
+                    Todas las funciones de carga de shaders devuelven un valor booleano que indica si la operación 
+                    tuvo éxito. En caso de fallo, puedes obtener el mensaje de error utilizando el método 
+                    <code>getLastError()</code>:
+                </p>
+                <pre><code>Raftel::ShaderProgram shader;
+            if (!shader.load("vertex.vert", "fragment.frag")) {
+                std::cerr << "Error al cargar el shader: " << shader.getLastError() << std::endl;
+            }</code></pre>
+            </div>
+            
+            <h3>Uso de Shaders</h3>
+            
+            <p>
+                Una vez creado el programa de shader, puedes activarlo, establecer uniformes y desactivarlo:
+            </p>
+            
+            <div class="example-card">
+                <div class="example-card-header">
+                    Uso básico de un ShaderProgram
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Activar el shader
+            myShader.use();
+            
+            // Establecer uniformes
+            myShader.setUniform("u_color", glm::vec3(1.0f, 0.5f, 0.2f));
+            myShader.setUniform("u_modelMatrix", modelMatrix);
+            myShader.setUniform("u_viewMatrix", viewMatrix);
+            myShader.setUniform("u_projectionMatrix", projMatrix);
+            
+            // Renderizar objetos...
+            
+            // Desactivar el shader cuando hayas terminado
+            myShader.unUse();</code></pre>
+                </div>
+            </div>
+            
+            <h3>Uniformes Disponibles</h3>
+            
+            <p>
+                Raftel Engine proporciona métodos para establecer varios tipos de uniformes en los shaders:
+            </p>
+            
+            <div class="grid">
+                <div class="grid-item">
+                    <h4>Tipos básicos</h4>
+                    <ul>
+                        <li><code>setUniform(name, int)</code></li>
+                        <li><code>setUniform(name, float)</code></li>
+                    </ul>
+                </div>
+                
+                <div class="grid-item">
+                    <h4>Vectores</h4>
+                    <ul>
+                        <li><code>setUniform(name, glm::vec3)</code></li>
+                        <li><code>setUniform(name, glm::vec4)</code></li>
+                    </ul>
+                </div>
+                
+                <div class="grid-item">
+                    <h4>Matrices</h4>
+                    <ul>
+                        <li><code>setUniform(name, glm::mat4)</code></li>
+                        <li><code>setUniform(name, std::vector&lt;glm::mat4&gt;)</code></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="tip-box">
+                <h3>Optimización de Uniformes</h3>
+                <p>
+                    Para mejorar el rendimiento, Raftel Engine almacena en caché las ubicaciones de los uniformes internamente. Si necesitas ver 
+                    qué uniformes están activos en un programa de shader, puedes usar el método <code>printActiveUniforms()</code>.
+                </p>
+            </div>
+            
+            <h3>Implementación de bajo nivel con la clase Shader</h3>
+            
+            <p>
+                Aunque normalmente trabajarás con la clase <code>ShaderProgram</code>, Raftel Engine también proporciona una clase <code>Shader</code> de nivel inferior
+                para casos de uso avanzados donde necesites un control más detallado sobre shaders individuales:
+            </p>
+            
+            <div class="example-card">
+                <div class="example-card-header">
+                    Uso avanzado con la clase Shader
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Crear shaders individuales
+            Raftel::Shader vertexShader;
+            Raftel::Shader fragmentShader;
+            
+            // Cargar desde archivos
+            vertexShader.loadFromFile("custom.vert", GL_VERTEX_SHADER);
+            fragmentShader.loadFromFile("custom.frag", GL_FRAGMENT_SHADER);
+            
+            // O cargar desde código fuente
+            vertexShader.loadFromSource(vertexCode, GL_VERTEX_SHADER);
+            fragmentShader.loadFromSource(fragmentCode, GL_FRAGMENT_SHADER);
+            
+            // Crear un programa y adjuntar los shaders
+            Raftel::ShaderProgram program;
+            program.attachShader(vertexShader);
+            program.attachShader(fragmentShader);
+            
+            // Vincular el programa
+            program.link();</code></pre>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <h3>Importante</h3>
+                <p>
+                    Cuando se trabaja directamente con la clase <code>Shader</code>, es responsabilidad del desarrollador asegurarse de que todos los shaders necesarios 
+                    estén adjuntos antes de llamar a <code>link()</code>. También ten en cuenta que la clase <code>Shader</code> es principalmente para uso interno
+                    de <code>ShaderProgram</code> y la mayoría de los usuarios no necesitarán interactuar directamente con ella.
+                </p>
+            </div>
             <h2>Using Custom Shaders</h2>
 
             <p>
