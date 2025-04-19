@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="RenderSystem documentation for Raftel Engine, a powerful rendering pipeline supporting forward and deferred rendering.">
+    <meta name="keywords"
+        content="Raftel Engine, Game Development, Graphics Engine, RenderSystem, Forward Rendering, Deferred Rendering, HDR">
+    <meta name="author" content="Carlos Mazcuñán Blanes, Marc Folgado Balbás">
+    <link rel="icon" href="../img/raftellogo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>RenderSystem - Raftel Engine</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <!-- Header fijo -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="../img/raftellogo.png" alt="Raftel Engine Logo">
+            <span>Raftel Engine</span>
+        </div>
+        <div class="header-search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <input type="text" placeholder="Search documentation...">
+        </div>
+        <div class="header-links">
+            <a href="../index.html">Home</a>
+            <a href="../doxygen/html/index.html" target="_blank">API Reference</a>
+            <a href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/" target="_blank">GitHub</a>
+            <a href="../index.html#community">Community</a>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Sidebar izquierdo -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-category">Getting Started</div>
+                <a href="../index.html" class="sidebar-item">Introduction</a>
+                <a href="../started/installation.html" class="sidebar-item">Installation</a>
+                <a href="../started/buidsetup.html" class="sidebar-item">Build Setup</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Tutorials</div>
+                <a href="../tutorial/tutorialwindow.html" class="sidebar-item">Creating a Window</a>
+                <a href="../tutorial/tutorialtriangle.html" class="sidebar-item">Drawing a Triangle</a>
+                <a href="../tutorial/tutorialinput.html" class="sidebar-item">Handling Input</a>
+                <a href="../tutorial/tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
+                <a href="../tutorial/tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
+                <a href="../tutorial/tutorialcamera.html" class="sidebar-item">Camera Controls</a>
+                <a href="../tutorial/tutorialecs.html" class="sidebar-item">Entity Component System</a>
+                <a href="../tutorial/tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-category">Core Components</div>
+                <a href="windowsystem.html" class="sidebar-item">Window System</a>
+                <a href="shader.html" class="sidebar-item">Shaders</a>
+                <a href="mesh.html" class="sidebar-item">Meshes</a>
+                <a href="material.html" class="sidebar-item">Materials</a>
+                <a href="texture.html" class="sidebar-item">Textures</a>
+                <a href="lighting.html" class="sidebar-item">Lighting</a>
+                <a href="input.html" class="sidebar-item">Input</a>
+                <a href="jobsystem.html" class="sidebar-item">JobSystem</a>
+                <a href="rendersystem.html" class="sidebar-item active">RenderSystem</a>
+                <a href="ecs.html" class="sidebar-item">ECS</a>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="content">
+            <h1>RenderSystem</h1>
+
+            <p>
+                The RenderSystem is a core component of Raftel Engine that manages the rendering pipeline.
+                It provides two primary rendering techniques: Forward Rendering and Deferred Rendering,
+                with support for advanced features like shadows, High Dynamic Range (HDR), tonemapping,
+                and skybox rendering.
+            </p>
+
+            <div class="info-box">
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Flexible rendering pipeline with support for both Forward and Deferred Rendering</li>
+                    <li>Integrated shadow mapping system</li>
+                    <li>High Dynamic Range (HDR) rendering with configurable tonemapping</li>
+                    <li>Automatic or manual tonemapping adjustment</li>
+                    <li>Support for skybox rendering</li>
+                    <li>Custom shader support</li>
+                    <li>Entity Component System integration</li>
+                </ul>
+            </div>
+
+            <h2>Rendering Pipelines</h2>
+
+            <p>
+                Raftel Engine offers two distinct rendering pipelines that can be used depending on your
+                application's requirements:
+            </p>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>Forward Rendering</h3>
+                    <p>
+                        A traditional rendering approach where each object is rendered in a single pass with all
+                        lighting
+                        calculations performed for each fragment. This approach is simpler and works well for scenes
+                        with fewer lights.
+                    </p>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Deferred Rendering</h3>
+                    <p>
+                        A multi-pass technique that first renders scene geometry information to G-buffers,
+                        then performs lighting calculations in a separate pass. This approach is more efficient
+                        for scenes with many lights.
+                    </p>
+                </div>
+            </div>
+
+            <h2>Using Forward Rendering</h2>
+
+            <p>
+                Forward rendering is the simplest approach and is ideal for scenes with a moderate number of lights.
+                To use forward rendering, simply call the <code>UpdateForwardRenderSystem</code> method:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Basic Forward Rendering
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Initialize the engine and create required objects
+Raftel::EntityManager entityManager;
+Raftel::Camera camera;
+
+// In your render loop
+// Render the scene using forward rendering (no shadows)
+Raftel::RenderSystem::UpdateForwardRenderSystem(entityManager, camera, false);
+
+// To enable shadows
+Raftel::RenderSystem::UpdateForwardRenderSystem(entityManager, camera, true);</code></pre>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h3>When to Use Forward Rendering</h3>
+                <p>
+                    Forward rendering is a good choice when:
+                </p>
+                <ul>
+                    <li>Your scene has a small to moderate number of lights</li>
+                    <li>You need to support transparency easily</li>
+                    <li>You're targeting lower-end hardware</li>
+                    <li>You need simpler implementation and debugging</li>
+                </ul>
+            </div>
+
+            <h3>Forward Rendering with Shadows</h3>
+
+            <p>
+                The <code>UpdateForwardRenderSystem</code> method accepts a boolean parameter to toggle shadow
+                rendering:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Forward Rendering Method Signature
+                </div>
+                <div class="example-card-body">
+                    <pre><code>/**
+ * @brief Updates and renders the entire scene using forward rendering.
+ * @param em The entity manager that manages entities in the scene.
+ * @param cam The camera used to view the scene.
+ * @param shadow A boolean flag to indicate whether shadows should be rendered. Default is false.
+ */
+static void UpdateForwardRenderSystem(EntityManager&amp; em, Camera&amp; cam, bool shadow = false);</code></pre>
+                </div>
+            </div>
+
+            <p>
+                When <code>shadow</code> is set to <code>true</code>, the RenderSystem will perform additional
+                passes to generate shadow maps and apply them to the scene.
+            </p>
+
+            <h2>Using Deferred Rendering</h2>
+
+            <p>
+                Deferred rendering separates the geometry and lighting passes, making it more efficient for scenes
+                with many lights. To use deferred rendering, call the <code>UpdateDeferredRenderSystem</code> method:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Basic Deferred Rendering
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Initialize the engine and create required objects
+Raftel::EntityManager entityManager;
+Raftel::Camera camera;
+
+// In your render loop
+// Render the scene using deferred rendering (with shadows)
+Raftel::RenderSystem::UpdateDeferredRenderSystem(entityManager, camera, true);
+
+// To disable shadows
+Raftel::RenderSystem::UpdateDeferredRenderSystem(entityManager, camera, false);</code></pre>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h3>When to Use Deferred Rendering</h3>
+                <p>
+                    Deferred rendering is beneficial when:
+                </p>
+                <ul>
+                    <li>Your scene has many lights (tens or hundreds)</li>
+                    <li>You want to implement advanced lighting effects efficiently</li>
+                    <li>You're targeting mid to high-end hardware</li>
+                    <li>You don't need to handle transparency in the same pass</li>
+                </ul>
+            </div>
+
+            <h3>Deferred Rendering with Shadows</h3>
+
+            <p>
+                Similar to forward rendering, the <code>UpdateDeferredRenderSystem</code> method accepts a
+                boolean parameter to toggle shadow rendering:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Deferred Rendering Method Signature
+                </div>
+                <div class="example-card-body">
+                    <pre><code>/**
+ * @brief Updates the deferred rendering system.
+ * @param em The entity manager that manages the entities to be rendered.
+ * @param cam The camera used to view the scene.
+ * @param bShadows A boolean flag to indicate whether shadows should be rendered. Default is true.
+ */
+static void UpdateDeferredRenderSystem(EntityManager&amp; em, Camera&amp; cam, bool bShadows = true);</code></pre>
+                </div>
+            </div>
+
+            <p>
+                Note that unlike the forward rendering method, shadows are enabled by default in deferred rendering.
+            </p>
+
+            <h2>High Dynamic Range (HDR) Rendering</h2>
+
+            <p>
+                Raftel Engine supports High Dynamic Range (HDR) rendering, which allows for a wider range of color
+                values and more realistic lighting. HDR rendering can be enabled or disabled through the Engine
+                singleton:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Enabling HDR Rendering
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Enable HDR rendering
+Raftel::Engine::Instance().HDR = true;
+
+// Disable HDR rendering
+Raftel::Engine::Instance().HDR = false;</code></pre>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>What is HDR?</h3>
+                <p>
+                    High Dynamic Range (HDR) rendering allows the engine to work with a wider range of luminance values
+                    than traditional 8-bit per channel rendering. This enables more realistic lighting with brighter
+                    highlights,
+                    deeper shadows, and more detailed color gradients. HDR is particularly effective for scenes with
+                    bright
+                    light sources, reflective surfaces, or dramatic lighting conditions.
+                </p>
+            </div>
+
+            <h3>Tonemapping</h3>
+
+            <p>
+                When using HDR rendering, tonemapping is required to convert the high dynamic range values to the
+                limited range that can be displayed on standard monitors. Raftel Engine provides several options for
+                tonemapping:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Configuring Tonemapping
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Enable tonemapping (required for HDR)
+Raftel::Engine::Instance().TonneMapping = true;
+
+// Choose between automatic or manual tonemapping
+Raftel::Engine::Instance().AutoTonemapping = true;  // Automatic adjustment based on scene luminance
+
+// Manual tonemapping parameters (when AutoTonemapping is false)
+Raftel::Engine::Instance().exposure = 1.0f;         // Controls overall brightness
+Raftel::Engine::Instance().contrast = 1.1f;         // Controls contrast between light and dark areas
+Raftel::Engine::Instance().saturation = 1.05f;      // Controls color intensity
+Raftel::Engine::Instance().targetMiddleGray = 0.18f; // Reference value for middle gray
+Raftel::Engine::Instance().adaptationSpeed = 0.05f;  // Speed of adaptation to brightness changes</code></pre>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>Important Note About HDR</h3>
+                <p>
+                    When HDR is enabled, make sure to also enable tonemapping (<code>TonneMapping = true</code>).
+                    Without tonemapping, HDR values will be incorrectly clamped to the display range, leading to
+                    visual artifacts or washed-out colors.
+                </p>
+            </div>
+
+            <h2>Skybox Rendering</h2>
+
+            <p>
+                The RenderSystem also supports skybox rendering for creating realistic outdoor environments or
+                background
+                scenes. To set up a skybox, use the <code>SetSkyboxTexture</code> method:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Setting Up a Skybox
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Load a cubemap texture
+std::shared_ptr&lt;Raftel::Texture&gt; cubemapTexture = /* load your cubemap texture */;
+
+// Set the skybox texture
+Raftel::RenderSystem::SetSkyboxTexture(cubemapTexture);</code></pre>
+                </div>
+            </div>
+
+            <p>
+                Once a skybox texture is set, the RenderSystem will automatically render it as the background of your
+                scene.
+            </p>
+
+            <h2>Custom Shaders (Forward Rendering Only)</h2>
+
+            <p>
+                Raftel Engine allows you to customize the rendering process by replacing the core shader with your
+                own shaders when using Forward Rendering. This gives you full control over the visual appearance of your
+                scene:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Using Custom Shaders with Forward Rendering
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Change shaders using file paths
+Raftel::RenderSystem::ChangeCoreShader("shaders/custom_vertex.vert", "shaders/custom_fragment.frag");
+
+// Include a geometry shader
+Raftel::RenderSystem::ChangeCoreShader("shaders/custom_vertex.vert", "shaders/custom_fragment.frag", "shaders/custom_geometry.geom");
+
+// Restore the default shader
+Raftel::RenderSystem::SetDefaultCoreShader();</code></pre>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>Important: Forward Rendering Only</h3>
+                <p>
+                    Custom shaders can only be used with the Forward Rendering pipeline. The Deferred Rendering pipeline
+                    uses a specialized internal shader system that cannot be directly replaced with custom shaders.
+                    If you need to customize the visual appearance when using Deferred Rendering, consider using
+                    post-processing effects instead.
+                </p>
+            </div>
+
+            <div class="tip-box">
+                <h3>Custom Shader Requirements</h3>
+                <p>
+                    When creating custom shaders for use with the Forward Rendering pipeline, make sure to maintain
+                    compatibility
+                    with the engine's uniform naming conventions and input/output formats. See the <a
+                        href="shader.html">Shader documentation</a>
+                    for more details on required uniforms and attributes.
+                </p>
+            </div>
+
+            <h2>Ambient Lighting</h2>
+
+            <p>
+                Ambient lighting can be configured through the Engine singleton to provide basic illumination
+                for all objects in the scene:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Configuring Ambient Light
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// Enable ambient light
+Raftel::Engine::Instance().has_ambient_light = true;  // Use Raftel::TRUE
+
+// Set ambient light color (RGB values from 0.0 to 1.0)
+Raftel::Engine::Instance().ambient_light = glm::vec3(0.1f, 0.1f, 0.1f);</code></pre>
+                </div>
+            </div>
+
+            <h2>Debugging Features</h2>
+
+            <p>
+                Raftel Engine includes several debugging features to help visualize and troubleshoot rendering issues.
+                These features can be accessed through the engine's editor interface:
+            </p>
+
+            <div class="info-box">
+                <h3>Editor Mode</h3>
+                <p>
+                    The engine's editor mode provides access to additional debugging features, including:
+                </p>
+                <ul>
+                    <li>Rendering entity bounding boxes</li>
+                    <li>Real-time adjustment of rendering parameters</li>
+                    <li>Visualization of lighting and shadow maps</li>
+                </ul>
+                <p>
+                    To learn how to activate and use the editor, refer to the <a
+                        href="../tutorial/tutorialecs.html">Entity Component System Tutorial</a>.
+                </p>
+            </div>
+
+            <h2>Implementation Flow</h2>
+
+            <p>
+                Understanding the internal flow of the rendering pipeline can help you optimize your application
+                and better integrate custom rendering solutions:
+            </p>
+
+            <h3>Forward Rendering Pipeline Flow</h3>
+
+            <ol>
+                <li><strong>Update Core Systems</strong>: Prepares basic rendering systems and transforms</li>
+                <li><strong>Update Transform System</strong>: Updates entity transformations</li>
+                <li><strong>Update Camera System</strong>: Updates camera matrices and view parameters</li>
+                <li><strong>Shadow Map Generation</strong> (if shadows enabled): Renders the scene from light's
+                    perspective</li>
+                <li><strong>Update Light System</strong>: Configures lighting parameters</li>
+                <li><strong>Render Scene</strong>: Renders all entities with lighting and materials</li>
+                <li><strong>Render Skybox</strong> (if configured): Renders the background skybox</li>
+                <li><strong>Post-processing</strong>: Applies HDR and tonemapping if enabled</li>
+            </ol>
+
+            <h3>Deferred Rendering Pipeline Flow</h3>
+
+            <ol>
+                <li><strong>Update Core Systems</strong>: Prepares basic rendering systems and transforms</li>
+                <li><strong>Update Transform System</strong>: Updates entity transformations</li>
+                <li><strong>Update Camera System</strong>: Updates camera matrices and view parameters</li>
+                <li><strong>Geometry Pass</strong>: Renders scene information to G-buffers (position, normals, albedo,
+                    etc.)</li>
+                <li><strong>Shadow Map Generation</strong> (if shadows enabled): Renders the scene from light's
+                    perspective</li>
+                <li><strong>Lighting Pass</strong>: Performs lighting calculations using G-buffer data</li>
+                <li><strong>Render Skybox</strong> (if configured): Renders the background skybox</li>
+                <li><strong>Post-processing</strong>: Applies HDR and tonemapping if enabled</li>
+            </ol>
+
+            <h2>Performance Considerations</h2>
+
+            <div class="info-box">
+                <h3>Choosing the Right Pipeline</h3>
+                <p>
+                    The choice between forward and deferred rendering depends on your scene complexity and hardware
+                    targets:
+                </p>
+                <ul>
+                    <li><strong>Forward Rendering</strong> is generally faster for scenes with few lights and works
+                        better with transparency</li>
+                    <li><strong>Deferred Rendering</strong> scales better with many lights but requires more memory for
+                        G-buffers</li>
+                    <li><strong>Shadows</strong> significantly impact performance, especially with many shadow-casting
+                        lights</li>
+                    <li><strong>HDR and Tonemapping</strong> add some overhead but greatly improve visual quality</li>
+                </ul>
+            </div>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Optimizing Rendering Performance
+                </div>
+                <div class="example-card-body">
+                    <pre><code>// For simpler scenes or lower-end hardware
+// Use forward rendering without shadows
+Raftel::RenderSystem::UpdateForwardRenderSystem(entityManager, camera, false);
+Raftel::Engine::Instance().HDR = false;
+
+// For complex scenes with many lights
+// Use deferred rendering with shadows
+Raftel::RenderSystem::UpdateDeferredRenderSystem(entityManager, camera, true);
+Raftel::Engine::Instance().HDR = true;
+Raftel::Engine::Instance().TonneMapping = true;</code></pre>
+                </div>
+            </div>
+
+            <h2>Complete Example</h2>
+
+            <p>
+                Here's a complete example that demonstrates how to set up and use the RenderSystem in a typical
+                application:
+            </p>
+
+            <div class="example-card">
+                <div class="example-card-header">
+                    Complete RenderSystem Usage Example
+                </div>
+                <div class="example-card-body">
+                    <pre><code>#include "raftel/systems.hpp"
+#include "raftel/window.hpp"
+#include "raftel/camera.hpp"
+#include "raftel/entity_manager.hpp"
+#include "raftel/texture.hpp"
+
+int main() {
+    // Initialize engine systems
+    auto windowSystem = Raftel::WindowSystem::make();
+    auto window = Raftel::Window::make("Raftel Engine Demo", *windowSystem);
+    
+    // Initialize render system
+    Raftel::RenderSystem::Initialize();
+    
+    // Configure rendering settings
+    Raftel::Engine::Instance().HDR = true;
+    Raftel::Engine::Instance().TonneMapping = true;
+    Raftel::Engine::Instance().AutoTonemapping = true;
+    
+    // Configure ambient light
+    Raftel::Engine::Instance().has_ambient_light = true;
+    Raftel::Engine::Instance().ambient_light = glm::vec3(0.1f, 0.1f, 0.15f);
+    
+    // Create camera and entity manager
+    Raftel::Camera camera;
+    Raftel::EntityManager entityManager;
+    
+    // Set up skybox (optional)
+    auto skyboxTexture = /* load your cubemap texture */;
+    Raftel::RenderSystem::SetSkyboxTexture(skyboxTexture);
+    
+    // Create entities, lights, meshes, etc.
+    // ...
+    
+    // Main render loop
+    while (!window->ShouldClose()) {
+        // Update camera, input, physics, etc.
+        // ...
+        
+        // Choose your rendering approach:
+        
+        // Option 1: Forward rendering with shadows
+        Raftel::RenderSystem::UpdateForwardRenderSystem(entityManager, camera, true);
+        
+        // Option 2: Deferred rendering with shadows (alternative)
+        // Raftel::RenderSystem::UpdateDeferredRenderSystem(entityManager, camera, true);
+        
+        // Swap buffers and handle events
+        window->swapBuffers();
+    }
+    
+    // Clean up
+    Raftel::RenderSystem::Shutdown();
+    
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+
+            <h2>Related Topics</h2>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <h3><a href="shader.html">Shaders</a></h3>
+                    <p>Learn about the shader system that integrates with the RenderSystem.</p>
+                </div>
+
+                <div class="grid-item">
+                    <h3><a href="lighting.html">Lighting</a></h3>
+                    <p>Explore how to set up and configure lights in your scene.</p>
+                </div>
+                <div class="grid-item">
+                    <h3><a href="../tutorial/tutorialecs.html">Entity Component System</a></h3>
+                    <p>Learn how to use the editor and debug rendering features.</p>
+                </div>
+            </div>
+
+            <div class="tutorial-nav">
+                <a href="jobsystem.html" class="prev">JobSystem</a>
+                <a href="ecs.html" class="next">ECS</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="../about.html">About</a>
+            <a href="../extra/license.html">License</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../privacy.html">Privacy</a>
+        </div>
+        <div class="footer-copyright">
+            &copy; 2025 Raftel Engine. All rights reserved.
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+
+</html>
