@@ -56,7 +56,6 @@
                 <a href="tutorial/tutorialinput.html" class="sidebar-item">Handling Input</a>
                 <a href="tutorial/tutorialmesh.html" class="sidebar-item">Loading 3D Meshes</a>
                 <a href="tutorial/tutorialjobsystem.html" class="sidebar-item">Using JobSystem</a>
-                <a href="tutorial/tutorialrendersystem.html" class="sidebar-item">RenderSystem</a>
                 <a href="tutorial/tutorialcamera.html" class="sidebar-item">Camera Controls</a>
                 <a href="tutorial/tutorialecs.html" class="sidebar-item">Entity Component System</a>
                 <a href="tutorial/tutoriallighting.html" class="sidebar-item">Lighting and Shadows</a>
@@ -98,11 +97,178 @@
                     </div>
                 </div>
                 <div class="example-viewer-content">
-                  <video autoplay loop muted playsinline 
-                  style="width:100%; height:100%; object-fit:cover;">
-               <source src="img/demo.mp4" type="video/mp4">
-               Tu navegador no soporta el elemento video.
-           </video>
+                    <video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover;">
+                        <source src="img/demo.mp4" type="video/mp4">
+                        Tu navegador no soporta el elemento video.
+                    </video>
+                </div>
+                <div class="example-viewer-code" style="display: none;">
+                    <pre><code>
+#include "raftel/window.hpp"
+#include "raftel/shader.hpp"
+#include "raftel/ecs.hpp"
+#include "raftel/camera.hpp"
+#include "raftel/imguiRenderer.hpp"
+#include "raftel/deferred.hpp"
+#include "raftel/systems.hpp"
+#include "raftel/input.hpp"
+#include "raftel/imguiWindows.hpp"
+#include <fstream>
+#include <string>
+int main(void)
+{
+    // create window system and wyndow
+    auto windowSystemOpt = Raftel::WindowSystem::make();
+    auto windowOpt = Raftel::Window::make("WindowTest", *windowSystemOpt);
+    if (!windowOpt) {
+        std::cerr << "Can't create window\n" ; return -1; } // make window context windowOpt->MakeContextCurrent();
+        //Create camera
+        Raftel::Camera cam(windowOpt.get());
+        cam.SetPosition(glm::vec3(36.0f, -163.0f, -270.0f));
+        cam.SetRotation(glm::vec3(0.4f, 80.8f, 0.0f));
+        // to create and show entities you need create entity system (ecs)
+        auto ecs = std::make_unique<Raftel::EntityManager>();
+                    
+        // we will create a entity terrain
+        // create entity
+                    
+        // create texture and mesh
+        auto cube_t = Raftel::Texture::loadTexture("../assets/textures/textura_terreno1.png");
+        auto terrainMesh = Raftel::MeshFactory::createTerrain("../assets/heightmap/galicia.png", 1.0f, 200.0f,
+        true);
+        terrainMesh->GetMaterialByIndex(0)->setAlbedo(cube_t);
+        terrainMesh->setupMesh();           
+        auto terrain = ecs->CreateEntity();
+        // add components to the entity
+        terrain.addMeshComp(terrainMesh);
+        terrain.addRenderComp(true);
+        terrain.addTransformComp(Raftel::TransformComponent{
+                                    glm::vec3(0.0f, -200.0f, -400.0f),
+                                    glm::vec3(0.0f),
+                                    glm::vec3(1.0f)
+                                    });
+                    
+        Raftel::Engine::Instance().has_ambient_light = true;
+        Raftel::Engine::Instance().ambient_light = glm::vec3(0.18f, 0.09f, 0.31f);
+        //add some light
+        auto spotLightEntity = ecs->CreateEntity();
+        spotLightEntity.addLightComp(Raftel::LightComponent(
+                                     Raftel::LightComponent::LightType::DIRECTIONAL,
+                                     glm::vec3(0.55f, 0.58f, 0.6f),
+                                     0.3f, 0.1f, 20.0f, 30.0f,
+                                     windowOpt->getScreenSize()));
+
+        spotLightEntity.addTransformComp({ glm::vec3(-230.0f, -150.0f, -240.0f), glm::vec3(90.0f, 0.0f,
+                                    -180.0f), glm::vec3(10.0f) });
+                    
+        std::shared_ptr<Raftel::Texture> skyboxtexture = Raftel::Texture::loadCubemap({
+            "../assets/textures/skybox/sky_night/px.png",
+            "../assets/textures/skybox/sky_night/nx.png",
+            "../assets/textures/skybox/sky_night/py.png",
+            "../assets/textures/skybox/sky_night/ny.png",
+            "../assets/textures/skybox/sky_night/pz.png",
+            "../assets/textures/skybox/sky_night/nz.png" });
+                    
+        auto lighthousemesh = Raftel::Mesh::Create("../assets/obj/lighthouse.obj", false);
+        auto lighthousetext = Raftel::Texture::loadTexture("../assets/textures/lighthouse_baked.png");
+        lighthousemesh->GetMaterialByIndex(0)->setAlbedo(lighthousetext);
+        lighthousemesh->setupMesh();
+        auto lighthouse = ecs->CreateEntity();
+        lighthouse.addRenderComp(true);
+        lighthouse.addMeshComp(lighthousemesh);
+        lighthouse.addTransformComp(Raftel::TransformComponent{
+                                        glm::vec3(-48.0f, -175.0f, -290.0f),
+                                        glm::vec3(0.0f),
+                                        glm::vec3(10.0f)
+                                        });
+                    
+        auto shipmesh = Raftel::Mesh::Create("../assets/obj/kennye/boat-sail-b.obj", false);
+        shipmesh->setupMesh();
+        auto ship = ecs->CreateEntity();
+        ship.addRenderComp(true);
+        ship.addMeshComp(shipmesh);
+        ship.addTransformComp(Raftel::TransformComponent{
+                                        glm::vec3(-170.0f, -196.0f, -240.0f),
+                                        glm::vec3(0.0f),
+                                        glm::vec3(2.0f)
+                                        });
+                    
+        auto shipmesh1 = Raftel::Mesh::Create("../assets/obj/kennye/boat-sail-a.obj", false);
+        shipmesh1->setupMesh();
+        auto ship1 = ecs->CreateEntity();
+        ship1.addRenderComp(true);
+        ship1.addMeshComp(shipmesh1);
+        ship1.addTransformComp(Raftel::TransformComponent{
+                                        glm::vec3(-141.0f, -196.0f, -226.0f),
+                                        glm::vec3(0.0f, 138.0f, 0.0f),
+                                        glm::vec3(2.0f)
+                                        });
+                                     
+        auto spotlighthouse = ecs->CreateEntity();
+        spotlighthouse.addLightComp(Raftel::LightComponent(
+                                    Raftel::LightComponent::LightType::SPOT,
+                                    glm::vec3(1.0f, 0.75f, 0.7f),
+                                    1.0f, 500.0f, 20.0f, 30.0f,
+                                    windowOpt->getScreenSize()));
+        spotlighthouse.addTransformComp(Raftel::TransformComponent{
+                                        glm::vec3(-48.0f, -165.0f, -290.0f),
+                                        glm::vec3(0.0f),
+                                        glm::vec3(1.0f)
+                                        });
+        Raftel::RenderSystem::Initialize();
+        Raftel::RenderSystem::SetSkyboxTexture(skyboxtexture);
+                    
+        //our engine has ImGui support, if you want to use it, only need create:
+        Raftel::imguiRenderer ImguiRender(windowOpt->window_);
+        //and update each frame
+        //also we have a editor class that you can manage some things
+        Raftel::Editor editor;
+        float sunset = -180.0f;
+        float spotlightpitch = 0.0f;
+        static double lastTime = 0.0;
+
+        while (!windowOpt->ShouldClose())
+        {
+            double currentTime = glfwGetTime();
+            double deltaTime = currentTime - lastTime;
+            //update input
+            windowOpt->input->updateKeys();
+            windowOpt->clear();
+                    
+            //preset camera controls
+            cam.PresetCamera(windowOpt.get());
+            //update camera
+            cam.Update(windowOpt);
+                    
+            spotLightEntity.setRotation(glm::vec3(90.0f, 0.0f, sunset));
+            spotlighthouse.setRotation(glm::vec3(0.0f, spotlightpitch, 0.0f));
+
+            //render system -> render the entities that you create in the ecs
+            Raftel::RenderSystem::UpdateForwardRenderSystem(*ecs, cam, true);
+            ImguiRender.newFrame();
+
+            ////ImGui functions between this one, like:
+            editor.Show(cam, *ecs, windowOpt.get());
+            ImguiRender.endFrame();
+                    
+            windowOpt->swapBuffers();
+            sunset += 30.0f * deltaTime;
+            spotlightpitch += 10.0f * deltaTime;
+            if (sunset >= 180.0f)
+            {
+                sunset = -180.0f;
+            }
+            if (spotlightpitch >= 360.0f)
+            {
+                spotlightpitch = 0.0f;
+            }
+            lastTime = currentTime;
+        }
+                    
+    Raftel::RenderSystem::Shutdown();
+    return 0;
+}
+                        </code></pre>
                 </div>
             </div>
 
@@ -128,7 +294,7 @@
                 </div>
 
                 <div class="grid-item">
-                    <h3>Cross-Platform</h3>
+                    <h3>Platform</h3>
                     <p>Develop once and deploy everywhere with support for Windows.</p>
                 </div>
 
@@ -219,97 +385,175 @@ int main() {
                 </div>
             </div>
 
-        <h2 id="downloads">Downloads</h2>
-        
-        <p>Get started with Raftel Engine by downloading the latest version below:</p>
-        
-        <div class="downloads-container">
-            <div class="download-card">
-                <div class="download-header">
-                    <h3>Raftel Engine v0.1.6</h3>
-                    <span class="download-date">Released on March 13, 2025</span>
+            <h2 id="downloads">Downloads</h2>
+
+            <p>Get started with Raftel Engine by downloading the latest version below:</p>
+
+            <div class="downloads-container">
+                <div class="download-card">
+                    <div class="download-header">
+                        <h3>Raftel Engine v0.1.7</h3>
+                        <span class="download-date">Released on April 19, 2025</span>
+                    </div>
+                    <div class="download-content">
+                        <p>This version introduces optimized rendering pipelines, deferred rendering, HDR with dynamic
+                            tonemapping, and much more.</p>
+                        <div class="download-buttons">
+                            <a href="files/Raftel-v0.1.7.zip" class="button" download="Raftel-v0.1.7.zip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Download v0.1.7 (Windows)
+                            </a>
+                            <a href="#release-notes-0.1.7" class="button button-secondary">View Release Notes</a>
+                        </div>
+                    </div>
                 </div>
-            <div class="download-content">
-                <p>This version includes support for multiple 3D model formats, advanced rendering features, and much more.</p>
-                <div class="download-buttons">
-                    <a href="files/Raftel-v0.1.6.zip" class="button" download="Raftel-v0.1.6.zip">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            style="margin-right: 8px;">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                        Download v0.1.6 (Windows)
-                    </a>
-                    <a href="#release-notes" class="button button-secondary">View Release Notes</a>
+
+                <div class="download-card">
+                    <div class="download-header">
+                        <h3>Raftel Engine v0.1.6</h3>
+                        <span class="download-date">Released on March 13, 2025</span>
+                    </div>
+                    <div class="download-content">
+                        <p>This version includes support for multiple 3D model formats, advanced rendering features, and
+                            much more.</p>
+                        <div class="download-buttons">
+                            <a href="files/Raftel-v0.1.6.zip" class="button" download="Raftel-v0.1.6.zip">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Download v0.1.6 (Windows)
+                            </a>
+                            <a href="#release-notes-0.1.6" class="button button-secondary">View Release Notes</a>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <div class="info-box">
+                <h3>Build from Source</h3>
+                <p>If you prefer to build from source or need the latest development version, check out our <a
+                        href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/">GitHub repository</a> and
+                    follow the
+                    build instructions.</p>
             </div>
-        </div>
-        
-        <div class="info-box">
-            <h3>Build from Source</h3>
-            <p>If you prefer to build from source or need the latest development version, check out our <a
-                    href="https://github.com/Marc433/3PVG_PMG_24_mazcunyabla_folgadoba/">GitHub repository</a> and follow the
-                build instructions.</p>
-        </div>
-        
-        <!-- Sección de Release Notes -->
-        <div class="release-notes" id="release-notes">
-            <h2>Release Notes - v0.1.6</h2>
-        
-            <div class="release-section">
-                <h3>3D Model Support</h3>
-                <ul>
-                    <li><strong>Multiple Format Support:</strong> Added support for OBJ, FBX, STL, GLB/GLTF, and DAE (Collada)
-                        formats</li>
-                    <li><strong>Material Files:</strong> Automatic loading and processing of MTL material files</li>
-                    <li><strong>Enhanced Parsing:</strong> Improved material property detection and application</li>
-                </ul>
+
+            <!-- Sección de Release Notes para v0.1.7 -->
+            <div class="release-notes" id="release-notes-0.1.7">
+                <h2>Release Notes - v0.1.7</h2>
+
+                <div class="release-section">
+                    <h3>Rendering Pipeline Improvements</h3>
+                    <ul>
+                        <li><strong>Deferred Rendering:</strong> New deferred rendering pipeline for highly efficient
+                            rendering with many lights</li>
+                        <li><strong>Performance Optimization:</strong> Significant performance improvements across the
+                            entire rendering pipeline</li>
+                        <li><strong>Shadow System Enhancement:</strong> Shadow support for all light types in a scene
+                            simultaneously</li>
+                    </ul>
+                </div>
+
+                <div class="release-section">
+                    <h3>Visual Enhancement Features</h3>
+                    <ul>
+                        <li><strong>HDR Rendering:</strong> High Dynamic Range rendering for more realistic lighting and
+                            colors</li>
+                        <li><strong>Tonemapping:</strong> Advanced tonemapping algorithms for converting HDR to display
+                            output</li>
+                        <li><strong>Dynamic Tonemapping:</strong> Automatic adjustment based on scene luminance for
+                            optimal visual quality</li>
+                    </ul>
+                </div>
+
+                <div class="release-section">
+                    <h3>Customization & Flexibility</h3>
+                    <ul>
+                        <li><strong>Custom Core Shaders:</strong> Users can now replace the core rendering shader (for
+                            forward rendering)</li>
+                        <li><strong>Rendering Pipeline Selection:</strong> Toggle between forward and deferred rendering
+                            based on scene requirements</li>
+                    </ul>
+                </div>
+
+                <div class="release-section">
+                    <h3>Debugging & Development Tools</h3>
+                    <ul>
+                        <li><strong>Ray Casting:</strong> New raycasting system for object selection and collision
+                            detection</li>
+                        <li><strong>Line Rendering:</strong> Direct rendering of 3D lines for debug visualization and UI
+                            elements</li>
+                    </ul>
+                </div>
             </div>
-        
-            <div class="release-section">
-                <h3>Rendering Features</h3>
-                <ul>
-                    <li><strong>Forward Rendering:</strong> Implemented a complete forward rendering pipeline</li>
-                    <li><strong>Multiple Lights:</strong> Support for various light types in a single scene</li>
-                    <li><strong>Shadow Mapping:</strong> Real-time shadows for directional and spot lights</li>
-                    <li><strong>Ambient Lighting:</strong> Global illumination system for realistic lighting</li>
-                    <li><strong>Skybox:</strong> Customizable skybox with 6-sided cube mapping</li>
-                </ul>
+
+            <!-- Sección de Release Notes para v0.1.6 -->
+            <div class="release-notes" id="release-notes-0.1.6">
+                <h2>Release Notes - v0.1.6</h2>
+
+                <div class="release-section">
+                    <h3>3D Model Support</h3>
+                    <ul>
+                        <li><strong>Multiple Format Support:</strong> Added support for OBJ, FBX, STL, GLB/GLTF, and DAE
+                            (Collada)
+                            formats</li>
+                        <li><strong>Material Files:</strong> Automatic loading and processing of MTL material files</li>
+                        <li><strong>Enhanced Parsing:</strong> Improved material property detection and application</li>
+                    </ul>
+                </div>
+
+                <div class="release-section">
+                    <h3>Rendering Features</h3>
+                    <ul>
+                        <li><strong>Forward Rendering:</strong> Implemented a complete forward rendering pipeline</li>
+                        <li><strong>Multiple Lights:</strong> Support for various light types in a single scene</li>
+                        <li><strong>Shadow Mapping:</strong> Real-time shadows for directional and spot lights</li>
+                        <li><strong>Ambient Lighting:</strong> Global illumination system for realistic lighting</li>
+                        <li><strong>Skybox:</strong> Customizable skybox with 6-sided cube mapping</li>
+                    </ul>
+                </div>
+
+                <div class="release-section">
+                    <h3>Editor Features</h3>
+                    <ul>
+                        <li><strong>Entity Management:</strong> Default window for entity manipulation at runtime</li>
+                        <li><strong>ImGui Integration:</strong> API for creating custom editor windows with ImGui</li>
+                        <li><strong>Property Editors:</strong> Visual editors for component properties</li>
+                    </ul>
+                </div>
+
+                <div class="release-section">
+                    <h3>Scripting System</h3>
+                    <ul>
+                        <li><strong>Lua Integration:</strong> Full Lua scripting support for game logic</li>
+                        <li><strong>API Bindings:</strong> Comprehensive bindings to engine features</li>
+                        <li><strong>Component Scripting:</strong> Attach scripts to entities through the component
+                            system</li>
+                    </ul>
+                </div>
+
+                <div class="release-section">
+                    <h3>Performance Improvements</h3>
+                    <ul>
+                        <li><strong>JobSystem:</strong> Multi-threaded task management for parallel processing</li>
+                        <li><strong>Worker Threads:</strong> Optimized thread pool for background tasks</li>
+                        <li><strong>Memory Optimization:</strong> Reduced memory footprint for large scenes</li>
+                    </ul>
+                </div>
             </div>
-        
-            <div class="release-section">
-                <h3>Editor Features</h3>
-                <ul>
-                    <li><strong>Entity Management:</strong> Default window for entity manipulation at runtime</li>
-                    <li><strong>ImGui Integration:</strong> API for creating custom editor windows with ImGui</li>
-                    <li><strong>Property Editors:</strong> Visual editors for component properties</li>
-                </ul>
-            </div>
-        
-            <div class="release-section">
-                <h3>Scripting System</h3>
-                <ul>
-                    <li><strong>Lua Integration:</strong> Full Lua scripting support for game logic</li>
-                    <li><strong>API Bindings:</strong> Comprehensive bindings to engine features</li>
-                    <li><strong>Component Scripting:</strong> Attach scripts to entities through the component system</li>
-                </ul>
-            </div>
-        
-            <div class="release-section">
-                <h3>Performance Improvements</h3>
-                <ul>
-                    <li><strong>JobSystem:</strong> Multi-threaded task management for parallel processing</li>
-                    <li><strong>Worker Threads:</strong> Optimized thread pool for background tasks</li>
-                    <li><strong>Memory Optimization:</strong> Reduced memory footprint for large scenes</li>
-                </ul>
-            </div>
-        </div>
 
             <p>We're excited to see what you'll create with Raftel Engine! Share your projects with us using the hashtag
-                <strong>#RaftelEngine</strong> on social media.</p>
+                <strong>#RaftelEngine</strong> on social media.
+            </p>
         </div>
     </div>
 
